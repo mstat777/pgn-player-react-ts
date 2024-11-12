@@ -1,0 +1,38 @@
+@use '../../global.scss';
+
+.main {
+
+    &_section {
+        display: flex;
+        flex-direction: column;
+        margin: 2rem 1rem 4rem;
+
+        @media screen and (min-width: global.$tablet) {
+            flex-direction: row;
+            justify-content: center;
+            margin: 1rem auto;
+        }
+
+        .notation_section {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            margin: 2rem 1rem;
+            outline: 1px solid grey;
+
+            .notation {
+                width: 300px;
+                height: 90%;
+                padding: 5px;
+
+                > textarea {
+                    width: 290px;
+                    height: 100%;
+                    padding: .5rem;
+                    resize: none;
+                    font-size: 1.6rem;
+                }
+            }
+        }
+    }
+}

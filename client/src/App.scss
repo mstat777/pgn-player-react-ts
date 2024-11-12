@@ -1,0 +1,109 @@
+@use './global';
+
+/*************************************************************/
+/* ----------------------- GENERALES ----------------------- */
+/*************************************************************/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body{
+    font-family: global.$main-font;  
+    font-size: 1.6rem;
+    background-color: global.$primary-color;
+    
+    > div { // "root"
+        min-height: 100vh; // pour positionner le footer toujours en bas de la page
+        display: flex;
+        flex-direction: column;
+
+        main {
+            text-align: center;
+        }
+    }
+}
+
+/* ------------ HEADINGS ------------- */
+h1, h2, h3 {
+    display: block;
+    font-family: global.$title-font;
+    font-weight: 500;
+    color: global.$tertiary-color-1;
+}
+
+h1 {
+	font-size: 3.6rem;
+    text-transform: uppercase;
+    margin: 2.6rem 0;
+}
+
+h2 {
+	font-size: 2.8rem;
+    margin: 2rem 0;
+}
+
+h3 {
+	font-size: 2.2rem;
+    margin: 1.6rem 0;
+}
+
+/* ------------- OTHERS -------------- */
+a {
+    display: inline-block;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+li {
+    list-style: none;
+}
+
+p {
+    margin: 1rem 0;
+}
+
+img {
+    display: block;
+    width: 100%;
+    max-height: 100%;
+}
+
+button {
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+/* ---------- FORM ELEMENTS ----------- */
+input[type="text"],
+input[type="password"],
+input[type="search"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+input[type="number"],
+input[type*="date"],
+select,
+textarea {
+	display: inline-block;
+	font-size: 1.6rem;
+    font-family: global.$main-font; 
+	color: global.$darkgrey-color-3; 
+	border: 1px solid global.$lightgrey-color-2;
+	border-radius: .6rem;
+}
+textarea {
+	display: block;
+    resize: none;
+}
+
+::placeholder {
+    font-weight: 400;
+	color: global.$grey-color; 
+}

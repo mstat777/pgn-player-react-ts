@@ -1,0 +1,33 @@
+// ---------------------- Colors ---------------------- //
+$primary-color: white;                 
+$secondary-color: #1f2722;
+$tertiary-color-1: #33b065;              
+$tertiary-color-2: #329359;   
+$tertiary-color-3: #166937;  
+$tertiary-color-4: #0a3f20;      
+
+$highlight-color: #e71369;    // highlight texts, errors
+
+$verydarkbluegrey-color: #232934; 
+$darkbluegrey-color: #333d4e;    
+$bluegrey-color: #525d70; 
+$darkgrey-color-1: #313131;
+$darkgrey-color-2: #444;
+$darkgrey-color-3: #626262;    // input, textarea, select...
+$grey-color: #808080;
+$lightgrey-color-1: #b3b3b3;  
+$lightgrey-color-2: #c3c3c3;   // table cells borders
+$lightgrey-color-3: #dfdfdf;   
+$lightgrey-color-4: #f3f3f3; // alternate table rows
+
+// ----------------------- Fonts ---------------------- //
+$main-font: 'Red Hat Text', sans-serif;      
+$title-font: 'Red Hat Text', sans-serif; // for headings
+
+// ------------ Breakpoints (media queries) ----------- //
+$tablet: 768px;
+$desktop: 1100px;
+
+// ----------------------- Other ---------------------- //
+$header-height: 60px;
+$footer-height: 35px;
