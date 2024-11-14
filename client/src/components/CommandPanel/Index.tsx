@@ -1,30 +1,32 @@
 import './CommandPanel.scss';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBackwardFast, faCaretLeft, faCaretRight, faForwardFast } from '@fortawesome/free-solid-svg-icons';
+
 
 export default function CommandPanel(){
 
     return ( 
         <div className="command_panel">
-            <div className="functions-btn">
+            <div className="functions_btn">
                 <button type="button" id="loadBtn">load</button>
-                
                 <button type="button" id="clearBtn">clear</button>
             </div>
 
-            <div className="nav-btn">
+            <div className="nav_btn">
                 <button type="button" id="toStartBtn">
-                    <i className="fa-solid fa-backward-fast"></i>
+                    <FontAwesomeIcon icon={faBackwardFast}/>
                 </button>
 
                 <button type="button" id="previousMoveBtn">
-                    <i className="fa-solid fa-caret-left"></i>
+                    <FontAwesomeIcon icon={faCaretLeft}/>
                 </button>
 
                 <button type="button" id="nextMoveBtn">
-                    <i className="fa-solid fa-caret-right"></i>
+                    <FontAwesomeIcon icon={faCaretRight}/>
                 </button>
 
                 <button type="button" id="toEndBtn">
-                    <i className="fa-solid fa-forward-fast"></i>
+                    <FontAwesomeIcon icon={faForwardFast}/>
                 </button>
             </div>
         </div>

@@ -6,7 +6,7 @@ interface GameState {
     nbPieces: number;
     currentMove: number;
     currentRound: number;
-    playerToGo: Color;
+    playerTurn: Color;
     isValidMove: boolean;
     errors: string[];
 }
@@ -16,7 +16,7 @@ const initialState: GameState = {
     nbPieces: 32, // all available pieces of both players
     currentMove: 0,
     currentRound: 0,
-    playerToGo: "white",
+    playerTurn: "white",
     isValidMove: true,
     errors: []
 }
@@ -25,7 +25,12 @@ export const gameSlice = createSlice({
     name: "game",
     initialState,
     reducers: {
-
+        setPlayerTurn: (state) => {
+            state.playerTurn = state.playerTurn === 'white' ?  'black' : 'white';
+        }, 
+        resetGame: (state) => {
+            
+        }, 
     }
 });
 

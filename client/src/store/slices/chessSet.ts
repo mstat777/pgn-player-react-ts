@@ -3,7 +3,7 @@ import { Square, IChessPiece } from "../../configs/interfaces";
 import { initializePieces } from "../../utils/initializePieces";
 import { initializeSquares } from "../../utils/initializeSquares";
 
-interface ChessboardState {
+interface ChessSetState {
     board: [];
     squares: Square[];
     pieces: {
@@ -12,7 +12,7 @@ interface ChessboardState {
     };
 }
 
-const initialState: ChessboardState = {
+const initialState: ChessSetState = {
     board: [
 
     ],
@@ -20,12 +20,12 @@ const initialState: ChessboardState = {
     pieces: initializePieces()
 }
 
-export const chessboardSlice = createSlice({
-    name: "chessboard",
+export const chessSetSlice = createSlice({
+    name: "chessSet",
     initialState,
     reducers: {
 
     }
 });
 
-export default chessboardSlice.reducer;
+export default chessSetSlice.reducer;

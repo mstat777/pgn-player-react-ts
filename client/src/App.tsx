@@ -2,7 +2,7 @@ import './App.scss';
 import { useState } from 'react';
 import Loading from './components/Loading/Index';
 import Header from './components/Header/Index';
-import Main from './pages/Main/Index';
+import Home from './pages/Home/Index';
 import Footer from './components/Footer/Index';
 
 function App() {
@@ -13,7 +13,7 @@ function App() {
             <Loading /> :
         <>
             <Header />
-            <Main />
+            <Home />
             <Footer />
         </>
     );

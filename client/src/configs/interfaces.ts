@@ -9,7 +9,7 @@ export interface IChessPiece {
     color: Color;
     type: PieceType;
     location: number;
-    active: boolean;
+    active?: boolean;
 }
 
 export class ChessPiece implements IChessPiece {

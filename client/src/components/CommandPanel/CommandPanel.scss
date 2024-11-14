@@ -1,5 +1,14 @@
 @use '../../global.scss';
 
+@mixin button {
+    height: 20px;
+    margin: 0 5px;
+    border: 1px solid global.$tertiary-color-3;
+    border-radius: 2px;
+    box-shadow: 2px 2px 2px global.$darkgrey-color-3;
+    text-transform: uppercase;
+}
+
 .command_panel {
     display: flex;
     justify-content: space-between;
@@ -13,56 +22,45 @@
         align-items: center;
 
         > button {
-            height: 20px;
-            width: auto;
-            margin-left: 5px;
-            margin-right: 5px;
-            padding-left: 6px;
-            padding-right: 6px;
-            border: 1px solid global.$tertiary-color-3;
-            border-radius: 2px;
+            @include button;
+            padding: 0 6px;
+            font-weight: 600;
             font-size: 1.2rem;
             letter-spacing: 1px;
-            text-transform: uppercase;
             color: global.$tertiary-color-3;
             background-color: global.$lightgrey-color-4;
         }
-    }
 
-    .clear_btn {
-        border-color: global.$highlight-color;
-        color: global.$highlight-color;
-        transition: color .4s;
-    }
-
-    .load_btn {
-        border-color: global.$tertiary-color-3;
-        color: global.$lightgrey-color-4;
-        background-color: global.$tertiary-color-3;
-        transition: background-color .4s;
-
-        &:hover {
-            background-color: global.$tertiary-color-1;
+        .clear_btn {
+            border-color: global.$highlight-color;
+            color: global.$highlight-color;
+            transition: color .4s;
+        }
+    
+        .load_btn {
+            border-color: global.$tertiary-color-3;
+            color: global.$lightgrey-color-4;
+            background-color: global.$tertiary-color-3;
+            transition: background-color .4s;
+            &:hover {
+                background-color: global.$tertiary-color-1;
+            }
         }
     }
 
-    .nav-btn {
+    .nav_btn {
         display: flex;
         align-items: center;
 
         >button {
+            @include button;
             display: flex;
             justify-content: center;
             align-items: center;
             width: 30px;
-            height: 20px;
-            margin-left: 5px;
-            margin-right: 5px;
-            border: 1px solid #555555;
-            border-radius: 2px;
             font-size: 1.4rem;
-            color: #555555;
-            background-color: #c7c7c7;
+            color: global.$darkgrey-color-3;
+            background-color: global.$lightgrey-color-2;
         }
     }
 }

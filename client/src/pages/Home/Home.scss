@@ -1,16 +1,19 @@
 @use '../../global.scss';
 
-.main {
+.home {
 
     &_section {
         display: flex;
         flex-direction: column;
+        align-items: center;
         margin: 2rem 1rem 4rem;
 
         @media screen and (min-width: global.$tablet) {
             flex-direction: row;
+            align-items: flex-start;
             justify-content: center;
             margin: 1rem auto;
+            padding: 2rem 4rem;
         }
 
         .notation_section {
@@ -19,12 +22,13 @@
             width: 300px;
             margin: 2rem 1rem;
             outline: 1px solid grey;
+            box-shadow: 4px 4px 8px 2px global.$grey-color;
 
             .notation {
                 width: 300px;
                 height: 90%;
                 padding: 5px;
-
+                
                 > textarea {
                     width: 290px;
                     height: 100%;

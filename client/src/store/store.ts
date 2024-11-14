@@ -1,13 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import gameReducer from './slices/game';
 import pgnDataReducer from './slices/pgnData';
-import chessboardReducer from './slices/chessboard';
+import chessSetReducer from './slices/chessSet';
 
 export const store = configureStore({
     reducer: {
         game: gameReducer,
         pgnData: pgnDataReducer,
-        chessboard: chessboardReducer,
+        chessSet: chessSetReducer,
     }
 })
 
