@@ -16,27 +16,5 @@
             padding: 2rem 4rem;
         }
 
-        .notation_section {
-            display: flex;
-            flex-direction: column;
-            width: 300px;
-            margin: 2rem 1rem;
-            outline: 1px solid grey;
-            box-shadow: 4px 4px 8px 2px global.$grey-color;
-
-            .notation {
-                width: 300px;
-                height: 90%;
-                padding: 5px;
-                
-                > textarea {
-                    width: 290px;
-                    height: 100%;
-                    padding: .5rem;
-                    resize: none;
-                    font-size: 1.6rem;
-                }
-            }
-        }
     }
 }

@@ -1,31 +1,28 @@
 import './Home.scss';
 import ChessSet from '../../components/ChessSet/Index';
-import CommandPanel from '../../components/CommandPanel/Index';
-import { useState } from 'react';
+import Notation from '../../components/Notation/Index';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { initializeSquares, initializePieces } from '../../store/slices/chessSet';
+import Loading from '../../components/Loading/Index';
 
 export default function Home(){
-    const [pgnText, setPgnText] = useState<string>('');
-    const pgnTextMaxLength = 2500;
+    const dispatch = useAppDispatch();
+    //const { squares, pieces } = useAppSelector((state) => state.chessSet);
+
+    useEffect(() => {
+        dispatch(initializeSquares());
+        dispatch(initializePieces());
+    },[]);
 
     return ( 
         <main className="home">
-            <section className="home_section">
-                <ChessSet />
-
-                <section className="notation_section">
-                    <CommandPanel />
-
-                    <div className="notation">
-                        <textarea
-                            //value={pgnText}
-                            placeholder="put your PGN data here..."
-                            rows={8}
-                            maxLength={pgnTextMaxLength}
-                        ></textarea>
-                    </div>
+            { 
+                <section className="home_section">
+                    <ChessSet />
+                    <Notation />
                 </section>
-
-            </section>
+            }
         </main>
     );
 }

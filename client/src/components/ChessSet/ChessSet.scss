@@ -3,13 +3,14 @@
 .chess_set {
     position: relative;
     width: 280px;
-    aspect-ratio: 1;
+    height: 280px;
     margin: 2rem auto;
     outline: 2px solid global.$darkgrey-color-1;
     box-shadow: 6px 6px 12px 3px global.$grey-color;
 
     @media screen and (min-width: global.$tablet) {
         width: 400px;
+        height: 400px;
     }
 
     .chessboard {
