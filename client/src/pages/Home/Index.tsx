@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { initializeSquares, initializePieces } from '../../store/slices/chessSet';
 import Loading from '../../components/Loading/Index';
+import StatusPanel from '../../components/StatusPanel/Index';
 
 export default function Home(){
     const dispatch = useAppDispatch();
@@ -20,7 +21,11 @@ export default function Home(){
             { 
                 <section className="home_section">
                     <ChessSet />
-                    <Notation />
+                    
+                    <div>
+                        <Notation />
+                        <StatusPanel />
+                    </div>
                 </section>
             }
         </main>

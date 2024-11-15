@@ -1,14 +1,29 @@
 import './Notation.scss';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBackwardFast, faCaretLeft, faCaretRight, faForwardFast } from '@fortawesome/free-solid-svg-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { formatData, validateData } from '../../store/slices/pgnData';
-
+import { formatPgnData, validatePgnData } from '../../utils/pgnDataFunctions';
+//import { setCurrentRound, setPlayerTurn } from '../../store/slices/game';
+import { Game } from '../../configs/interfaces';
+import { setPlayerTurn } from '../../utils/gameFunctions';
+import { movePiece } from '../../utils/movePiece';
 
 export default function Notation(){
-    const dispatch = useAppDispatch();
-    const { moveNb, whiteMoves, blackMoves, errors, status } = useAppSelector((state) => state.pgnData);
+    //const dispatch = useAppDispatch();
+    const { white, black } = useAppSelector((state) => state.chessSet.pieces);
+    //const { currentMove, currentRound, playerTurn } = useAppSelector((state) => state.game);
+    const { whiteMoves, blackMoves } = useAppSelector((state) => state.pgnData);
+
+    const GAME: Game = {
+        isGameOver: false,
+        piecesLeft: 32, // pieces left of both players
+        currentMove: 0,
+        currentRound: 0,
+        playerTurn: "white",
+        isValidMove: true,
+        errors: []
+    }
 
     const [pgnText, setPgnText] = useState<string>('');
     const pgnTextMaxLength = 2500;
@@ -16,22 +31,25 @@ export default function Notation(){
     const handleLoad = () => {
         if (pgnText) {
             // first reset Redux pgnData slice:
-            dispatch({type: 'RESET_PGN'});
-            dispatch(formatData(pgnText));
-            
+            //dispatch({type: 'RESET_PGN'});
+            validatePgnData(formatPgnData(pgnText));
         } else {
             console.log('Nothing is entered!');
         }
     }
 
-    useEffect(() => {
-        if (moveNb.length) {
-            console.log(moveNb);
-            dispatch(validateData());
-        }
-    },[moveNb.length]);
+    const handleNextMove = () => {
+        GAME.currentRound = Math.floor(GAME.currentMove/2);
+        console.log("round = " + (GAME.currentRound+1) + " move = " + (GAME.currentMove+1));
+        GAME.playerTurn === "white" ?
+            movePiece(whiteMoves[GAME.currentRound], GAME.playerTurn) :
+            movePiece(blackMoves[GAME.currentRound], GAME.playerTurn);
+        GAME.playerTurn = setPlayerTurn(GAME.playerTurn);
+        GAME.currentMove++;
+    }
 
     return ( 
+        (white.length && black.length) &&
         <section className="notation_section">
 
             <div className="command_panel">
@@ -56,7 +74,10 @@ export default function Notation(){
                         <FontAwesomeIcon icon={faCaretLeft}/>
                     </button>
 
-                    <button id="nextMoveBtn">
+                    <button 
+                        id="nextMoveBtn"
+                        onClick={handleNextMove}
+                    >
                         <FontAwesomeIcon icon={faCaretRight}/>
                     </button>
 

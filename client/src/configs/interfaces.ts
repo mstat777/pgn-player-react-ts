@@ -29,3 +29,30 @@ export class ChessPiece implements IChessPiece {
         this.active = true;
     }
 }
+
+export interface PGNData {
+    moveNb: string[];
+    whiteMoves: string[];
+    blackMoves: string[];
+    errors: string[];
+    status?: string;
+}
+
+export interface Game {
+    isGameOver: boolean;
+    piecesLeft: number;
+    currentMove: number;
+    currentRound: number;
+    playerTurn: Color;
+    isValidMove: boolean;
+    errors: string[];
+}
+
+export interface ChessSet {
+    board: [];
+    squares: Square[];
+    pieces: {
+        white: IChessPiece[],
+        black: IChessPiece[]
+    };
+}

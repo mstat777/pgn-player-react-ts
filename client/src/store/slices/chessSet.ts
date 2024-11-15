@@ -1,17 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit/react";
 import { Color, SquareType, PieceType } from "../../configs/types";
 import { Square, IChessPiece, ChessPiece } from "../../configs/interfaces";
+import { ChessSet } from "../../configs/interfaces";
 
-interface ChessSetState {
-    board: [];
-    squares: Square[];
-    pieces: {
-        white: IChessPiece[],
-        black: IChessPiece[]
-    };
-}
-
-const initialState: ChessSetState = {
+const initialState: ChessSet = {
     board: [],
     squares: [],
     pieces: {

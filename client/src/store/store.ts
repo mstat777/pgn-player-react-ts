@@ -27,8 +27,9 @@ export const store = configureStore({
                 ignoredPaths: ['chessSet.pieces'],
             }
         })
-})
+});
 
+export type AppStore = typeof store;
 // Infer the `RootState` and `AppDispatch` types from the store itself
 //export type RootState = ReturnType<typeof store.getState>;
 export type RootState = ReturnType<typeof rootReducer>;

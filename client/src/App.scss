@@ -81,22 +81,12 @@ button {
 }
 
 /* ---------- FORM ELEMENTS ----------- */
-input[type="text"],
-input[type="password"],
-input[type="search"],
-input[type="email"],
-input[type="tel"],
-input[type="date"],
-input[type="number"],
-input[type*="date"],
+input,
 select,
 textarea {
 	display: inline-block;
-	font-size: 1.6rem;
+    border: none;
     font-family: global.$main-font; 
-	color: global.$darkgrey-color-3; 
-	border: 1px solid global.$lightgrey-color-2;
-	border-radius: .6rem;
 }
 textarea {
 	display: block;

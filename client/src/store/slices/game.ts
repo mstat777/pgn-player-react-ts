@@ -1,19 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit/react";
-import { Color } from "../../configs/types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit/react";
+import { Game } from "../../configs/interfaces";
 
-interface GameState {
-    isGameOver: boolean;
-    nbPieces: number;
-    currentMove: number;
-    currentRound: number;
-    playerTurn: Color;
-    isValidMove: boolean;
-    errors: string[];
-}
-
-const initialState: GameState = {
+const initialState: Game = {
     isGameOver: false,
-    nbPieces: 32, // all available pieces of both players
+    piecesLeft: 32, // pieces left of both players
     currentMove: 0,
     currentRound: 0,
     playerTurn: "white",
@@ -25,13 +15,18 @@ export const gameSlice = createSlice({
     name: "game",
     initialState,
     reducers: {
+        setCurrentRound: (state, action: PayloadAction<number>) => {
+            state.currentRound = action.payload;
+        },
         setPlayerTurn: (state) => {
             state.playerTurn = state.playerTurn === 'white' ?  'black' : 'white';
-        }, 
-        resetGame: (state) => {
-            
-        }, 
+        }
     }
 });
+
+export const {
+    setCurrentRound,
+    setPlayerTurn
+} = gameSlice.actions;
 
 export default gameSlice.reducer;
