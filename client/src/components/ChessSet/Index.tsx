@@ -1,24 +1,31 @@
 import './ChessSet.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Ref, forwardRef, RefObject, useRef, MutableRefObject } from 'react';
 import { useAppSelector } from '../../store/hooks';
 import ChessPiece from './ChessPiece/Index';
 import { Color } from '../../configs/types';
 import Loading from '../Loading/Index';
+import { getX, getY } from '../../utils/gameFunctions';
 
-export default function ChessSet(){
+//type ForwardedRef<HTMLDivElement> = ((instance: HTMLDivElement | null) => void) | MutableRefObject<HTMLDivElement | null> | null;
+type ForwardedRef = MutableRefObject<(HTMLDivElement | null)[]>;
+
+const ChessSet = forwardRef((props, ref) => {
     const { squares, pieces } = useAppSelector((state) => state.chessSet);
+
+    const piecesLength = pieces.white.length + pieces.black.length;
 
     const [isDataLoaded, setIsDataLoaded] = useState<boolean>(false);
 
-    useEffect(() => {
-        if (squares.length && pieces.white.length && pieces.black.length) {
-            setIsDataLoaded(true);
-        }
-    },[squares.length, pieces.white.length, pieces.black.length]);
+    //const pieceRef = useRef<Array<HTMLDivElement | null>>([]);
+    const pieceRef = ref as MutableRefObject<(HTMLDivElement | null)[]>;
 
-    // calculate piece coordinates from piece's location data:
-    const getX = (pieceLocation: number) => (Math.floor(pieceLocation / 10) - 1) *100 / 8;
-    const getY = (pieceLocation: number) => ((pieceLocation % 10) - 1) *100 / 8;
+    useEffect(() => {
+        if (squares.length && piecesLength ) {
+            setIsDataLoaded(true);
+            /*const snur = pieceRef.current[3];
+            if (snur) snur.style.bottom = "50%";*/
+        }
+    },[squares.length, piecesLength]);
 
     return ( 
         !isDataLoaded ? 
@@ -36,13 +43,17 @@ export default function ChessSet(){
             </div>
 
             <div className="pieces">
-                { Object.keys(pieces).map((side) => 
+                { Object.keys(pieces).map((side, indexSide) => 
                         pieces[side as keyof typeof pieces].map((piece, i) =>
                             <ChessPiece 
+                                ref={(el) => //{
+                                    pieceRef.current[i + (indexSide*16)] = el
+                                    //console.log(el); }
+                                }
                                 color={side as Color}
                                 type={piece.type} 
                                 left={`${getX(piece.location)}%`}
-                                top={`${getY(piece.location)}%`}
+                                bottom={`${getY(piece.location)}%`}
                                 key={i}
                             />
                         )
@@ -51,4 +62,6 @@ export default function ChessSet(){
             </div>
         </div>
     );
-}
+});
+
+export default ChessSet;

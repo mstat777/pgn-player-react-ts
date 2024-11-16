@@ -19,17 +19,17 @@ export function initializePieces(): Pieces {
 
     // create pieces. Iterate 2 times (white & black)
     for (let i = 0; i < 2; i++) {
-        majPiecesRow = side === "black" ? 1 : 8;
-        pawnsRow = side === "black" ? 2 : 7;
+        majPiecesRow = side === "white" ? 1 : 8;
+        pawnsRow = side === "white" ? 2 : 7;
 
         // create all major pieces:
         majPiecesSet.forEach((majPiece, i) => 
-            pieces[side][i] = new ChessPiece(side, majPiece, parseInt(`${i+1}${majPiecesRow}`))
+            pieces[side][i] = new ChessPiece(side, majPiece, `${i+1}${majPiecesRow}`)
         );
 
         // create all pawns:
         for (let i = 0; i < 8; i++){
-            pieces[side][i+8] = new ChessPiece(side, "pawn", parseInt(`${i+1}${pawnsRow}`));
+            pieces[side][i+8] = new ChessPiece(side, "pawn", `${i+1}${pawnsRow}`);
         }
         side = "black";
     }

@@ -5,7 +5,7 @@ export function initializeSquares(): Square[] {
     const squares: Square[] = [];
 
     for (let i = 0; i < 64; i++) {
-        const location: number = (Math.floor((63 - i) / 8) + 1)*10 + i % 8 + 1;
+        const location: string = (Math.floor((63 - i) / 8) + 1)*10 + i % 8 + 1;
         let color: SquareType;
 
         if (Math.floor(i / 8) % 2 === 0) { 

@@ -1,27 +1,31 @@
-import { Color, PieceType } from "../../../configs/types";
 import './ChessPiece.scss';
+import { Color, PieceType } from "../../../configs/types";
+import { IChessPiece } from '../../../configs/interfaces';
+import { LegacyRef, forwardRef } from "react";
 import PieceImage from "../../../configs/piecesImages";
-import { capitalize } from "../../../utils/generalFunctions";
+import { capitalize } from "../../../utils/commonFunctions";
 
 type Props = {
     color: Color;
     type: PieceType;
     left: string;
-    top: string;
+    bottom: string;
 }
 
-export default function ChessPiece(props: Props) {
-    const { color, type, left, top } = props;
+const ChessPiece = forwardRef((props: Props, ref: LegacyRef<HTMLDivElement> | undefined) => {
+    const { color, type, left, bottom } = props;
 
     const pieceImageName = color + capitalize(type);
 
     return (
+        
         <div 
+            ref={ref}
             className="piece" 
-            id={type}
+            //id={type}
             style={{
                 left: left,
-                top: top
+                bottom: bottom
             }}
         >
             <img 
@@ -29,5 +33,8 @@ export default function ChessPiece(props: Props) {
                 alt={`${type} chess piece`}
             />
         </div>
+        
     );
-}
+});
+
+export default ChessPiece;

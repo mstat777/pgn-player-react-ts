@@ -18,7 +18,7 @@ export const gameSlice = createSlice({
         setCurrentRound: (state, action: PayloadAction<number>) => {
             state.currentRound = action.payload;
         },
-        setPlayerTurn: (state) => {
+        changePlayer: (state) => {
             state.playerTurn = state.playerTurn === 'white' ?  'black' : 'white';
         }
     }
@@ -26,7 +26,7 @@ export const gameSlice = createSlice({
 
 export const {
     setCurrentRound,
-    setPlayerTurn
+    changePlayer
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

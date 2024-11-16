@@ -5,23 +5,23 @@ export const movePiece = (
     move: string,
     playerTurn: Color
 ) => {
-    console.clear();
+    //console.clear();
     const state = store.getState();
     const { pieces } = state.chessSet;
 
-    console.log(pieces);
-
     let castlingLong = false;
     let castlingShort = false;
-    let capture = false;
+    let capture = false; 
     let check = false;
     let checkmate = false;
     let draw = false;
     let oneOfAPairMove = false;
+    //let removeImgIfCapture = false; // remove the image of the captured piece. Pass this value to the component
 
     // special notation characters
     if (move.includes("x")) {
         capture = true;
+        //removeImgIfCapture = true;
         move = move.replace("x", "");
         console.log("capture = ",capture);
     } 
@@ -39,10 +39,12 @@ export const movePiece = (
     
     // store the move square location ID (ex. 'a4', 'd5')
     const squareLoc = move.slice(-2);
-    console.log(squareLoc);
-    let newLocation = (squareLoc.charCodeAt(0) - 96) + squareLoc.charAt(1);
-    let oldLocation;
-    let pieceId;
+    // the square that a piece should be moved TO
+    let newLocation: string = (squareLoc.charCodeAt(0) - 96) + squareLoc.charAt(1);
+    // the square that a piece should be moved FROM
+    let oldLocation: string;
+    // the array's id of the piece that should be moved
+    let pieceId: number = -1;
 
     // --------------- a simple pawn move -----------------
     if (move.length === 2) {
@@ -79,16 +81,16 @@ export const movePiece = (
             case "N": {
                 const firstOfPairLoc = pieces[playerTurn][1].location; // pair's first element location
                 console.log(pieces[playerTurn][1]);
-                console.log(pieces[playerTurn][1].active && 
+                /*console.log(pieces[playerTurn][1].active && 
                     Math.abs(newLocation.charAt(0) - firstOfPairLoc.charAt(0)) >= 1 && 
                 Math.abs(newLocation.charAt(0) - firstOfPairLoc.charAt(0)) <= 2 &&
                 Math.abs(newLocation.charAt(1) - firstOfPairLoc.charAt(1)) >= 1 && 
-                Math.abs(newLocation.charAt(1) - firstOfPairLoc.charAt(1)) <= 2);
+                Math.abs(newLocation.charAt(1) - firstOfPairLoc.charAt(1)) <= 2);*/
                 if (pieces[playerTurn][1].active && 
-                    Math.abs(newLocation.charAt(0) - firstOfPairLoc.charAt(0)) >= 1 && 
-                Math.abs(newLocation.charAt(0) - firstOfPairLoc.charAt(0)) <= 2 &&
-                Math.abs(newLocation.charAt(1) - firstOfPairLoc.charAt(1)) >= 1 && 
-                Math.abs(newLocation.charAt(1) - firstOfPairLoc.charAt(1)) <= 2) {
+                    Math.abs(parseInt(newLocation.charAt(0)) - parseInt(firstOfPairLoc.charAt(0))) >= 1 && 
+                Math.abs(parseInt(newLocation.charAt(0)) - parseInt(firstOfPairLoc.charAt(0))) <= 2 &&
+                Math.abs(parseInt(newLocation.charAt(1)) - parseInt(firstOfPairLoc.charAt(1))) >= 1 && 
+                Math.abs(parseInt(newLocation.charAt(1)) - parseInt(firstOfPairLoc.charAt(1))) <= 2) {
                     pieceId = 1;
                 } else { 
                     pieceId = 6;
@@ -97,16 +99,7 @@ export const movePiece = (
             // CASTLE 'O-O'
             case "O": pieceId = 4; break; 
             // pawns: a, ..., h
-            case "a": {
-                if (!capture) {
-                    pieceId = 8;
-                } else {
-                    if (Math.abs((parseInt(firstOfPairLoc.charAt(0)) - parseInt(firstOfPairLoc.charAt(1))) % 2) === Math.abs((parseInt(newLocation.charAt(0)) - parseInt(newLocation.charAt(1))) % 2)){
-
-                    }
-                }
-                break; 
-            }
+            case "a": pieceId = 8;break; 
             case "b": pieceId = 9; break; 
             case "c": pieceId = 10; break; 
             case "d": pieceId = 11; break; 
@@ -161,27 +154,16 @@ export const movePiece = (
     
     // if CAPTURE, first remove captured piece :
     if (capture) {
-        /*console.log("newLocation = "+newLocation);
-        console.log("will remove:");
-        console.log(document.querySelector(`[location="${newLocation}"]`));*/
-        document.querySelector(`[location="${newLocation}"]`).firstChild.remove();
-        let captured = playerTurn === "white" ? "black" : "white";
+        let captured: Color = playerTurn === "white" ? "black" : "white";
         // inactivate captured (removed) piece :
         for (let i = 0; i < 16; i++) {
             if (pieces[captured][i].location === newLocation) {
                 pieces[captured][i].active = false; 
-                console.log(pieces[captured][i] + "is TAKEN");
                 break;
             } 
         }
-        capture = false;
+        //capture = false;
     }
-
-    // find the piece to move & GRAPHICALLY move it :
-    const movingPiece = document.querySelector(`[location="${oldLocation}"]`).firstChild;
-    console.log(document.querySelector(`[location="${oldLocation}"]`));
-    document.querySelector(`[location="${oldLocation}"]`).firstChild.remove();
-    document.querySelector(`[location="${newLocation}"]`).append(movingPiece);
 
     // If castling, king's rook will be also moved :
     if (castlingShort || castlingLong) {
@@ -196,9 +178,13 @@ export const movePiece = (
             castlingLong = false;
             pieces[playerTurn][0].location = newLocation;
         }
-          
-        const movingPiece = document.querySelector(`[location="${oldLocation}"]`).firstChild;
-        document.querySelector(`[location="${oldLocation}"]`).firstChild.remove();
-        document.querySelector(`[location="${newLocation}"]`).append(movingPiece);
     }
+
+    if (playerTurn === "black") {
+        pieceId += 16;
+    }  
+    console.log("pieceId = ",pieceId);
+    console.log("newLocation = ",newLocation);
+    console.log("capture = ",capture);
+    return { pieceId, newLocation, capture }
 }

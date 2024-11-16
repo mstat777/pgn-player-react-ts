@@ -33,7 +33,7 @@ export const chessSetSlice = createSlice({
         
                 tempArray.push({
                     color: color, 
-                    location: location
+                    location: location.toString()
                 });
             }
 
@@ -55,19 +55,19 @@ export const chessSetSlice = createSlice({
 
             // create pieces. Iterate 2 times (white & black)
             for (let i = 0; i < 2; i++) {
-                majPiecesRow = side === "black" ? 1 : 8;
-                pawnsRow = side === "black" ? 2 : 7;
-                let location: number;
+                majPiecesRow = side === "white" ? 1 : 8;
+                pawnsRow = side === "white" ? 2 : 7;
+                let location: string;
 
                 // create all major pieces:
                 majPiecesSet.forEach((majPiece, i) => {
-                    location = parseInt(`${i+1}${majPiecesRow}`);
+                    location = `${i+1}${majPiecesRow}`;
                     tempPieces[side][i] = new ChessPiece(side, majPiece, location);
                 });
 
                 // create all pawns:
                 for (let i = 0; i < 8; i++){
-                    location = parseInt(`${i+1}${pawnsRow}`);
+                    location = `${i+1}${pawnsRow}`;
                     tempPieces[side][i+8] = new ChessPiece(side, "pawn", location);
                 }
 

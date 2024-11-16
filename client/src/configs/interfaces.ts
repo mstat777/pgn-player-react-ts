@@ -2,13 +2,13 @@ import { Color, PieceType, SquareType } from "./types";
 
 export interface Square {
     color: SquareType
-    location: number;
+    location: string;
 }
 
 export interface IChessPiece {
     color: Color;
     type: PieceType;
-    location: number;
+    location: string;
     active?: boolean;
 }
 
@@ -21,7 +21,7 @@ export class ChessPiece implements IChessPiece {
     constructor(
         color: Color, 
         type: PieceType, 
-        location: number
+        location: string
     ) {
         this.color = color;
         this.type = type;
@@ -44,6 +44,7 @@ export interface Game {
     currentMove: number;
     currentRound: number;
     playerTurn: Color;
+    playerToWait: Color;
     isValidMove: boolean;
     errors: string[];
 }
