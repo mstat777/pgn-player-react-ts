@@ -45,6 +45,7 @@ export const formatPgnData = (pgnData: string): PGNData => {
 
 // verify formatted PGN data
 export const validatePgnData = (formattedData: PGNData): void => {
+    //console.log(formattedData);
     formattedData.moveNb.forEach((moveNbTxt, i) => {
         const moveNb: number = parseInt(moveNbTxt);
 
@@ -64,6 +65,7 @@ export const validatePgnData = (formattedData: PGNData): void => {
         formattedData.status = "OK. No errors found in the PNG data.";
     } else {
         formattedData.status = "Errors found in the PNG data.";
+        console.log(formattedData.errors);
     }
 
     store.dispatch(setPgnData(formattedData));

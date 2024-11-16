@@ -1,13 +1,12 @@
 import './ChessSet.scss';
-import { useEffect, useState, Ref, forwardRef, RefObject, useRef, MutableRefObject } from 'react';
+import { useEffect, useState, forwardRef, MutableRefObject } from 'react';
 import { useAppSelector } from '../../store/hooks';
 import ChessPiece from './ChessPiece/Index';
 import { Color } from '../../configs/types';
 import Loading from '../Loading/Index';
 import { getX, getY } from '../../utils/gameFunctions';
 
-//type ForwardedRef<HTMLDivElement> = ((instance: HTMLDivElement | null) => void) | MutableRefObject<HTMLDivElement | null> | null;
-type ForwardedRef = MutableRefObject<(HTMLDivElement | null)[]>;
+//type ForwardedRef = MutableRefObject<(HTMLDivElement | null)[]>;
 
 const ChessSet = forwardRef((props, ref) => {
     const { squares, pieces } = useAppSelector((state) => state.chessSet);
@@ -16,14 +15,11 @@ const ChessSet = forwardRef((props, ref) => {
 
     const [isDataLoaded, setIsDataLoaded] = useState<boolean>(false);
 
-    //const pieceRef = useRef<Array<HTMLDivElement | null>>([]);
     const pieceRef = ref as MutableRefObject<(HTMLDivElement | null)[]>;
 
     useEffect(() => {
         if (squares.length && piecesLength ) {
             setIsDataLoaded(true);
-            /*const snur = pieceRef.current[3];
-            if (snur) snur.style.bottom = "50%";*/
         }
     },[squares.length, piecesLength]);
 
@@ -45,6 +41,7 @@ const ChessSet = forwardRef((props, ref) => {
             <div className="pieces">
                 { Object.keys(pieces).map((side, indexSide) => 
                         pieces[side as keyof typeof pieces].map((piece, i) =>
+                            piece.location &&
                             <ChessPiece 
                                 ref={(el) => //{
                                     pieceRef.current[i + (indexSide*16)] = el

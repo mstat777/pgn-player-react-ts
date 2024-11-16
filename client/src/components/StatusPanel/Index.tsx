@@ -1,10 +1,17 @@
 import { useAppSelector } from '../../store/hooks';
 import './StatusPanel.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, Dispatch, SetStateAction } from 'react';
 
-export default function StatusPanel() {
+type Props = {
+    statusTxt: string;
+    setStatusTxt: Dispatch<SetStateAction<string>>;
+}
+
+export default function StatusPanel(props: Props) {
+    const { statusTxt, setStatusTxt } = props;
+
     const { errors, status } = useAppSelector((state) => state.pgnData);
-    const [statusTxt, setStatusTxt] = useState<string>('');
+    
 
     useEffect(() => {
         if (status) {

@@ -4,7 +4,7 @@ import { IChessPiece } from "../configs/interfaces"
 export const removeCapturedPiece = (location: string, array: IChessPiece[]): number => {
     let index: number = -1;
     array.forEach((piece, i) => {
-        //console.log("piece.location = ",piece.location);
+        //console.log("removeCapturedPiece.location = ",piece.location);
         //console.log("location = ",location);
         if (piece.active === true)
         if (piece.location === location && piece.active === true) {

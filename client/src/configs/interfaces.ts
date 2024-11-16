@@ -8,7 +8,7 @@ export interface Square {
 export interface IChessPiece {
     color: Color;
     type: PieceType;
-    location: string;
+    location?: string;
     active?: boolean;
 }
 
@@ -21,12 +21,13 @@ export class ChessPiece implements IChessPiece {
     constructor(
         color: Color, 
         type: PieceType, 
-        location: string
+        location: string | undefined,
+        active: boolean | undefined
     ) {
         this.color = color;
         this.type = type;
         this.location = location; // location ID links the pieces and the chessboard squares, ex. 24, 47, 88
-        this.active = true;
+        this.active = active;
     }
 }
 
@@ -50,7 +51,6 @@ export interface Game {
 }
 
 export interface ChessSet {
-    board: [];
     squares: Square[];
     pieces: {
         white: IChessPiece[],

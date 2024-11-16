@@ -7,6 +7,7 @@ const initialState: Game = {
     currentMove: 0,
     currentRound: 0,
     playerTurn: "white",
+    playerToWait: "black",
     isValidMove: true,
     errors: []
 }
@@ -20,6 +21,7 @@ export const gameSlice = createSlice({
         },
         changePlayer: (state) => {
             state.playerTurn = state.playerTurn === 'white' ?  'black' : 'white';
+            state.playerToWait = state.playerToWait === 'white' ?  'black' : 'white';
         }
     }
 });

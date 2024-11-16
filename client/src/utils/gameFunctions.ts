@@ -1,7 +1,8 @@
 import { Color } from "../configs/types";
 
 export const changePlayer = (turn: Color): Color => {
-    return turn === 'white' ?  'black' : 'white';
+    let result: Color = turn === 'white' ?  'black' : 'white';
+    return result;
 }
 
 // calculate piece coordinates from piece's location data:
