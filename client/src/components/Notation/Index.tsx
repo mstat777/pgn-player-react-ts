@@ -22,6 +22,8 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
     const pieces = useAppSelector((state) => state.chessSet.pieces);
     const pieceRef = ref as MutableRefObject<(HTMLDivElement | null)[]>;
 
+    const pgnErrors = useAppSelector((state) => state.pgnData.errors);
+
     const [isGameOver, setIsGameOver] = useState<boolean>(false);
     const [piecesLeft, setPiecesLeft] = useState<number>(32); // pieces left of both players
     const [currentMove, setCurrentMove] = useState<number>(0);
@@ -204,7 +206,10 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
 
                     <button 
                         id="nextMoveBtn"
-                        onClick={handleNextMove}
+                        onClick={() => {
+                            !pgnErrors.length &&
+                            handleNextMove();
+                        }}
                     >
                         <FontAwesomeIcon icon={faCaretRight}/>
                     </button>

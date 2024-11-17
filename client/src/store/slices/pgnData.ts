@@ -6,7 +6,25 @@ const initialState: PGNData = {
     whiteMoves: [],
     blackMoves: [],
     errors: [],
-    status: ""
+    status: "",
+    tag: {
+        event: "",
+        site: "",
+        date: "",
+        round: "",
+        white: "",
+        black: "",
+        result: "",
+        annotator: "",
+        plyCount: "",
+        timeControl: "",
+        time: "",
+        termination: "",
+        mode: "",
+        fen: "",
+        whiteElo: "",
+        blackElo: ""
+    }
 }
 
 export const pgnDataSlice = createSlice({

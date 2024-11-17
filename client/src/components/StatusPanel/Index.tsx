@@ -11,7 +11,6 @@ export default function StatusPanel(props: Props) {
     const { statusTxt, setStatusTxt } = props;
 
     const { errors, status } = useAppSelector((state) => state.pgnData);
-    
 
     useEffect(() => {
         if (status) {
