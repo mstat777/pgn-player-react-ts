@@ -96,9 +96,9 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                 }
 
                 // REMOVE captured piece's image 
-                let idImageRef = idPiece;
+                let idImage = idPiece;
                 if (playerToWait === "black") {
-                    idImageRef += 16;
+                    idImage += 16;
                 }
                 const removeFromArray = [...pieces[`${playerToWait}`]];
                 const removedIndex: number = removeCapturedPiece(newLocation, removeFromArray);
@@ -123,6 +123,24 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                     location: rookLocation
                 }));
                 
+                // move the king's & rook's images
+                let idKingImage = 4;
+                let idRookImage = castlingLong ? 0 : 7;
+                if (playerTurn === "black") {
+                    idKingImage += 16;
+                    idRookImage += 16;
+                }
+                const kingImageRef = pieceRef.current[idKingImage];
+                const rookImageRef = pieceRef.current[idRookImage];
+                if (kingImageRef && rookImageRef) {
+                    kingImageRef.style.left = `${getX(kingLocation)}%`;
+                    kingImageRef.style.bottom = `${getY(kingLocation)}%`;
+                    rookImageRef.style.left = `${getX(rookLocation)}%`;
+                    rookImageRef.style.bottom = `${getY(rookLocation)}%`;
+                } 
+                else {
+                    console.log("Error with king's & rook's images!");
+                }
             }
 
             
@@ -135,14 +153,14 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                     location: newLocation
                 }));
                 // move the piece's image
-                let idImageRef = idPiece;
+                let idImage = idPiece;
                 if (playerTurn === "black") {
-                    idImageRef += 16;
+                    idImage += 16;
                 }
-                const movingPiece = pieceRef.current[idImageRef];
-                if (movingPiece) {
-                    movingPiece.style.left = `${getX(newLocation)}%`;
-                    movingPiece.style.bottom = `${getY(newLocation)}%`;
+                const pieceImageRef = pieceRef.current[idImage];
+                if (pieceImageRef) {
+                    pieceImageRef.style.left = `${getX(newLocation)}%`;
+                    pieceImageRef.style.bottom = `${getY(newLocation)}%`;
                 }
             }
 
