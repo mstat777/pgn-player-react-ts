@@ -86,7 +86,7 @@ export const chessSetSlice = createSlice({
             console.log(action.payload);
             if (action.payload.location) {
                 if (action.payload.side === "white") {
-                    console.log({
+                    /*console.log({
                         ...state,
                         pieces: {
                             ...state.pieces,
@@ -98,7 +98,7 @@ export const chessSetSlice = createSlice({
                                 return piece;
                             })
                         }
-                    });
+                    });*/
                     return {
                         ...state,
                         pieces: {
@@ -113,7 +113,7 @@ export const chessSetSlice = createSlice({
                         }
                     }
                 } else {
-                    console.log({
+                    /*console.log({
                         ...state,
                         pieces: {
                             ...state.pieces,
@@ -125,7 +125,7 @@ export const chessSetSlice = createSlice({
                                 return piece;
                             })
                         }
-                    });
+                    });*/
                     return {
                         ...state,
                         pieces: {
@@ -145,7 +145,7 @@ export const chessSetSlice = createSlice({
             // desactivate a captured piece:
             if (action.payload.active === false) {
                 if (action.payload.side === "white") {
-                    console.log({
+                    /*console.log({
                         ...state,
                         pieces: {
                             ...state.pieces,
@@ -157,7 +157,7 @@ export const chessSetSlice = createSlice({
                                 return piece;
                             })
                         }
-                    });
+                    });*/
                     return {
                         ...state,
                         pieces: {
@@ -172,7 +172,7 @@ export const chessSetSlice = createSlice({
                         }
                     }
                 } else {
-                    console.log({
+                    /*console.log({
                         ...state,
                         pieces: {
                             ...state.pieces,
@@ -184,7 +184,7 @@ export const chessSetSlice = createSlice({
                                 return piece;
                             })
                         }
-                    });
+                    });*/
                     return {
                         ...state,
                         pieces: {

@@ -1,12 +1,13 @@
 import { setPgnData } from "../store/slices/pgnData";
-import { PGNData, ITag, Tag } from "../configs/interfaces";
+import { PGNData, TagType } from "../configs/interfaces";
 import { store } from "../store/store";
 
 // format raw PGN data from user input(textarea)
 export const formatPgnData = (pgnData: string): PGNData => {
     const data = pgnData.trim();
 
-    let tag = new Tag();
+    let tagValue: string = "";
+    let tagKey: string = "";
     let movesArray = []; // store all the extracted moves
     let move = "";
     let previousIsSpace = false; // empty space separator
@@ -14,7 +15,7 @@ export const formatPgnData = (pgnData: string): PGNData => {
     let isTagValue = false; // for writing a tag's value
     let isWritingMoves = false; // indicate moves part of the data
 
-    const tags: ITag[] = [];
+    const tags: TagType = {};
     const moveNb: string[] = [];
     const whiteMoves: string[] = [];
     const blackMoves: string[] = [];
@@ -26,11 +27,10 @@ export const formatPgnData = (pgnData: string): PGNData => {
             if (data.charAt(i) === "[") {
                 isTag = true;
             } else if (data.charAt(i) === "]") {
-                if (isTag) {
-                    console.log("tagKey = ", tag.key);//tagKey);
-
-                    tags.push(tag);
-                    tag = new Tag();
+                if (isTag && tagKey) {
+                    tags[tagKey.toLowerCase()] = tagValue;
+                    tagKey = "";
+                    tagValue = "";
                     isTag = false;
                 } else {
                     errors.push("Unexpected character found: ']' (closing square bracket)");
@@ -48,21 +48,23 @@ export const formatPgnData = (pgnData: string): PGNData => {
             } else if (data.charAt(i) === " ") {
                 if (isTag) {
                     if (isTagValue) {
-                        tag.setValue(data.charAt(i));
+                        tagValue += data.charAt(i);
                     }
                 }
+            } else if ( data.charAt(i) === "\n") {
+
             } else if ( data.charAt(i) === "1" && !isTag) {
                 isWritingMoves = true;
                 move += data.charAt(i); // start writing move
             } else { // any other character
                 if (isTag) {
                     if (isTagValue) {
-                        tag.setValue(data.charAt(i));
+                        tagValue += data.charAt(i);
                     } else {
-                        tag.setKey(data.charAt(i));
+                        tagKey += data.charAt(i);
                     }
                 } else {
-                    errors.push("Unexpected character found: data.charAt(i)");
+                    errors.push(`Unexpected character found: ${data.charAt(i)}`);
                 }
             }
         }
@@ -83,9 +85,9 @@ export const formatPgnData = (pgnData: string): PGNData => {
             }
         }
     }
-    // if TAGS found, pass all tags' keys in lowercase
 
-    console.log(movesArray);
+    console.log(tags);
+
     // if NO errors found while formatting,
     // => split the moves according to player
     if (!errors.length) {
@@ -106,7 +108,7 @@ export const formatPgnData = (pgnData: string): PGNData => {
 export const validatePgnData = (formattedData: PGNData): void => {
     // write moves, only if NO errors found while formatting
     if (!formattedData.errors.length) {
-        //console.log(formattedData);
+        console.log(formattedData);
         formattedData.moveNb.forEach((moveNbTxt, i) => {
             const moveNb: number = parseInt(moveNbTxt);
 

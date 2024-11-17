@@ -1,6 +1,7 @@
 // ---------------------- Colors ---------------------- //
 $primary-color: white;                 
 $secondary-color: #1f2722;
+$tertiary-color-0: #57e991; 
 $tertiary-color-1: #33b065;              
 $tertiary-color-2: #329359;   
 $tertiary-color-3: #166937;  
@@ -24,6 +25,7 @@ $lightgrey-color-4: #f3f3f3; // alternate table rows
 // ----------------------- Fonts ---------------------- //
 $main-font: 'Red Hat Text', sans-serif;      
 $title-font: 'Red Hat Text', sans-serif; // for headings
+$status-font: 'Chakra Petch', sans-serif;
 
 // ------------ Breakpoints (media queries) ----------- //
 $tablet: 768px;

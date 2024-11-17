@@ -29,7 +29,9 @@ export const store = configureStore({
         getDefaultMiddleware({
             // allow non-serializable data to be stored (ChessPiece class instances)
             serializableCheck: {
-                ignoredPaths: ['chessSet.pieces'],
+                ignoredPaths: ['chessSet.pieces', 'pgnData.tags'],
+                //ignoredActions: ['pgnData/setPgnData'],
+                ignoredActionPaths: ['payload.tags']
             }
         })
 });

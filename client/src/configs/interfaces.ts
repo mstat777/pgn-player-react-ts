@@ -32,56 +32,16 @@ export class ChessPiece implements IChessPiece {
 }
 
 export interface PGNData {
+    tags?: TagType;
     moveNb: string[];
     whiteMoves: string[];
     blackMoves: string[];
     errors: string[];
     status?: string;
-    tags?: {
-        event?: string;
-        site?: string;
-        date?: string;
-        round?: string;
-        white?: string;
-        black?: string;
-        result?: string;
-        // optional:
-        annotator?: string;
-        plyCount?: string;
-        timeControl?: string;
-        time?: string;
-        termination?: string;
-        mode?: string;
-        fen?: string;
-        whiteElo?: string;
-        blackElo?: string;
-    }
 }
 
-export interface ITag {
-    key: string;
-    value: string;
-}
-
-export class Tag implements ITag {
-    key;
-    value;
-
-    constructor (){
-        this.key = '';
-        this.value = '';
-    }
-
-    setKey(value: string) {
-        this.key += value;
-    }
-    setValue(value: string) {
-        this.value += value;
-    }
-    reset() {
-        this.key = '';
-        this.value = '';
-    }
+export interface TagType {
+    [key: string]: string;
 }
 
 export interface Game {

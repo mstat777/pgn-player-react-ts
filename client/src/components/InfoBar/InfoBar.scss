@@ -1,8 +1,9 @@
 @use '../../global.scss';
 
 .infobar {
+    position: relative;
     width: global.$chessboard-mobile;
-    height: 100px;
+    min-height: 36px;
     padding: 1rem;
     outline: 1px solid grey;
     box-shadow: 3px 3px 6px 2px global.$lightgrey-color-1;
@@ -11,5 +12,42 @@
     @media screen and (min-width: global.$tablet) {
         width: global.$chessboard-tablet;
         margin: 0 1rem 0 2rem;
+    }
+
+    .collapse_btn {
+        position: absolute;
+        top: 7px;
+        right: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: none;
+        background-color: global.$lightgrey-color-4;
+    }
+
+    &_details,
+    &_data_ctn {
+        width: 100%;
+        text-align: left;
+
+        .tag {
+            margin: 0;
+            font-size: 1.2rem;
+
+            > * + * {
+                margin-left: .5rem;
+            }
+
+            .key {
+
+            }
+
+            .value { 
+                font-weight: 500;
+            }
+        }
     }
 }

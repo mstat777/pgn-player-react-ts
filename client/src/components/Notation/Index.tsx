@@ -19,6 +19,9 @@ type Props = {
 
 const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
     const dispatch = useAppDispatch();
+
+    const { whiteMoves, blackMoves } = useAppSelector((state) => state.pgnData);
+
     const pieces = useAppSelector((state) => state.chessSet.pieces);
     const pieceRef = ref as MutableRefObject<(HTMLDivElement | null)[]>;
 
@@ -35,8 +38,6 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
 
     const [pgnText, setPgnText] = useState<string>('');
     const pgnTextMaxLength = 2500;
-
-    const { whiteMoves, blackMoves } = useAppSelector((state) => state.pgnData);
 
     const handleClear = () => {
         if (pgnText) {
@@ -61,6 +62,7 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
     const handleLoad = () => {
         if (pgnText) {
             // first reset Redux pgnData slice:
+            console.clear();
             dispatch({type: 'RESET_PGN'});
             validatePgnData(formatPgnData(pgnText));
         } else {
@@ -71,6 +73,7 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
     const handleNextMove = () => {
         console.clear();
         console.log(pieces);
+        console.log(whiteMoves);
         currentRound = Math.floor(currentMove/2);
         console.log("round = " + (currentRound+1) + " move = " + (currentMove+1));
 

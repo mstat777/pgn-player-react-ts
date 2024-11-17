@@ -17,6 +17,9 @@ export const movePiece = (
     const state = store.getState();
     const { pieces } = state.chessSet;
 
+    console.log(pieces);
+    console.log("move = ", move);
+
     let castlingLong = false;
     let castlingShort = false;
     let capture = false; 

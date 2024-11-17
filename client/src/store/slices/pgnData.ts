@@ -2,29 +2,12 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit/react";
 import { PGNData } from "../../configs/interfaces";
 
 const initialState: PGNData = {
+    tags: {},
     moveNb: [],
     whiteMoves: [],
     blackMoves: [],
     errors: [],
-    status: "",
-    tag: {
-        event: "",
-        site: "",
-        date: "",
-        round: "",
-        white: "",
-        black: "",
-        result: "",
-        annotator: "",
-        plyCount: "",
-        timeControl: "",
-        time: "",
-        termination: "",
-        mode: "",
-        fen: "",
-        whiteElo: "",
-        blackElo: ""
-    }
+    status: ""
 }
 
 export const pgnDataSlice = createSlice({
@@ -32,11 +15,7 @@ export const pgnDataSlice = createSlice({
     initialState,
     reducers: {
         setPgnData: (state, action: PayloadAction<PGNData>) => {
-            state.moveNb = action.payload.moveNb;
-            state.whiteMoves = action.payload.whiteMoves;
-            state.blackMoves = action.payload.blackMoves;
-            state.errors = action.payload.errors;
-            state.status = action.payload.status;
+            return action.payload;
         }
     }
 });
