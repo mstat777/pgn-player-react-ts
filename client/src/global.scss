@@ -8,9 +8,10 @@ $tertiary-color-4: #0a3f20;
 
 $highlight-color: #e71369;    // highlight texts, errors
 
-$verydarkbluegrey-color: #232934; 
-$darkbluegrey-color: #333d4e;    
-$bluegrey-color: #525d70; 
+$verydarkgreengrey-color: #35443b; 
+$darkgreengrey-color: #586e61;    
+$greengrey-color: #718e7d; 
+$lightgreengrey-color: #abc6b6; 
 $darkgrey-color-1: #313131;
 $darkgrey-color-2: #444;
 $darkgrey-color-3: #626262;    // input, textarea, select...
@@ -31,3 +32,5 @@ $desktop: 1100px;
 // ----------------------- Other ---------------------- //
 $header-height: 60px;
 $footer-height: 35px;
+$chessboard-mobile: 300px;
+$chessboard-tablet: 400px;

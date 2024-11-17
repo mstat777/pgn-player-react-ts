@@ -2,15 +2,16 @@
 
 .chess_set {
     position: relative;
-    width: 280px;
-    height: 280px;
+    width: global.$chessboard-mobile;
+    height: global.$chessboard-mobile;
     margin: 2rem auto;
     outline: 2px solid global.$darkgrey-color-1;
     box-shadow: 6px 6px 12px 3px global.$grey-color;
 
     @media screen and (min-width: global.$tablet) {
-        width: 400px;
-        height: 400px;
+        width: global.$chessboard-tablet;
+        height: global.$chessboard-tablet;
+        margin: 2rem;
     }
 
     .chessboard {

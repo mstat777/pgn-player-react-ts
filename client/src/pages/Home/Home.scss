@@ -10,11 +10,17 @@
 
         @media screen and (min-width: global.$tablet) {
             flex-direction: row;
+            flex-wrap: wrap;
             align-items: flex-start;
             justify-content: center;
             margin: 1rem auto;
             padding: 2rem 4rem;
         }
 
+        .notation_status_ctn {
+            display: inline-flex;
+            flex-direction: column-reverse;
+            margin: 0;
+        }
     }
 }

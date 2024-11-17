@@ -1,7 +1,8 @@
 @use '../../global.scss';
 
 .status_section {
-    width: 300px;
+    display: inline-block;
+    width: global.$chessboard-mobile;
     height: 150px;
     margin: 2rem 1rem;
     padding: 1rem;

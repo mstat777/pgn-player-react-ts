@@ -10,9 +10,9 @@
 }
 
 .notation_section {
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
-    width: 300px;
+    width: global.$chessboard-mobile;
     margin: 2rem 1rem;
     outline: 1px solid grey;
     box-shadow: 4px 4px 8px 2px global.$grey-color;

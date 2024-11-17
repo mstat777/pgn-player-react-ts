@@ -1,0 +1,15 @@
+@use '../../global.scss';
+
+.infobar {
+    width: global.$chessboard-mobile;
+    height: 100px;
+    padding: 1rem;
+    outline: 1px solid grey;
+    box-shadow: 3px 3px 6px 2px global.$lightgrey-color-1;
+    background-color: global.$lightgreengrey-color;
+
+    @media screen and (min-width: global.$tablet) {
+        width: global.$chessboard-tablet;
+        margin: 0 1rem 0 2rem;
+    }
+}

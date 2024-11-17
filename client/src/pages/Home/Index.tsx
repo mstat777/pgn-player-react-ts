@@ -2,13 +2,13 @@ import './Home.scss';
 import ChessSet from '../../components/ChessSet/Index';
 import Notation from '../../components/Notation/Index';
 import { useEffect, useState, useRef } from 'react';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useAppDispatch } from '../../store/hooks';
 import { initializeSquares, initializePieces } from '../../store/slices/chessSet';
 import StatusPanel from '../../components/StatusPanel/Index';
+import InfoBar from '../../components/InfoBar/Index';
 
 export default function Home(){
     const dispatch = useAppDispatch();
-    //const { moveNb } = useAppSelector((state) => state.pgnData);
     
     const pieceRef = useRef<Array<HTMLDivElement | null>>([]);
 
@@ -22,9 +22,14 @@ export default function Home(){
     return ( 
         <main className="home">
             <section className="home_section">
-                <ChessSet ref={pieceRef}/>
-                
-                <div>
+
+                <div className="infobar_chessset_ctn">
+                    <InfoBar />
+
+                    <ChessSet ref={pieceRef}/>
+                </div> 
+
+                <div className="notation_status_ctn">
                     <Notation 
                         ref={pieceRef}
                         setStatusTxt={setStatusTxt}
