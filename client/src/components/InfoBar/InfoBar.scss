@@ -1,16 +1,16 @@
-@use '../../global.scss';
+@use '../../scss/global.scss' as *;
 
 .infobar {
     position: relative;
-    width: global.$chessboard-mobile;
+    width: $chessboard-mobile;
     min-height: 36px;
     padding: 1rem;
     outline: 1px solid grey;
-    box-shadow: 3px 3px 6px 2px global.$lightgrey-color-1;
-    background-color: global.$lightgreengrey-color;
+    box-shadow: 3px 3px 6px 2px var(--lightgrey-color-1);
+    background-color: $lightgreengrey-color;
 
-    @media screen and (min-width: global.$tablet) {
-        width: global.$chessboard-tablet;
+    @media screen and (min-width: $tablet) {
+        width: $chessboard-tablet;
         margin: 0 1rem 0 2rem;
     }
 
@@ -25,7 +25,7 @@
         height: 22px;
         border-radius: 50%;
         border: none;
-        background-color: global.$lightgrey-color-4;
+        background-color: var(--lightgrey-color-4);
     }
 
     &_details,

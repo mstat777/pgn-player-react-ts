@@ -1,8 +1,7 @@
-@use './global';
+@use './scss/global.scss' as *;
+@use './scss/themes.scss' as *;
 
-/*************************************************************/
-/* ----------------------- GENERALES ----------------------- */
-/*************************************************************/
+/* ------------------------ GENERAL ------------------------ */
 * {
     margin: 0;
     padding: 0;
@@ -14,12 +13,14 @@ html {
 }
 
 body{
-    font-family: global.$main-font;  
+    font-family: $main-font;  
     font-size: 1.6rem;
-    background-color: global.$primary-color;
+    background-color: var(--primary-color);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     
     > div { // "root"
-        min-height: 100vh; // pour positionner le footer toujours en bas de la page
+        min-height: 100vh; // footer always at the bottom
         display: flex;
         flex-direction: column;
 
@@ -32,9 +33,9 @@ body{
 /* ------------ HEADINGS ------------- */
 h1, h2, h3 {
     display: block;
-    font-family: global.$title-font;
+    font-family: $title-font;
     font-weight: 500;
-    color: global.$tertiary-color-1;
+    color: var(--tertiary-color-1);
 }
 
 h1 {
@@ -86,7 +87,7 @@ select,
 textarea {
 	display: inline-block;
     border: none;
-    font-family: global.$main-font; 
+    font-family: $main-font; 
 }
 textarea {
 	display: block;
@@ -95,5 +96,5 @@ textarea {
 
 ::placeholder {
     font-weight: 400;
-	color: global.$grey-color; 
+	color: var(--darkgrey-color-1); 
 }

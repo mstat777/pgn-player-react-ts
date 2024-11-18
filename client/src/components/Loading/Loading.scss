@@ -1,4 +1,4 @@
-@use '../../global';
+@use '../../scss/global.scss' as *;
 
 .spinner {
     position: absolute;
@@ -8,18 +8,18 @@
     width: 60px;
     height: 60px;
     
-    @media screen and (min-width: global.$tablet) {
+    @media screen and (min-width: $tablet) {
         width: 80px;
         height: 80px;
     }
 
     >path {
         &:first-child {
-            stroke: global.$tertiary-color-2;
+            stroke: var(--tertiary-color-2);
         }
         &:last-child {
-            stroke: global.$tertiary-color-1;
-            fill: global.$tertiary-color-3;
+            stroke: var(--tertiary-color-1);
+            fill: var(--tertiary-color-3);
             -webkit-animation: spin 1.5s linear infinite;
             -moz-animation: spin 1.5s linear infinite;
             -o-animation: spin 1.5s linear infinite;

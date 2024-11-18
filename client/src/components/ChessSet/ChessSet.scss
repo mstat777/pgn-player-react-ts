@@ -1,16 +1,16 @@
-@use '../../global.scss';
+@use '../../scss/global.scss' as *;
 
 .chess_set {
     position: relative;
-    width: global.$chessboard-mobile;
-    height: global.$chessboard-mobile;
+    width: $chessboard-mobile;
+    height: $chessboard-mobile;
     margin: 2rem auto;
-    outline: 2px solid global.$darkgrey-color-1;
-    box-shadow: 6px 6px 12px 3px global.$grey-color;
+    outline: 2px solid var(--darkgrey-color-4);
+    box-shadow: 6px 6px 12px 3px var(--darkgrey-color-1);
 
-    @media screen and (min-width: global.$tablet) {
-        width: global.$chessboard-tablet;
-        height: global.$chessboard-tablet;
+    @media screen and (min-width: $tablet) {
+        width: $chessboard-tablet;
+        height: $chessboard-tablet;
         margin: 2rem;
     }
 
@@ -28,7 +28,7 @@
             //position: relative;
             width: 100%;
             aspect-ratio: 1;
-            @media screen and (min-width: global.$tablet) {
+            @media screen and (min-width: $tablet) {
                 width: 50px;
             }
         
@@ -50,10 +50,10 @@
         }
 
         .dark {
-            background-color: global.$lightgrey-color-1;
+            background-color: var(--lightgrey-color-1);
         }
         .light {
-            background-color: global.$lightgrey-color-3;
+            background-color: var(--lightgrey-color-3);
         }
     }
 

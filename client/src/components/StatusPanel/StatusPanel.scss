@@ -1,31 +1,31 @@
-@use '../../global.scss';
+@use '../../scss/global.scss' as *;
 
 .status_section {
     display: inline-block;
-    width: global.$chessboard-mobile;
+    width: $chessboard-mobile;
     height: 150px;
     margin: 2rem 1rem;
     padding: 1rem;
     outline: 1px solid grey;
-    box-shadow: 3px 3px 6px 2px global.$lightgrey-color-1;
-    background-color: global.$grey-color;
+    box-shadow: 3px 3px 6px 2px var(--lightgrey-color-1);
+    background-color: var(--darkgrey-color-1);
 
     .status_txt_ctn {
         width: 100%;
         height: 100%;
         padding: 1rem;
         border-radius: 12px;
-        box-shadow: inset 0 0 5px 2px global.$darkgrey-color-3;
-        background-color: global.$secondary-color;
+        box-shadow: inset 0 0 5px 2px var(--darkgrey-color-2);
+        background-color: var(--secondary-color);
 
         .status_txt {
             width: 100%;
             height: 100%;
-            font-family: global.$status-font;
+            font-family: $status-font;
             font-size: 1.4rem;
-            //color: global.$primary-color;
-            color: global.$tertiary-color-0;
-            text-shadow: 0 0 8px global.$tertiary-color-2, 0 0 16px global.$primary-color;
+            //color: var(--primary-color);
+            color: var(--tertiary-color-0);
+            text-shadow: 0 0 8px var(--tertiary-color-2), 0 0 16px var(--primary-color);
             background-color: transparent;
         }
     }
