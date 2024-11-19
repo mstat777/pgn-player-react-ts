@@ -18,7 +18,7 @@ $btn-height: 36px;
     transition: all .4s;
 
     &:hover {
-        border-color: var(--primary-color);
+        border-color: $primary-color;
         color: var(--tertiary-color-2);
     }
 

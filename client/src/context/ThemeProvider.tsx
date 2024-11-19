@@ -6,7 +6,7 @@ interface ContextProps {
 }
 
 export const ThemeContext = createContext<ContextProps>({
-    darkTheme: true,
+    darkTheme: false,
     toggleTheme: () => {}
 });
 
@@ -15,7 +15,7 @@ interface Props {
 }
 
 const ThemeProvider = ({children}: Props) => {
-    const [darkTheme, setDarkTheme] = useState<boolean>(true);
+    const [darkTheme, setDarkTheme] = useState<boolean>(false);
 
     const toggleThemeHandler = () => {
         setDarkTheme((prevState) => !prevState);

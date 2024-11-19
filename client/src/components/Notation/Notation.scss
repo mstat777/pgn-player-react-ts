@@ -16,6 +16,10 @@
     margin: 2rem 1rem;
     outline: 1px solid grey;
     box-shadow: 4px 4px 8px 2px var(--darkgrey-color-1);
+    @media screen and (min-width: $tablet) {
+        margin: 0 1rem;
+    }
+
 
     .command_panel {
         display: flex;

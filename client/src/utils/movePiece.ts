@@ -54,6 +54,7 @@ export const movePiece = (
     // the id of the piece that should be moved
     let idPiece: number | undefined = undefined; // from 0 to 15
 
+    console.log("move.length = ",move.length);
     // --------------- a simple pawn move -----------------
     if (move.length === 2) {
         idPiece = parseInt(newLocation.charAt(0)) + 7;
@@ -144,7 +145,12 @@ export const movePiece = (
             } break;
         }
     }
+    // Longside castling
+    if (move.length === 5) {
+        idPiece = 4; 
+    }
     
+    console.log("castlingLong = ",castlingLong);
     console.log("idPiece = ",idPiece);
     console.log("newLocation = ",newLocation);
     console.log("capture = ",capture);

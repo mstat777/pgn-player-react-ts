@@ -9,6 +9,9 @@
     outline: 1px solid grey;
     box-shadow: 3px 3px 6px 2px var(--lightgrey-color-1);
     background-color: var(--darkgrey-color-1);
+    @media screen and (min-width: $tablet) {
+        margin: 0 1rem;
+    }
 
     .status_txt_ctn {
         width: 100%;

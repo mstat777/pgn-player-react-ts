@@ -72,16 +72,28 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
 
     const handleNextMove = () => {
         console.clear();
-        console.log(pieces);
-        console.log(whiteMoves);
+        //console.log(pieces);
+        //console.log(whiteMoves);
         currentRound = Math.floor(currentMove/2);
         console.log("round = " + (currentRound+1) + " move = " + (currentMove+1));
 
+        // check for GAME OVER
+        if ((playerTurn === "white" && 
+            !whiteMoves[currentRound]) || 
+            (playerTurn === "black" && 
+            !blackMoves[currentRound]))
+        {
+            setStatusTxt("Game is over.");
+            setIsGameOver(true);
+            return;
+        }
+        
         // get the piece and the new location to be moved to:
         let { idPiece, newLocation, capture, castlingLong, castlingShort } = playerTurn === "white" ?
             movePiece(whiteMoves[currentRound], playerTurn) :
             movePiece(blackMoves[currentRound], playerTurn);
 
+        
         if (idPiece) {
             console.log("idPiece = ", idPiece);
             // if CAPTURE, find & desactivate the captured piece in redux store:
@@ -112,6 +124,131 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
 
             // if CASTLING
             if (castlingLong || castlingShort) {
+                console.log(castling);
+                const { kingLocation, rookLocation } = castling(castlingShort, castlingLong, playerTurn);
+
+                console.log({ kingLocation, rookLocation });
+                // change king's location
+                dispatch(setPieceData({
+                    side: playerTurn, 
+                    id: 4, 
+                    location: kingLocation
+                }));
+                // change rook's location
+                dispatch(setPieceData({
+                    side: playerTurn, 
+                    id: castlingLong ? 0 : 7, 
+                    location: rookLocation
+                }));
+                
+                // move the king's & rook's images
+                let idKingImage = 4;
+                let idRookImage = castlingLong ? 0 : 7;
+                if (playerTurn === "black") {
+                    idKingImage += 16;
+                    idRookImage += 16;
+                }
+                const kingImageRef = pieceRef.current[idKingImage];
+                const rookImageRef = pieceRef.current[idRookImage];
+                if (kingImageRef && rookImageRef) {
+                    kingImageRef.style.left = `${getX(kingLocation)}%`;
+                    kingImageRef.style.bottom = `${getY(kingLocation)}%`;
+                    rookImageRef.style.left = `${getX(rookLocation)}%`;
+                    rookImageRef.style.bottom = `${getY(rookLocation)}%`;
+                } 
+                else {
+                    console.log("Error with king's & rook's images!");
+                }
+            }
+
+            
+            console.log("side = ", playerTurn);
+            // update Redux Store data (location, active, etc.) & move piece's image, only if NOT CASTLING
+            if (!castlingLong && !castlingShort) {
+                dispatch(setPieceData({
+                    side: playerTurn, 
+                    id: idPiece, 
+                    location: newLocation
+                }));
+                // move the piece's image
+                let idImage = idPiece;
+                if (playerTurn === "black") {
+                    idImage += 16;
+                }
+                const pieceImageRef = pieceRef.current[idImage];
+                if (pieceImageRef) {
+                    pieceImageRef.style.left = `${getX(newLocation)}%`;
+                    pieceImageRef.style.bottom = `${getY(newLocation)}%`;
+                }
+            }
+
+        } else { // idPiece is 'undefined'
+            setStatusTxt("Error: idPiece is 'undefined'!");
+        }
+
+        setPlayerTurn(changePlayer(playerTurn));
+        //console.log("playerTurn = ", playerTurn);
+        setPlayerToWait(changePlayer(playerToWait));
+        //console.log("playerToWait = ", playerToWait);
+        setCurrentMove(currentMove +1);
+        
+    }
+
+    const handlePreviousMove = () => {
+        console.clear();
+        //console.log(pieces);
+        //console.log(whiteMoves);
+        currentRound = Math.floor(currentMove/2);
+        console.log("round = " + (currentRound+1) + " move = " + (currentMove+1));
+
+        // check for GAME OVER
+        if ((playerTurn === "white" && 
+            !whiteMoves[currentRound]) || 
+            (playerTurn === "black" && 
+            !blackMoves[currentRound]))
+        {
+            setStatusTxt("Game is over.");
+            setIsGameOver(true);
+            return;
+        }
+        
+        // get the piece and the new location to be moved to:
+        let { idPiece, newLocation, capture, castlingLong, castlingShort } = playerTurn === "white" ?
+            movePiece(whiteMoves[currentRound], playerTurn) :
+            movePiece(blackMoves[currentRound], playerTurn);
+
+        
+        if (idPiece) {
+            console.log("idPiece = ", idPiece);
+            // if CAPTURE, find & desactivate the captured piece in redux store:
+            if (capture) {
+                for (let i = 0; i < 16; i++) {
+                    // captured piece is found on the newLocation
+                    if (pieces[playerToWait][i].location === newLocation) {
+                        //console.log("pieces[playerToWait][i].location = ", pieces[playerToWait][i].location);
+                        //console.log("newLocation = ", newLocation);
+                        dispatch(setPieceData({
+                            side: playerToWait, 
+                            id: i, 
+                            active: false
+                        }));
+                        break;
+                    } 
+                }
+
+                // REMOVE captured piece's image 
+                let idImage = idPiece;
+                if (playerToWait === "black") {
+                    idImage += 16;
+                }
+                const removeFromArray = [...pieces[`${playerToWait}`]];
+                const removedIndex: number = removeCapturedPiece(newLocation, removeFromArray);
+                pieceRef.current[removedIndex]?.remove();
+            }
+
+            // if CASTLING
+            if (castlingLong || castlingShort) {
+                console.log(castling);
                 const { kingLocation, rookLocation } = castling(castlingShort, castlingLong, playerTurn);
 
                 console.log({ kingLocation, rookLocation });
