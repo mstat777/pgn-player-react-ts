@@ -5,14 +5,20 @@ export interface Square {
     location: string;
 }
 
+// for storing when & which square a piece has moved to
+// 'key' is the move number, 'value' is the move location
+export type MoveNbWithLocation = {
+    [key: number]: string;
+}
+
 export interface IChessPiece {
     color: Color;
     type: PieceType;
-    location?: string;
-    active?: boolean;
+    location: MoveNbWithLocation[];
+    active: boolean;
 }
 
-export class ChessPiece implements IChessPiece {
+export class ChessPiece {
     color;
     type;
     location;
@@ -21,13 +27,13 @@ export class ChessPiece implements IChessPiece {
     constructor(
         color: Color, 
         type: PieceType, 
-        location: string | undefined,
-        active: boolean | undefined
+        location?: MoveNbWithLocation[],
+        active?: boolean
     ) {
         this.color = color;
         this.type = type;
-        this.location = location; // location ID links the pieces and the chessboard squares, ex. 24, 47, 88
-        this.active = active;
+        this.location = location || []; // location ID links the pieces and the chessboard squares, ex. 24, 47, 88
+        this.active = active || true;
     }
 }
 
@@ -40,7 +46,7 @@ export interface PGNData {
     status?: string;
 }
 
-export interface TagType {
+export type TagType = {
     [key: string]: string;
 }
 
@@ -48,7 +54,7 @@ export interface Game {
     isGameOver: boolean;
     piecesLeft: number;
     currentMove: number;
-    currentRound: number;
+    //currentRound: number;
     playerTurn: Color;
     playerToWait: Color;
     isValidMove: boolean;

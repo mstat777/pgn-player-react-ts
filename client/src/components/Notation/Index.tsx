@@ -4,12 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBackwardFast, faCaretLeft, faCaretRight, faForwardFast } from '@fortawesome/free-solid-svg-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { formatPgnData, validatePgnData } from '../../utils/pgnDataFunctions';
-import { setPieceData } from '../../store/slices/chessSet';
+import { initializePieces, initializeSquares, setPieceData } from '../../store/slices/chessSet';
 import { Color } from '../../configs/types';
-import { Game, IChessPiece } from '../../configs/interfaces';
-import { changePlayer } from '../../utils/gameFunctions';
+import { MoveNbWithLocation, Game, IChessPiece } from '../../configs/interfaces';
+import { changePlayer } from '../../utils/commonFunctions';
 import { movePiece } from '../../utils/movePiece';
-import { getX, getY } from '../../utils/gameFunctions';
+import { getX, getY } from '../../utils/commonFunctions';
 import { removeCapturedPiece } from '../../utils/removeCapturedPiece';
 import { castling } from '../../utils/castling';
 
@@ -24,35 +24,47 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
 
     const pieces = useAppSelector((state) => state.chessSet.pieces);
     const pieceRef = ref as MutableRefObject<(HTMLDivElement | null)[]>;
-
+    console.log(pieces);
     const pgnErrors = useAppSelector((state) => state.pgnData.errors);
 
     const [isGameOver, setIsGameOver] = useState<boolean>(false);
     const [piecesLeft, setPiecesLeft] = useState<number>(32); // pieces left of both players
-    const [currentMove, setCurrentMove] = useState<number>(0);
-    let currentRound = 0;
+    const [currentMove, setCurrentMove] = useState<number>(-1);
+    //const [currentRound, setCurrentRound] = useState<number>(0);
     const [playerTurn, setPlayerTurn] = useState<Color>("white");
     const [playerToWait, setPlayerToWait] = useState<Color>("black");
     const [isValidMove, setIsValidMove] = useState<boolean>(true);
     const [errors, setErrors] = useState<string[]>([]);
 
-    const [pgnText, setPgnText] = useState<string>('');
-    const pgnTextMaxLength = 2500;
+    const [pgnTxt, setPgnTxt] = useState<string>('');
+    const pgnTxtMaxLength = 2500;
+
+    // change Round number if Move number is changed
+    useEffect(() => {
+        if (currentMove >= 0) {
+            //setCurrentRound(Math.floor((currentMove+1)/2));
+            handleNextMove();
+        }
+    },[currentMove]);
+
+    const initialize = () => {
+        setCurrentMove(-1);
+        dispatch({type: 'RESET_GAME'}); // reset Redux pgnData slice
+        dispatch(initializeSquares());
+        dispatch(initializePieces());
+    }
 
     const handleClear = () => {
-        if (pgnText) {
-            // reset Redux pgnData slice:
-            dispatch({type: 'RESET_PGN'});
-            //dispatch({type: 'RESET_GAME'});
-            setPgnText('');
-            // reset to initial pieces positions
+        if (pgnTxt) {
+            initialize();
+            setPgnTxt(''); // clear input data
+            // reset to initial piece's IMAGE positions
             Object.keys(pieces).map((side, indexSide) => 
                 pieces[side as keyof typeof pieces].map((piece, i) => {
                     let ref = pieceRef.current[i + (indexSide*16)];
                     if (ref && piece.location) {
-                        //console.log(ref);
-                        ref.style.left = `${getX(piece.location)}%`;
-                        ref.style.bottom = `${getY(piece.location)}%`;
+                        ref.style.left = `${getX(piece.location[0][0])}%`;
+                        ref.style.bottom = `${getY(piece.location[0][0])}%`;
                     }
                 })
             )
@@ -60,12 +72,12 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
     }
 
     const handleLoad = () => {
-        if (pgnText) {
-            // first reset Redux pgnData slice:
+        if (pgnTxt) {
             console.clear();
-            dispatch({type: 'RESET_PGN'});
-            validatePgnData(formatPgnData(pgnText));
+            initialize();
+            validatePgnData(formatPgnData(pgnTxt));
         } else {
+            setStatusTxt('Nothing is entered!');
             console.log('Nothing is entered!');
         }
     }
@@ -74,8 +86,19 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
         console.clear();
         //console.log(pieces);
         //console.log(whiteMoves);
-        currentRound = Math.floor(currentMove/2);
-        console.log("round = " + (currentRound+1) + " move = " + (currentMove+1));
+        //console.log("currentRound will be ", Math.floor((currentMove+1)/2)+1);
+
+        //setCurrentMove(currentMove +1);
+        //console.log("currentMove will be ", currentMove+2);
+        
+        if (!whiteMoves.length) {
+            setStatusTxt("Please press the 'LOAD' button.");
+            return;
+        }
+        
+        console.log("round = " + Math.floor(currentMove/2) + " move = " + currentMove);
+
+        let currentRound = Math.floor(currentMove/2);
 
         // check for GAME OVER
         if ((playerTurn === "white" && 
@@ -87,20 +110,22 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
             setIsGameOver(true);
             return;
         }
-        
+
         // get the piece and the new location to be moved to:
         let { idPiece, newLocation, capture, castlingLong, castlingShort } = playerTurn === "white" ?
             movePiece(whiteMoves[currentRound], playerTurn) :
             movePiece(blackMoves[currentRound], playerTurn);
-
         
         if (idPiece) {
             console.log("idPiece = ", idPiece);
             // if CAPTURE, find & desactivate the captured piece in redux store:
             if (capture) {
                 for (let i = 0; i < 16; i++) {
+                    // get the last location of the piece
+                    const lastLocation: MoveNbWithLocation = Object.values(pieces[playerToWait][i].location.slice(-1)[0])[0];
+                    console.log("lastLocation = ",lastLocation);
                     // captured piece is found on the newLocation
-                    if (pieces[playerToWait][i].location === newLocation) {
+                    if (lastLocation === newLocation) {
                         //console.log("pieces[playerToWait][i].location = ", pieces[playerToWait][i].location);
                         //console.log("newLocation = ", newLocation);
                         dispatch(setPieceData({
@@ -128,17 +153,21 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                 const { kingLocation, rookLocation } = castling(castlingShort, castlingLong, playerTurn);
 
                 console.log({ kingLocation, rookLocation });
+                let kingMoveAndLocation: MoveNbWithLocation = {};
+                kingMoveAndLocation[currentRound+1] = kingLocation;
+                let rookMoveAndLocation: MoveNbWithLocation = {};
+                rookMoveAndLocation[currentRound+1] = rookLocation;
                 // change king's location
                 dispatch(setPieceData({
                     side: playerTurn, 
                     id: 4, 
-                    location: kingLocation
+                    location: [kingMoveAndLocation]
                 }));
                 // change rook's location
                 dispatch(setPieceData({
                     side: playerTurn, 
                     id: castlingLong ? 0 : 7, 
-                    location: rookLocation
+                    location: [rookMoveAndLocation]
                 }));
                 
                 // move the king's & rook's images
@@ -161,14 +190,15 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                 }
             }
 
-            
-            console.log("side = ", playerTurn);
             // update Redux Store data (location, active, etc.) & move piece's image, only if NOT CASTLING
             if (!castlingLong && !castlingShort) {
+                let pieceMoveAndLocation: MoveNbWithLocation = {};
+                pieceMoveAndLocation[currentRound+1] = newLocation;
+
                 dispatch(setPieceData({
                     side: playerTurn, 
                     id: idPiece, 
-                    location: newLocation
+                    location: [pieceMoveAndLocation]
                 }));
                 // move the piece's image
                 let idImage = idPiece;
@@ -181,7 +211,6 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                     pieceImageRef.style.bottom = `${getY(newLocation)}%`;
                 }
             }
-
         } else { // idPiece is 'undefined'
             setStatusTxt("Error: idPiece is 'undefined'!");
         }
@@ -190,28 +219,29 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
         //console.log("playerTurn = ", playerTurn);
         setPlayerToWait(changePlayer(playerToWait));
         //console.log("playerToWait = ", playerToWait);
-        setCurrentMove(currentMove +1);
-        
     }
 
     const handlePreviousMove = () => {
         console.clear();
         //console.log(pieces);
         //console.log(whiteMoves);
-        currentRound = Math.floor(currentMove/2);
-        console.log("round = " + (currentRound+1) + " move = " + (currentMove+1));
+        //console.log("currentRound will be ", Math.floor((currentMove-1)/2)+1);
+        //setCurrentMove(currentMove -1);
 
-        // check for GAME OVER
-        if ((playerTurn === "white" && 
-            !whiteMoves[currentRound]) || 
-            (playerTurn === "black" && 
-            !blackMoves[currentRound]))
-        {
-            setStatusTxt("Game is over.");
-            setIsGameOver(true);
+        if (!whiteMoves.length) {
+            setStatusTxt("Please press the 'LOAD' button.");
             return;
         }
-        
+
+        console.log("round = " + Math.floor(currentMove/2) + " move = " + currentMove);
+
+        // check if the beggining reached
+        if (currentMove < 0) {
+            setStatusTxt("The very beginning reached.");
+            return;
+        }
+
+        let currentRound = Math.floor(currentMove/2);
         // get the piece and the new location to be moved to:
         let { idPiece, newLocation, capture, castlingLong, castlingShort } = playerTurn === "white" ?
             movePiece(whiteMoves[currentRound], playerTurn) :
@@ -224,9 +254,10 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
             if (capture) {
                 for (let i = 0; i < 16; i++) {
                     // captured piece is found on the newLocation
-                    if (pieces[playerToWait][i].location === newLocation) {
-                        //console.log("pieces[playerToWait][i].location = ", pieces[playerToWait][i].location);
-                        //console.log("newLocation = ", newLocation);
+                    let lastLocation = pieces[playerToWait][i].location.slice(-1)[0];
+                    console.log(lastLocation);
+                    console.log(Object.values(lastLocation));
+                    if (lastLocation === newLocation) {
                         dispatch(setPieceData({
                             side: playerToWait, 
                             id: i, 
@@ -252,17 +283,21 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                 const { kingLocation, rookLocation } = castling(castlingShort, castlingLong, playerTurn);
 
                 console.log({ kingLocation, rookLocation });
+                let kingMoveAndLocation: MoveNbWithLocation = {};
+                kingMoveAndLocation[currentRound] = kingLocation;
+                let rookMoveAndLocation: MoveNbWithLocation = {};
+                rookMoveAndLocation[currentRound] = rookLocation;
                 // change king's location
                 dispatch(setPieceData({
                     side: playerTurn, 
                     id: 4, 
-                    location: kingLocation
+                    location: [kingMoveAndLocation]
                 }));
                 // change rook's location
                 dispatch(setPieceData({
                     side: playerTurn, 
                     id: castlingLong ? 0 : 7, 
-                    location: rookLocation
+                    location: [rookMoveAndLocation]
                 }));
                 
                 // move the king's & rook's images
@@ -285,14 +320,15 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                 }
             }
 
-            
-            console.log("side = ", playerTurn);
             // update Redux Store data (location, active, etc.) & move piece's image, only if NOT CASTLING
             if (!castlingLong && !castlingShort) {
+                let pieceMoveAndLocation: MoveNbWithLocation = {};
+                pieceMoveAndLocation[currentRound] = newLocation;
+
                 dispatch(setPieceData({
                     side: playerTurn, 
                     id: idPiece, 
-                    location: newLocation
+                    location: [pieceMoveAndLocation]
                 }));
                 // move the piece's image
                 let idImage = idPiece;
@@ -314,8 +350,6 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
         //console.log("playerTurn = ", playerTurn);
         setPlayerToWait(changePlayer(playerToWait));
         //console.log("playerToWait = ", playerToWait);
-        setCurrentMove(currentMove +1);
-        
     }
 
     return ( 
@@ -340,15 +374,23 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                         <FontAwesomeIcon icon={faBackwardFast}/>
                     </button>
 
-                    <button id="previousMoveBtn">
+                    <button 
+                        id="previousMoveBtn"
+                        onClick={() => {
+                            !pgnErrors.length && currentMove > 0 &&
+                            setCurrentMove(currentMove -1);
+                        }}
+                    >
                         <FontAwesomeIcon icon={faCaretLeft}/>
                     </button>
 
                     <button 
                         id="nextMoveBtn"
                         onClick={() => {
-                            !pgnErrors.length &&
-                            handleNextMove();
+                            console.log("pgnErrors.length = "+pgnErrors.length);
+                            console.log("isGameOver = ",isGameOver);
+                            !pgnErrors.length && !isGameOver &&
+                            setCurrentMove(currentMove +1);
                         }}
                     >
                         <FontAwesomeIcon icon={faCaretRight}/>
@@ -362,11 +404,11 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
 
             <div className="notation">
                 <textarea
-                    value={pgnText}
-                    onChange={(e) => setPgnText(e.target.value)}
+                    value={pgnTxt}
+                    onChange={(e) => setPgnTxt(e.target.value)}
                     placeholder="put your PGN data here..."
                     rows={8}
-                    maxLength={pgnTextMaxLength}
+                    maxLength={pgnTxtMaxLength}
                 ></textarea>
             </div>
         </section>

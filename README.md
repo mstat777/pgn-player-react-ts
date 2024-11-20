@@ -4,7 +4,7 @@
 
 ## Description
 
-A web application for chess players. PGN Player is a viewer that allows viewing chess games by loading their text notation. Chess game data should be loaded in PGN file format (common standard). (work in progress...)
+A web application for chess players. PGN Player is a viewer that allows viewing chess games by loading their text notation. Chess game data should be loaded either in PGN file format (standard) or as a plain text. (work in progress...)
 
 ## Table of Contents
 

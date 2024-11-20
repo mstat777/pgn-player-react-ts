@@ -1,5 +1,6 @@
 import { Color } from "../configs/types";
 import { store } from "../store/store";
+import { chessNotationToNumeric, getLastPieceLocation } from "./commonFunctions";
 
 type ReturnType = {
     idPiece: number | undefined;
@@ -49,12 +50,13 @@ export const movePiece = (
     
     // store the move square location ID (ex. 'a4', 'd5')
     const squareLoc = move.slice(-2);
-    // the square that a piece should be moved TO
-    let newLocation: string = (squareLoc.charCodeAt(0) - 96) + squareLoc.charAt(1);
+    // the square that a piece should be moved TO 
+    // saved in numeric format (for ex.: '52' for 'e2')
+    let newLocation = chessNotationToNumeric(squareLoc);
     // the id of the piece that should be moved
     let idPiece: number | undefined = undefined; // from 0 to 15
 
-    console.log("move.length = ",move.length);
+    //console.log("move.length = ",move.length);
     // --------------- a simple pawn move -----------------
     if (move.length === 2) {
         idPiece = parseInt(newLocation.charAt(0)) + 7;
@@ -66,7 +68,7 @@ export const movePiece = (
             case "Q": idPiece = 3; break; // QUEEN move
             // ROOK move
             case "R": {
-                const firstOfPairLoc = pieces[playerTurn][0].location; // pair's first element location
+                const firstOfPairLoc = getLastPieceLocation(pieces[playerTurn][0].location); // pair's first element location
                 console.log(pieces[playerTurn][0]);
                 console.log(pieces[playerTurn][7]);
                 if (pieces[playerTurn][0].active && (newLocation.charAt(0) === firstOfPairLoc?.charAt(0) || newLocation.charAt(1) === firstOfPairLoc?.charAt(1))) {
@@ -77,7 +79,7 @@ export const movePiece = (
             } break;
             // BISHOP move
             case "B": {
-                const firstOfPairLoc = pieces[playerTurn][2].location; 
+                const firstOfPairLoc = getLastPieceLocation(pieces[playerTurn][2].location); 
                 if (firstOfPairLoc && Math.abs((parseInt(firstOfPairLoc.charAt(0)) - parseInt(firstOfPairLoc.charAt(1))) % 2) === Math.abs((parseInt(newLocation.charAt(0)) - parseInt(newLocation.charAt(1))) % 2)) {
                     //console.log("equal");
                     idPiece = 2;
@@ -88,7 +90,7 @@ export const movePiece = (
             } break;  
             // KNIGHT move
             case "N": {
-                const firstOfPairLoc = pieces[playerTurn][1].location; // pair's first element location
+                const firstOfPairLoc = getLastPieceLocation(pieces[playerTurn][1].location); // pair's first element location
                 console.log(pieces[playerTurn][1]);
 
                 if (pieces[playerTurn][1].active && firstOfPairLoc &&
@@ -130,13 +132,12 @@ export const movePiece = (
         switch (move.charAt(0)) {
             // ROOK move
             case "R": {
-
-                const firstOfPairLoc = pieces[playerTurn][0].location; // pair's first element location
+                const firstOfPairLoc = getLastPieceLocation(pieces[playerTurn][0].location); // pair's first element location
                 idPiece = (firstOfPairLoc?.charAt(hintType) === hint) ? 0 : 7;
             } break;
             // KNIGHT move
             case "N": {
-                const firstOfPairLoc = pieces[playerTurn][1].location; // pair's first element location
+                const firstOfPairLoc = getLastPieceLocation(pieces[playerTurn][1].location); // pair's first element location
                 //console.log(firstOfPairLoc);
                 //console.log("hintType = "+hintType);
                 //console.log(firstOfPairLoc.charAt(hintType));

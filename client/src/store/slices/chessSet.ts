@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit/react";
 import { Color, SquareType, PieceType } from "../../configs/types";
-import { Square, IChessPiece, ChessPiece } from "../../configs/interfaces";
+import { Square, MoveNbWithLocation, IChessPiece, ChessPiece } from "../../configs/interfaces";
 import { ChessSet } from "../../configs/interfaces";
 
 type PieceModif = {
     side: Color;
     id: number;
-    location?: string;
+    location?: MoveNbWithLocation[];
     active?: boolean;
 }
 
@@ -49,6 +49,7 @@ export const chessSetSlice = createSlice({
             let side: Color = "white";
             let majPiecesRow: number;
             let pawnsRow: number;
+
             const tempPieces: {
                 white: IChessPiece[],
                 black: IChessPiece[]
@@ -63,18 +64,20 @@ export const chessSetSlice = createSlice({
             for (let i = 0; i < 2; i++) {
                 majPiecesRow = side === "white" ? 1 : 8;
                 pawnsRow = side === "white" ? 2 : 7;
-                let location: string;
-
+                
                 // create all major pieces:
                 majPiecesSet.forEach((majPiece, i) => {
-                    location = `${i+1}${majPiecesRow}`;
-                    tempPieces[side][i] = new ChessPiece(side, majPiece, location, true);
+                    const initPieceLocation: MoveNbWithLocation = {0: ''};
+                    initPieceLocation[0] = `${i+1}${majPiecesRow}`;
+                    //console.log([initPieceLocation]);
+                    tempPieces[side][i] = new ChessPiece(side, majPiece, [initPieceLocation], true);
                 });
 
                 // create all pawns:
                 for (let i = 0; i < 8; i++){
-                    location = `${i+1}${pawnsRow}`;
-                    tempPieces[side][i+8] = new ChessPiece(side, "pawn", location, true);
+                    const initPieceLocation: MoveNbWithLocation = {0: ''};
+                    initPieceLocation[0] = `${i+1}${pawnsRow}`;
+                    tempPieces[side][i+8] = new ChessPiece(side, "pawn", [initPieceLocation], true);
                 }
 
                 state.pieces[side] = [...tempPieces[side]];
@@ -92,7 +95,7 @@ export const chessSetSlice = createSlice({
                             ...state.pieces,
                             white: state.pieces.white.map((piece, i) => {
                                 if (i === action.payload.id) {
-                                    const chessPiece = new ChessPiece(piece.color, piece.type, action.payload.location, piece.active);
+                                    const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location,...action.payload.location], piece.active);
                                     return chessPiece;
                                 };
                                 return piece;
@@ -105,7 +108,7 @@ export const chessSetSlice = createSlice({
                             ...state.pieces,
                             white: state.pieces.white.map((piece, i) => {
                                 if (i === action.payload.id) {
-                                    const chessPiece = new ChessPiece(piece.color, piece.type, action.payload.location, piece.active);
+                                    const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location, ...action.payload.location as MoveNbWithLocation[]], piece.active);
                                     return chessPiece;
                                 };
                                 return piece;
@@ -119,7 +122,7 @@ export const chessSetSlice = createSlice({
                             ...state.pieces,
                             black: state.pieces.black.map((piece, i) => {
                                 if (i === action.payload.id) {
-                                    const chessPiece = new ChessPiece(piece.color, piece.type, action.payload.location, piece.active);
+                                    const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location,...action.payload.location], piece.active);
                                     return chessPiece;
                                 };
                                 return piece;
@@ -132,7 +135,7 @@ export const chessSetSlice = createSlice({
                             ...state.pieces,
                             black: state.pieces.black.map((piece, i) => {
                                 if (i === action.payload.id) {
-                                    const chessPiece = new ChessPiece(piece.color, piece.type, action.payload.location, piece.active);
+                                    const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location,...action.payload.location as MoveNbWithLocation[]], piece.active);
                                     return chessPiece;
                                 };
                                 return piece;
@@ -151,7 +154,7 @@ export const chessSetSlice = createSlice({
                             ...state.pieces,
                             white: state.pieces.white.map((piece, i) => {
                                 if (i === action.payload.id) {
-                                    const chessPiece = new ChessPiece(piece.color, piece.type, piece.location, action.payload.active);
+                                    const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location], action.payload.active);
                                     return chessPiece;
                                 };
                                 return piece;
@@ -164,7 +167,8 @@ export const chessSetSlice = createSlice({
                             ...state.pieces,
                             white: state.pieces.white.map((piece, i) => {
                                 if (i === action.payload.id) {
-                                    const chessPiece = new ChessPiece(piece.color, piece.type, piece.location, action.payload.active);
+                                    
+                                    const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location], action.payload.active);
                                     return chessPiece;
                                 };
                                 return piece;
@@ -178,7 +182,7 @@ export const chessSetSlice = createSlice({
                             ...state.pieces,
                             black: state.pieces.black.map((piece, i) => {
                                 if (i === action.payload.id) {
-                                    const chessPiece = new ChessPiece(piece.color, piece.type, piece.location, action.payload.active);
+                                    const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location], action.payload.active);
                                     return chessPiece;
                                 };
                                 return piece;
@@ -191,7 +195,7 @@ export const chessSetSlice = createSlice({
                             ...state.pieces,
                             black: state.pieces.black.map((piece, i) => {
                                 if (i === action.payload.id) {
-                                    const chessPiece = new ChessPiece(piece.color, piece.type, piece.location, action.payload.active);
+                                    const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location], action.payload.active);
                                     return chessPiece;
                                 };
                                 return piece;
