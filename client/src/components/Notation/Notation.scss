@@ -7,6 +7,10 @@
     border-radius: 2px;
     box-shadow: 2px 2px 2px var(--darkgrey-color-2);
     text-transform: uppercase;
+    -webkit-user-select: none;       
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none; 
 }
 
 .notation_section {

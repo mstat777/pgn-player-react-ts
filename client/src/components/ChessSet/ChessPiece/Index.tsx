@@ -1,6 +1,5 @@
 import './ChessPiece.scss';
 import { Color, PieceType } from "../../../configs/types";
-import { IChessPiece } from '../../../configs/interfaces';
 import { LegacyRef, forwardRef } from "react";
 import PieceImage from "../../../configs/piecesImages";
 import { capitalize } from "../../../utils/commonFunctions";
@@ -10,10 +9,11 @@ type Props = {
     type: PieceType;
     left: string;
     bottom: string;
+    opacity: string;
 }
 
 const ChessPiece = forwardRef((props: Props, ref: LegacyRef<HTMLDivElement> | undefined) => {
-    const { color, type, left, bottom } = props;
+    const { color, type, left, bottom, opacity } = props;
 
     const pieceImageName = color + capitalize(type);
 
@@ -22,10 +22,10 @@ const ChessPiece = forwardRef((props: Props, ref: LegacyRef<HTMLDivElement> | un
         <div 
             ref={ref}
             className="piece" 
-            //id={type}
             style={{
                 left: left,
-                bottom: bottom
+                bottom: bottom,
+                opacity: opacity
             }}
         >
             <img 

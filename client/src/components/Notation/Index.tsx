@@ -10,8 +10,8 @@ import { MoveNbWithLocation, Game, IChessPiece } from '../../configs/interfaces'
 import { changePlayer } from '../../utils/commonFunctions';
 import { getDataForwardMove } from '../../utils/getDataForwardMove';
 import { getDataBackwardMove } from '../../utils/getDataBackwardMove';
-import { getX, getY } from '../../utils/commonFunctions';
-import { removeCapturedPiece } from '../../utils/removeCapturedPiece';
+import { getX, getY, getPieceLocationByMoveNb } from '../../utils/commonFunctions';
+import { findCapturedPiece } from '../../utils/findCapturedPiece';
 import { castling } from '../../utils/castling';
 
 type Props = {
@@ -41,34 +41,13 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
     const pgnTxtMaxLength = 2500;
 
     const [isPlayingForward, setIsPlayingForward] = useState<boolean>(true);
-    // use this to know when to change the player's turn (only if there is no play direction change)
-    const [hasPlayDirectionChanged, setHasPlayDirectionChanged] = useState<boolean>(false);
 
     // play the move if Move number changed
     useEffect(() => {
         if (currentMove >= 0) {
-            if (!whiteMoves.length) {
-                setStatusTxt("Please press the 'LOAD' button.");
-                return;
-            } else {
-                isPlayingForward ? moveForward() : moveBackward();
-                //console.log("hasPlayDirectionChanged = ", hasPlayDirectionChanged);
-                /*if (!hasPlayDirectionChanged) {
-                    setPlayerTurn(changePlayer(playerTurn));
-                    console.log("playerTurn = ", playerTurn);
-                    setPlayerToWait(changePlayer(playerToWait));
-                    console.log("playerToWait = ", playerToWait);
-                }*/
-                //console.log("hasPlayDirectionChanged = ", hasPlayDirectionChanged);
-            }
+            isPlayingForward ? moveForward() : moveBackward();
         }
     },[currentMove, isPlayingForward]);
-/*
-    useEffect(() => {
-        if (!hasPlayDirectionChanged) {
-            setCurrentMove(isPlayingForward ? currentMove+1 : currentMove-1);
-        }   
-    },[hasPlayDirectionChanged]);  */
 
     const initialize = () => {
         setCurrentMove(-1);
@@ -81,6 +60,7 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
         if (pgnTxt) {
             initialize();
             setPgnTxt(''); // clear input data
+            setStatusTxt("PGN data cleared.")
             // reset to initial piece's IMAGE positions
             Object.keys(pieces).map((side, indexSide) => 
                 pieces[side as keyof typeof pieces].map((piece, i) => {
@@ -88,6 +68,7 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                     if (ref && piece.location) {
                         ref.style.left = `${getX(piece.location[0][0])}%`;
                         ref.style.bottom = `${getY(piece.location[0][0])}%`;
+                        ref.style.opacity = '1';
                     }
                 })
             )
@@ -108,7 +89,11 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
     const handleNextMove = () => {
         console.log(pgnErrors);
         console.log("isGameOver = ",isGameOver);
-        if (!pgnErrors.length && !isGameOver) {
+
+        if (!whiteMoves.length) {
+            setStatusTxt("Please press the 'LOAD' button.");
+            return;
+        } else if (!pgnErrors.length && !isGameOver) {
             console.log("isPlayingForward = ", isPlayingForward);
             console.log("currentMove = ", currentMove);
             if (isPlayingForward) {
@@ -128,7 +113,10 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
     const handlePreviousMove = () => {
         console.log(pgnErrors);
         console.log("currentMove = ",currentMove);
-        if (!pgnErrors.length && currentMove > 0) {
+        if (!whiteMoves.length) {
+            setStatusTxt("Please press the 'LOAD' button.");
+            return;
+        } else if (!pgnErrors.length && currentMove > 0) {
             console.log("isPlayingForward = ", isPlayingForward);
             if (!isPlayingForward) {
                 setPlayerTurn(changePlayer(playerTurn));
@@ -163,24 +151,28 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
 
         // get the piece and the new location to be moved to:
         let { idPiece, newLocation, capture, castlingLong, castlingShort } = playerTurn === "white" ?
-            getDataForwardMove(whiteMoves[currentRound], playerTurn) :
-            getDataForwardMove(blackMoves[currentRound], playerTurn);
+            getDataForwardMove(whiteMoves[currentRound], playerTurn, currentRound) :
+            getDataForwardMove(blackMoves[currentRound], playerTurn, currentRound);
         
-        if (idPiece !== undefined) {
+        if (idPiece >= 0) {
             console.log("idPiece = ", idPiece);
             // if CAPTURE, find & reactivate the captured piece in redux store:
             if (capture) {
+                console.log("capture");
                 for (let i = 0; i < 16; i++) {
                     // get the last location of the piece
                     const lastLocation: MoveNbWithLocation = Object.values(pieces[playerToWait][i].location.slice(-1)[0])[0];
-                    console.log("lastLocation = ",lastLocation);
+                    console.log(lastLocation);
                     // captured piece is found on the newLocation
                     if (lastLocation === newLocation) {
+                        console.log("lastLocation = ", lastLocation);
                         //console.log("pieces[playerToWait][i].location = ", pieces[playerToWait][i].location);
                         //console.log("newLocation = ", newLocation);
+                        console.log(playerToWait, i, false);
                         dispatch(setPieceData({
                             side: playerToWait, 
                             id: i, 
+                            location: [],
                             active: false
                         }));
                         break;
@@ -193,7 +185,7 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                     idImage += 16;
                 }
                 const removeFromArray = [...pieces[`${playerToWait}`]];
-                const removedIndex: number = removeCapturedPiece(newLocation, removeFromArray);
+                const removedIndex: number = findCapturedPiece(newLocation, removeFromArray);
                 
                 pieceRef.current[removedIndex]!.style.opacity = '0';
             }
@@ -212,13 +204,15 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                 dispatch(setPieceData({
                     side: playerTurn, 
                     id: 4, 
-                    location: [kingMoveAndLocation]
+                    location: [kingMoveAndLocation],
+                    active: true
                 }));
                 // change rook's location
                 dispatch(setPieceData({
                     side: playerTurn, 
                     id: castlingLong ? 0 : 7, 
-                    location: [rookMoveAndLocation]
+                    location: [rookMoveAndLocation],
+                    active: true
                 }));
                 
                 // move the king's & rook's images
@@ -243,14 +237,27 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
 
             // update Redux Store data (location, active, etc.) & move piece's image, only if NOT CASTLING
             if (!castlingLong && !castlingShort) {
-                let pieceMoveAndLocation: MoveNbWithLocation = {};
-                pieceMoveAndLocation[currentRound+1] = newLocation;
 
-                dispatch(setPieceData({
-                    side: playerTurn, 
-                    id: idPiece, 
-                    location: [pieceMoveAndLocation]
-                }));
+                // check if the move location is not added to the locations register yet. If not, then added it
+                const pieceLocationsMoveNums: string[] = [];
+                pieces[playerTurn][idPiece].location.map((loc) => {
+                    //console.log(Object.keys(loc)[0]);
+                    pieceLocationsMoveNums.push(Object.keys(loc)[0]);
+                });
+                //console.log(pieces[playerTurn][idPiece].location);
+                //console.log(pieceLocationsMoveNums);
+                //console.log((currentRound+1).toString());
+                if (!pieceLocationsMoveNums.includes((currentRound+1).toString())){
+                    let pieceMoveAndLocation: MoveNbWithLocation = {};
+                    pieceMoveAndLocation[currentRound+1] = newLocation;
+                    dispatch(setPieceData({
+                        side: playerTurn, 
+                        id: idPiece, 
+                        location: [pieceMoveAndLocation],
+                        active: true
+                    }));
+                }
+
                 // move the piece's image
                 let idImage = idPiece;
                 if (playerTurn === "black") {
@@ -262,7 +269,7 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                     pieceImageRef.style.bottom = `${getY(newLocation)}%`;
                 }
             }
-        } else { // idPiece is 'undefined'
+        } else { // idPiece === -1, it is 'undefined'
             setStatusTxt("Error: idPiece is 'undefined'!");
         }
     }
@@ -280,23 +287,26 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
         let currentRound = Math.floor(currentMove/2);
         console.log("playerTurn = ", playerTurn);
         // get the piece and the new location to be moved to:
-        let { idPiece, newLocation, capture, castlingLong, castlingShort } = playerTurn === "white" ?
-            getDataBackwardMove(whiteMoves[currentRound], playerTurn) :
-            getDataBackwardMove(blackMoves[currentRound], playerTurn);
+        let { idPiece, currentLocation, newLocation, capture, castlingLong, castlingShort } = playerTurn === "white" ?
+            getDataBackwardMove(whiteMoves[currentRound], playerTurn, currentRound) :
+            getDataBackwardMove(blackMoves[currentRound], playerTurn, currentRound);
         
-        if (idPiece !== undefined) {
+        if (idPiece >= 0) {
             console.log("idPiece = ", idPiece);
             // if CAPTURE, find & desactivate the captured piece in redux store:
             if (capture) {
                 for (let i = 0; i < 16; i++) {
                     // captured piece is found on the newLocation
-                    let lastLocation = pieces[playerToWait][i].location.slice(-1)[0];
+                    let lastLocation = getPieceLocationByMoveNb(pieces[playerToWait][i].location, currentRound);
                     console.log(lastLocation);
-                    console.log(Object.values(lastLocation));
-                    if (lastLocation === newLocation) {
+                    console.log(currentLocation);
+                    if (lastLocation === currentLocation) {
+                        console.log("playerToWait = ",playerToWait);
+                        console.log("i = ",i);
                         dispatch(setPieceData({
                             side: playerToWait, 
                             id: i, 
+                            location: [],
                             active: true
                         }));
                         break;
@@ -308,8 +318,10 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                 if (playerToWait === "black") {
                     idImage += 16;
                 }
+                console.log("removedSide = ",playerToWait);
                 const removeFromArray = [...pieces[`${playerToWait}`]];
-                const removedIndex: number = removeCapturedPiece(newLocation, removeFromArray);
+                const removedIndex: number = findCapturedPiece(currentLocation, removeFromArray);
+                console.log("removedIndex = ",removedIndex);
                 console.log(pieceRef.current[removedIndex]);
                 pieceRef.current[removedIndex]!.style.opacity = '1';
                 //pieceRef.current[removedIndex]?.remove();
@@ -325,18 +337,6 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                 kingMoveAndLocation[currentRound] = kingLocation;
                 let rookMoveAndLocation: MoveNbWithLocation = {};
                 rookMoveAndLocation[currentRound] = rookLocation;
-                // change king's location
-                dispatch(setPieceData({
-                    side: playerTurn, 
-                    id: 4, 
-                    location: [kingMoveAndLocation]
-                }));
-                // change rook's location
-                dispatch(setPieceData({
-                    side: playerTurn, 
-                    id: castlingLong ? 0 : 7, 
-                    location: [rookMoveAndLocation]
-                }));
                 
                 // move the king's & rook's images
                 let idKingImage = 4;
@@ -358,16 +358,8 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                 }
             }
 
-            // update Redux Store data (location, active, etc.) & move piece's image, only if NOT CASTLING
+            // move piece's image - an ordinary move (NOT CASTLING)
             if (!castlingLong && !castlingShort) {
-                let pieceMoveAndLocation: MoveNbWithLocation = {};
-                pieceMoveAndLocation[currentRound] = newLocation;
-
-                dispatch(setPieceData({
-                    side: playerTurn, 
-                    id: idPiece, 
-                    location: [pieceMoveAndLocation]
-                }));
                 // move the piece's image
                 let idImage = idPiece;
                 if (playerTurn === "black") {

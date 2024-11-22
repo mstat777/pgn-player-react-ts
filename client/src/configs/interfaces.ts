@@ -27,13 +27,13 @@ export class ChessPiece {
     constructor(
         color: Color, 
         type: PieceType, 
-        location?: MoveNbWithLocation[],
-        active?: boolean
+        location: MoveNbWithLocation[],
+        active: boolean
     ) {
         this.color = color;
         this.type = type;
         this.location = location || []; // location ID links the pieces and the chessboard squares, ex. 24, 47, 88
-        this.active = active || true;
+        this.active = active;
     }
 }
 

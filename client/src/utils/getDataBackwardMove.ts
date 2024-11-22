@@ -1,11 +1,13 @@
 import { Color } from "../configs/types";
 import { store } from "../store/store";
 import { chessNotationToNumeric, 
-        getLastPieceLocation,
-        getBeforeLastPieceLocation } from "./commonFunctions";
+        getPieceLastLocation,
+        getPieceBeforeLastLocation,
+        getPieceLastLocationRoundNb } from "./commonFunctions";
 
 type ReturnType = {
     idPiece: number;
+    currentLocation: string;
     newLocation: string;
     capture: boolean;
     castlingLong: boolean;
@@ -14,7 +16,8 @@ type ReturnType = {
 
 export const getDataBackwardMove = (
     move: string,
-    playerTurn: Color
+    playerTurn: Color,
+    roundNb: number
 ): ReturnType => {
     //console.clear();
     const state = store.getState();
@@ -52,20 +55,28 @@ export const getDataBackwardMove = (
     let newLocation: string = '00'; // '00' for undefined
     // the square the piece is currently located
     let currentLocation = chessNotationToNumeric(squareLoc);
+    console.log("currrent Loc = ",currentLocation);
 
     // the id of the piece that should be moved
     let idPiece: number = -1; // from 0 to 15, -1 for undefined
 
     // the piece moving backward is found on the current location
-    for (let i=0; i < pieces[playerTurn].length; i++){
-        if (getLastPieceLocation(pieces[playerTurn][i].location) === currentLocation) {
+    for (let i=0; i < 16; i++){
+        console.log("last piece Loc = ", getPieceLastLocation(pieces[playerTurn][i].location));
+        console.log("currrent Loc = ",currentLocation);
+        console.log("pieceLastLocRoundNb = ",getPieceLastLocationRoundNb(pieces[playerTurn][i].location));
+        console.log("roundNb+1 = ",roundNb+1);
+        if (getPieceLastLocation(pieces[playerTurn][i].location) === currentLocation && 
+            getPieceLastLocationRoundNb(pieces[playerTurn][i].location) === roundNb+1
+        ) {
             idPiece = i;
+            console.log("pieceID moving back = ", idPiece);
             break;
         }
     }
 
     // get the previous location (before the current one) of the moving piece
-    newLocation = getBeforeLastPieceLocation(pieces[playerTurn][idPiece].location);
+    newLocation = getPieceBeforeLastLocation(pieces[playerTurn][idPiece].location);
 
     console.log("castlingLong = ",castlingLong);
     console.log("idPiece = ",idPiece);
@@ -73,6 +84,7 @@ export const getDataBackwardMove = (
     console.log("capture = ",capture);
     return { 
         idPiece, 
+        currentLocation,
         newLocation, 
         capture, 
         castlingLong, 

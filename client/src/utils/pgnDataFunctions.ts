@@ -125,7 +125,7 @@ export const validatePgnData = (formattedData: PGNData): void => {
             }
         });
         if (!formattedData.errors.length) {
-            formattedData.status = "OK. No errors found in the PNG data.";
+            formattedData.status = "PGN data loaded successfully,";
         } else {
             formattedData.status = "Errors found in the PNG data.";
             console.log(formattedData.errors);

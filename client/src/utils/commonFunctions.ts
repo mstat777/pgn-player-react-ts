@@ -30,11 +30,40 @@ export const chessNotationToNumeric = (chessNotation: string): string => {
 }
 
 // find the last location from all locations of a piece
-export const getLastPieceLocation = (locationArray: MoveNbWithLocation[]): string => {
+export const getPieceLastLocation = (locationArray: MoveNbWithLocation[]): string => {
     return Object.values(locationArray.slice(-1)[0])[0];
 }
 
 // find the last location from all locations of a piece
-export const getBeforeLastPieceLocation = (locationArray: MoveNbWithLocation[]): string => {
+export const getPieceBeforeLastLocation = (locationArray: MoveNbWithLocation[]): string => {
     return Object.values(locationArray.slice(-2,-1)[0])[0];
+}
+
+// find the last location from a specific move number 
+export const getPieceLocationByMoveNb = (locationArray: MoveNbWithLocation[], roundNb: number) => {
+    let resultIndex: number | undefined;
+    const rounds: number[] = [];
+    locationArray.map(loc => {
+        //console.log(parseInt(Object.keys(loc)[0]));
+        rounds.push(parseInt(Object.keys(loc)[0]));
+    });
+    //console.log(rounds);
+    for (let i=rounds.length-1; i >= 0; i--){
+        //console.log("rounds[i] = ",rounds[i]);
+        //console.log("roundNb = ",roundNb);
+        if (rounds[i] <= roundNb) {
+            resultIndex = i;
+            break;
+        }
+    }
+    console.log("resultIndex = ", resultIndex);
+    if (resultIndex === undefined) {
+        throw new Error("Error: getPieceLocationByMoveNb!")
+    }
+    return (Object.values(locationArray[resultIndex])[0]);
+}
+
+// find the round number of the piece's last location
+export const getPieceLastLocationRoundNb = (locationArray: MoveNbWithLocation[]): number => {
+    return parseInt(Object.keys(locationArray.slice(-1)[0])[0]);
 }

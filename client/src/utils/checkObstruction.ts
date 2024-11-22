@@ -1,9 +1,9 @@
 import { store } from "../store/store";
-import { getLastPieceLocation } from "./commonFunctions";
+import { getPieceLastLocation } from "./commonFunctions";
 
 // check if the piece's path is obstructed by another piece
 // for queens, rooks or bishops
-export const checkObstruction = (startLocation: string, endLocation: string): boolean => {
+export const checkObstruction = (startLocation: string, endLocation: string, capture: boolean): boolean => {
     const state = store.getState();
     const { pieces } = state.chessSet;
 
@@ -30,6 +30,7 @@ export const checkObstruction = (startLocation: string, endLocation: string): bo
     }
 
     console.log("pathLength = ",pathLength);
+    console.log("moveType = ",moveType);
 
     // get the in-between square ids
     for (let i = 1; i <= pathLength; i++) {
@@ -40,22 +41,35 @@ export const checkObstruction = (startLocation: string, endLocation: string): bo
             case 'D': squareArray.push((start+i*11*direction).toString()); break;
         }
     }
-
+    
+    // if it's a capture move, don't check the endLocation for obstruction
+    capture && squareArray.pop();
     console.log(squareArray);
 
     // check if there is a piece located on one of the in-between squares or on the target ('endLocation') square
-    squareArray.map(square => {
-        pieces.white.map(piece => {
-            if (piece.active && (square === getLastPieceLocation(piece.location))) {
-                return true;
+    for (let i = 0; i < squareArray.length; i++) {
+        console.log("square = ",squareArray[i]);
+        let side = "white";
+        for (let j = 0; j < 2; j++){
+            let obstacle = pieces[side as keyof typeof pieces].find(piece => 
+                piece.active && (squareArray[i] === getPieceLastLocation(piece.location))
+            );
+
+            if (obstacle) {
+                console.log(obstacle);
+                return true; 
             }
-        });
-        pieces.black.map(piece => {
-            if (piece.active && (square === getLastPieceLocation(piece.location))) {
-                return true;
-            }
-        });
-    });
+            side = "black";
+        }
+        /*let obstacle = pieces.white.find(piece => 
+            piece.active && (squareArray[i] === getPieceLastLocation(piece.location))
+        );
+        if (obstacle) return true;
+        obstacle = pieces.black.find(piece => 
+            piece.active && (squareArray[i] === getPieceLastLocation(piece.location))
+        );
+        if (obstacle) return true;*/
+    };
 
     // if there are no obstructing pieces
     return false;

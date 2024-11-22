@@ -6,13 +6,10 @@ import { Color } from '../../configs/types';
 import Loading from '../Loading/Index';
 import { getX, getY } from '../../utils/commonFunctions';
 
-//type ForwardedRef = MutableRefObject<(HTMLDivElement | null)[]>;
-
 const ChessSet = forwardRef((props, ref) => {
     const { squares, pieces } = useAppSelector((state) => state.chessSet);
     const { moveNb } = useAppSelector((state) => state.pgnData);
 
-    //console.log(moveNb.length);
     const piecesLength = pieces.white.length + pieces.black.length;
 
     const [isDataLoaded, setIsDataLoaded] = useState<boolean>(false);
@@ -41,6 +38,7 @@ const ChessSet = forwardRef((props, ref) => {
             </div>
 
             <div className="pieces">
+                {/* initialize piece images positions & opacity */}
                 { Object.keys(pieces).map((side, indexSide) => 
                         pieces[side as keyof typeof pieces].map((piece, i) =>
                             piece.location &&
@@ -53,6 +51,7 @@ const ChessSet = forwardRef((props, ref) => {
                                 type={piece.type} 
                                 left={`${getX(piece.location[0][0])}%`}
                                 bottom={`${getY(piece.location[0][0])}%`}
+                                opacity={piece.active ? '1' : '0'}
                                 key={i}
                             />
                         )

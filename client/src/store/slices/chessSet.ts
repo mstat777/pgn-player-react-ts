@@ -6,8 +6,8 @@ import { ChessSet } from "../../configs/interfaces";
 type PieceModif = {
     side: Color;
     id: number;
-    location?: MoveNbWithLocation[];
-    active?: boolean;
+    location: MoveNbWithLocation[];
+    active: boolean;
 }
 
 const initialState: ChessSet = {
@@ -87,121 +87,17 @@ export const chessSetSlice = createSlice({
         },
         setPieceData: (state, action: PayloadAction<PieceModif>) => {
             console.log(action.payload);
-            if (action.payload.location) {
-                if (action.payload.side === "white") {
-                    /*console.log({
-                        ...state,
-                        pieces: {
-                            ...state.pieces,
-                            white: state.pieces.white.map((piece, i) => {
-                                if (i === action.payload.id) {
-                                    const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location,...action.payload.location], piece.active);
-                                    return chessPiece;
-                                };
-                                return piece;
-                            })
-                        }
-                    });*/
-                    return {
-                        ...state,
-                        pieces: {
-                            ...state.pieces,
-                            white: state.pieces.white.map((piece, i) => {
-                                if (i === action.payload.id) {
-                                    const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location, ...action.payload.location as MoveNbWithLocation[]], piece.active);
-                                    return chessPiece;
-                                };
-                                return piece;
-                            })
-                        }
-                    }
-                } else {
-                    /*console.log({
-                        ...state,
-                        pieces: {
-                            ...state.pieces,
-                            black: state.pieces.black.map((piece, i) => {
-                                if (i === action.payload.id) {
-                                    const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location,...action.payload.location], piece.active);
-                                    return chessPiece;
-                                };
-                                return piece;
-                            })
-                        }
-                    });*/
-                    return {
-                        ...state,
-                        pieces: {
-                            ...state.pieces,
-                            black: state.pieces.black.map((piece, i) => {
-                                if (i === action.payload.id) {
-                                    const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location,...action.payload.location as MoveNbWithLocation[]], piece.active);
-                                    return chessPiece;
-                                };
-                                return piece;
-                            })
-                        }
-                    }
-                }
-            }
-
-            // desactivate a captured piece:
-            if (action.payload.active === false) {
-                if (action.payload.side === "white") {
-                    /*console.log({
-                        ...state,
-                        pieces: {
-                            ...state.pieces,
-                            white: state.pieces.white.map((piece, i) => {
-                                if (i === action.payload.id) {
-                                    const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location], action.payload.active);
-                                    return chessPiece;
-                                };
-                                return piece;
-                            })
-                        }
-                    });*/
-                    return {
-                        ...state,
-                        pieces: {
-                            ...state.pieces,
-                            white: state.pieces.white.map((piece, i) => {
-                                if (i === action.payload.id) {
-                                    
-                                    const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location], action.payload.active);
-                                    return chessPiece;
-                                };
-                                return piece;
-                            })
-                        }
-                    }
-                } else {
-                    /*console.log({
-                        ...state,
-                        pieces: {
-                            ...state.pieces,
-                            black: state.pieces.black.map((piece, i) => {
-                                if (i === action.payload.id) {
-                                    const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location], action.payload.active);
-                                    return chessPiece;
-                                };
-                                return piece;
-                            })
-                        }
-                    });*/
-                    return {
-                        ...state,
-                        pieces: {
-                            ...state.pieces,
-                            black: state.pieces.black.map((piece, i) => {
-                                if (i === action.payload.id) {
-                                    const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location], action.payload.active);
-                                    return chessPiece;
-                                };
-                                return piece;
-                            })
-                        }
-                    }
+            return {
+                ...state,
+                pieces: {
+                    ...state.pieces,
+                    [`${action.payload.side}`]: state.pieces[`${action.payload.side}`].map((piece, i) => {
+                        if (i === action.payload.id) {
+                            const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location, ...action.payload.location as MoveNbWithLocation[]], action.payload.active);
+                            return chessPiece;
+                        };
+                        return piece;
+                    })
                 }
             }
         }
