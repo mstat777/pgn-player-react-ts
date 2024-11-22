@@ -12,7 +12,7 @@ const ChessSet = forwardRef((props, ref) => {
     const { squares, pieces } = useAppSelector((state) => state.chessSet);
     const { moveNb } = useAppSelector((state) => state.pgnData);
 
-    console.log(moveNb.length);
+    //console.log(moveNb.length);
     const piecesLength = pieces.white.length + pieces.black.length;
 
     const [isDataLoaded, setIsDataLoaded] = useState<boolean>(false);

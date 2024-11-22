@@ -1,16 +1,17 @@
 import { Color } from "../configs/types";
 import { store } from "../store/store";
 import { chessNotationToNumeric, getLastPieceLocation } from "./commonFunctions";
+import { checkObstruction } from "./checkObstruction";
 
 type ReturnType = {
-    idPiece: number | undefined;
+    idPiece: number;
     newLocation: string;
     capture: boolean;
     castlingLong: boolean;
     castlingShort: boolean;
 }
 
-export const movePiece = (
+export const getDataForwardMove = (
     move: string,
     playerTurn: Color
 ): ReturnType => {
@@ -54,7 +55,7 @@ export const movePiece = (
     // saved in numeric format (for ex.: '52' for 'e2')
     let newLocation = chessNotationToNumeric(squareLoc);
     // the id of the piece that should be moved
-    let idPiece: number | undefined = undefined; // from 0 to 15
+    let idPiece: number = -1; // from 0 to 15, -1 for undefined
 
     //console.log("move.length = ",move.length);
     // --------------- a simple pawn move -----------------
@@ -68,14 +69,44 @@ export const movePiece = (
             case "Q": idPiece = 3; break; // QUEEN move
             // ROOK move
             case "R": {
-                const firstOfPairLoc = getLastPieceLocation(pieces[playerTurn][0].location); // pair's first element location
-                console.log(pieces[playerTurn][0]);
-                console.log(pieces[playerTurn][7]);
-                if (pieces[playerTurn][0].active && (newLocation.charAt(0) === firstOfPairLoc?.charAt(0) || newLocation.charAt(1) === firstOfPairLoc?.charAt(1))) {
+                const firstOfPairLoc = getLastPieceLocation(pieces[playerTurn][0].location); // pair's first rook location
+                const secondOfPairLoc = getLastPieceLocation(pieces[playerTurn][7].location);
+                //console.log("firstOfPairLoc = ",firstOfPairLoc);
+                //console.log("secondOfPairLoc = ",secondOfPairLoc);
+                //console.log(pieces[playerTurn][0]);
+                //console.log(pieces[playerTurn][7]);
+                console.log(pieces[playerTurn][0].active);
+                console.log(pieces[playerTurn][7].active);
+                console.log(newLocation.charAt(0) === firstOfPairLoc.charAt(0));
+                console.log(newLocation.charAt(1) === firstOfPairLoc.charAt(1));
+                console.log(newLocation.charAt(0) === secondOfPairLoc.charAt(0));
+                console.log(newLocation.charAt(1) === secondOfPairLoc.charAt(1));
+
+                if (
+                    pieces[playerTurn][0].active && (newLocation.charAt(0) === firstOfPairLoc.charAt(0) || newLocation.charAt(1) === firstOfPairLoc.charAt(1)) &&
+                    (newLocation.charAt(0) !== secondOfPairLoc.charAt(0) && newLocation.charAt(1) !== secondOfPairLoc.charAt(1))
+                ) {
+                    // the first Rook row or column corresponds to the target location, but the second one don't
                     idPiece = 0;
-                } else { 
+                } else if (
+                    pieces[playerTurn][7].active && (newLocation.charAt(0) === secondOfPairLoc.charAt(0) || newLocation.charAt(1) === secondOfPairLoc.charAt(1)) &&
+                    (newLocation.charAt(0) !== firstOfPairLoc.charAt(0) && newLocation.charAt(1) !== firstOfPairLoc.charAt(1))
+                ) {
+                    // the second Rook row or column corresponds to the target location, but the first one don't
                     idPiece = 7;
+                } else if (
+                    pieces[playerTurn][0].active && 
+                    pieces[playerTurn][7].active && (newLocation.charAt(0) === secondOfPairLoc.charAt(0) || newLocation.charAt(1) === secondOfPairLoc.charAt(1)) &&
+                    (newLocation.charAt(0) !== firstOfPairLoc.charAt(0) || newLocation.charAt(1) !== firstOfPairLoc.charAt(1))
+                ) {
+                    // both rooks have a row or a column that corresponds to the target location, but it's not indicated which one, because one of the pair is obstructed
+                    // check if the 1st of the pair is obstructed
+                    idPiece = checkObstruction(firstOfPairLoc,newLocation) ? 7 : 0;
+                    console.log("obstruction Check");
+                } else {
+                    console.log(`Rook notation error on ${playerTurn}'s move ${move}!`);
                 }
+
             } break;
             // BISHOP move
             case "B": {

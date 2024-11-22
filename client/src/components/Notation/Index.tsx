@@ -8,7 +8,8 @@ import { initializePieces, initializeSquares, setPieceData } from '../../store/s
 import { Color } from '../../configs/types';
 import { MoveNbWithLocation, Game, IChessPiece } from '../../configs/interfaces';
 import { changePlayer } from '../../utils/commonFunctions';
-import { movePiece } from '../../utils/movePiece';
+import { getDataForwardMove } from '../../utils/getDataForwardMove';
+import { getDataBackwardMove } from '../../utils/getDataBackwardMove';
 import { getX, getY } from '../../utils/commonFunctions';
 import { removeCapturedPiece } from '../../utils/removeCapturedPiece';
 import { castling } from '../../utils/castling';
@@ -39,13 +40,35 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
     const [pgnTxt, setPgnTxt] = useState<string>('');
     const pgnTxtMaxLength = 2500;
 
-    // change Round number if Move number is changed
+    const [isPlayingForward, setIsPlayingForward] = useState<boolean>(true);
+    // use this to know when to change the player's turn (only if there is no play direction change)
+    const [hasPlayDirectionChanged, setHasPlayDirectionChanged] = useState<boolean>(false);
+
+    // play the move if Move number changed
     useEffect(() => {
         if (currentMove >= 0) {
-            //setCurrentRound(Math.floor((currentMove+1)/2));
-            handleNextMove();
+            if (!whiteMoves.length) {
+                setStatusTxt("Please press the 'LOAD' button.");
+                return;
+            } else {
+                isPlayingForward ? moveForward() : moveBackward();
+                //console.log("hasPlayDirectionChanged = ", hasPlayDirectionChanged);
+                /*if (!hasPlayDirectionChanged) {
+                    setPlayerTurn(changePlayer(playerTurn));
+                    console.log("playerTurn = ", playerTurn);
+                    setPlayerToWait(changePlayer(playerToWait));
+                    console.log("playerToWait = ", playerToWait);
+                }*/
+                //console.log("hasPlayDirectionChanged = ", hasPlayDirectionChanged);
+            }
         }
-    },[currentMove]);
+    },[currentMove, isPlayingForward]);
+/*
+    useEffect(() => {
+        if (!hasPlayDirectionChanged) {
+            setCurrentMove(isPlayingForward ? currentMove+1 : currentMove-1);
+        }   
+    },[hasPlayDirectionChanged]);  */
 
     const initialize = () => {
         setCurrentMove(-1);
@@ -83,19 +106,46 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
     }
 
     const handleNextMove = () => {
+        console.log(pgnErrors);
+        console.log("isGameOver = ",isGameOver);
+        if (!pgnErrors.length && !isGameOver) {
+            console.log("isPlayingForward = ", isPlayingForward);
+            console.log("currentMove = ", currentMove);
+            if (isPlayingForward) {
+                if (currentMove >= 0) {
+                    setPlayerTurn(changePlayer(playerTurn));
+                    console.log("playerTurn = ", playerTurn);
+                    setPlayerToWait(changePlayer(playerToWait));
+                    console.log("playerToWait = ", playerToWait);
+                }
+                setCurrentMove(currentMove +1); 
+            } else {
+                setIsPlayingForward(true);
+            }
+        }
+    }
+
+    const handlePreviousMove = () => {
+        console.log(pgnErrors);
+        console.log("currentMove = ",currentMove);
+        if (!pgnErrors.length && currentMove > 0) {
+            console.log("isPlayingForward = ", isPlayingForward);
+            if (!isPlayingForward) {
+                setPlayerTurn(changePlayer(playerTurn));
+                console.log("playerTurn = ", playerTurn);
+                setPlayerToWait(changePlayer(playerToWait));
+                console.log("playerToWait = ", playerToWait);
+                setCurrentMove(currentMove -1); 
+            } else {
+                setIsPlayingForward(false);
+            }
+        }
+    }
+
+    const moveForward = () => {
         console.clear();
         //console.log(pieces);
-        //console.log(whiteMoves);
-        //console.log("currentRound will be ", Math.floor((currentMove+1)/2)+1);
-
-        //setCurrentMove(currentMove +1);
-        //console.log("currentMove will be ", currentMove+2);
-        
-        if (!whiteMoves.length) {
-            setStatusTxt("Please press the 'LOAD' button.");
-            return;
-        }
-        
+        console.log("moveForward");
         console.log("round = " + Math.floor(currentMove/2) + " move = " + currentMove);
 
         let currentRound = Math.floor(currentMove/2);
@@ -113,12 +163,12 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
 
         // get the piece and the new location to be moved to:
         let { idPiece, newLocation, capture, castlingLong, castlingShort } = playerTurn === "white" ?
-            movePiece(whiteMoves[currentRound], playerTurn) :
-            movePiece(blackMoves[currentRound], playerTurn);
+            getDataForwardMove(whiteMoves[currentRound], playerTurn) :
+            getDataForwardMove(blackMoves[currentRound], playerTurn);
         
-        if (idPiece) {
+        if (idPiece !== undefined) {
             console.log("idPiece = ", idPiece);
-            // if CAPTURE, find & desactivate the captured piece in redux store:
+            // if CAPTURE, find & reactivate the captured piece in redux store:
             if (capture) {
                 for (let i = 0; i < 16; i++) {
                     // get the last location of the piece
@@ -137,14 +187,15 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                     } 
                 }
 
-                // REMOVE captured piece's image 
+                // HIDE captured piece's image 
                 let idImage = idPiece;
                 if (playerToWait === "black") {
                     idImage += 16;
                 }
                 const removeFromArray = [...pieces[`${playerToWait}`]];
                 const removedIndex: number = removeCapturedPiece(newLocation, removeFromArray);
-                pieceRef.current[removedIndex]?.remove();
+                
+                pieceRef.current[removedIndex]!.style.opacity = '0';
             }
 
             // if CASTLING
@@ -214,41 +265,26 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
         } else { // idPiece is 'undefined'
             setStatusTxt("Error: idPiece is 'undefined'!");
         }
-
-        setPlayerTurn(changePlayer(playerTurn));
-        //console.log("playerTurn = ", playerTurn);
-        setPlayerToWait(changePlayer(playerToWait));
-        //console.log("playerToWait = ", playerToWait);
     }
 
-    const handlePreviousMove = () => {
+    const moveBackward = () => {
         console.clear();
-        //console.log(pieces);
-        //console.log(whiteMoves);
-        //console.log("currentRound will be ", Math.floor((currentMove-1)/2)+1);
-        //setCurrentMove(currentMove -1);
-
-        if (!whiteMoves.length) {
-            setStatusTxt("Please press the 'LOAD' button.");
-            return;
-        }
-
+        console.log("moveBackward");
         console.log("round = " + Math.floor(currentMove/2) + " move = " + currentMove);
-
-        // check if the beggining reached
+        // check if the GAME BEGINNING reached
         if (currentMove < 0) {
             setStatusTxt("The very beginning reached.");
             return;
         }
 
         let currentRound = Math.floor(currentMove/2);
+        console.log("playerTurn = ", playerTurn);
         // get the piece and the new location to be moved to:
         let { idPiece, newLocation, capture, castlingLong, castlingShort } = playerTurn === "white" ?
-            movePiece(whiteMoves[currentRound], playerTurn) :
-            movePiece(blackMoves[currentRound], playerTurn);
-
+            getDataBackwardMove(whiteMoves[currentRound], playerTurn) :
+            getDataBackwardMove(blackMoves[currentRound], playerTurn);
         
-        if (idPiece) {
+        if (idPiece !== undefined) {
             console.log("idPiece = ", idPiece);
             // if CAPTURE, find & desactivate the captured piece in redux store:
             if (capture) {
@@ -261,20 +297,22 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                         dispatch(setPieceData({
                             side: playerToWait, 
                             id: i, 
-                            active: false
+                            active: true
                         }));
                         break;
                     } 
                 }
 
-                // REMOVE captured piece's image 
+                // make REAPPEAR captured piece's image 
                 let idImage = idPiece;
                 if (playerToWait === "black") {
                     idImage += 16;
                 }
                 const removeFromArray = [...pieces[`${playerToWait}`]];
                 const removedIndex: number = removeCapturedPiece(newLocation, removeFromArray);
-                pieceRef.current[removedIndex]?.remove();
+                console.log(pieceRef.current[removedIndex]);
+                pieceRef.current[removedIndex]!.style.opacity = '1';
+                //pieceRef.current[removedIndex]?.remove();
             }
 
             // if CASTLING
@@ -345,11 +383,6 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
         } else { // idPiece is 'undefined'
             setStatusTxt("Error: idPiece is 'undefined'!");
         }
-
-        setPlayerTurn(changePlayer(playerTurn));
-        //console.log("playerTurn = ", playerTurn);
-        setPlayerToWait(changePlayer(playerToWait));
-        //console.log("playerToWait = ", playerToWait);
     }
 
     return ( 
@@ -376,22 +409,14 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
 
                     <button 
                         id="previousMoveBtn"
-                        onClick={() => {
-                            !pgnErrors.length && currentMove > 0 &&
-                            setCurrentMove(currentMove -1);
-                        }}
+                        onClick={handlePreviousMove}
                     >
                         <FontAwesomeIcon icon={faCaretLeft}/>
                     </button>
 
                     <button 
                         id="nextMoveBtn"
-                        onClick={() => {
-                            console.log("pgnErrors.length = "+pgnErrors.length);
-                            console.log("isGameOver = ",isGameOver);
-                            !pgnErrors.length && !isGameOver &&
-                            setCurrentMove(currentMove +1);
-                        }}
+                        onClick={handleNextMove}
                     >
                         <FontAwesomeIcon icon={faCaretRight}/>
                     </button>

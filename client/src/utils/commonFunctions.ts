@@ -33,3 +33,8 @@ export const chessNotationToNumeric = (chessNotation: string): string => {
 export const getLastPieceLocation = (locationArray: MoveNbWithLocation[]): string => {
     return Object.values(locationArray.slice(-1)[0])[0];
 }
+
+// find the last location from all locations of a piece
+export const getBeforeLastPieceLocation = (locationArray: MoveNbWithLocation[]): string => {
+    return Object.values(locationArray.slice(-2,-1)[0])[0];
+}
