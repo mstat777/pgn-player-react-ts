@@ -20,9 +20,10 @@ export const formatPgnData = (pgnData: string): PGNData => {
     const whiteMoves: string[] = [];
     const blackMoves: string[] = [];
     const errors: string[] = [];
+    let resultMsg: string = '';
 
     for (let i = 0; i < data.length; i++) {
-        // check if there are tags in the beginning if the PNG
+        // check for TAGs in the beginning if the PNG
         if (!isWritingMoves) {
             if (data.charAt(i) === "[") {
                 isTag = true;
@@ -69,24 +70,53 @@ export const formatPgnData = (pgnData: string): PGNData => {
             }
         }
        
-        // if there are NO tags, or tags already written,
-        // => extract moves data into an array using empty spaces
+        // if NO tags, or tags are already written,
+        // => extract moves data into an array using empty space (or dot) as separator
         else if (isWritingMoves) {
-            if (data.charAt(i) !== " ") {
-                move += data.charAt(i);
-                previousIsSpace && (previousIsSpace = false);
-                i === data.length - 1 && movesArray.push(move);
-            } else if (data.charAt(i) === " ") {
-                if (!previousIsSpace) {
+            if (data.charAt(i) === " ") {
+                if (!previousIsSpace && move) {
                     movesArray.push(move);
                     move = "";
                     previousIsSpace = true;
                 }
             }
+            else if (data.charAt(i) === ".") {
+                move += data.charAt(i);
+                movesArray.push(move);
+                move = "";
+            } else {
+                move += data.charAt(i);
+                previousIsSpace && (previousIsSpace = false);
+                // if last character reached:
+                i === data.length - 1 && movesArray.push(move);
+            }
         }
     }
 
     console.log(tags);
+    // if result is noted at the end of the PGN, 
+    // remove it from the movesArray and save it appart
+    switch(movesArray[movesArray.length-1]){
+        case "1-0": {
+            resultMsg = "White won."; 
+            movesArray.pop();
+            break;
+        }
+        case "0-1": {
+            resultMsg = "Black won."; 
+            movesArray.pop();
+            break;
+        }
+        case "1/2-1/2": {
+            resultMsg = "Draw."; 
+            movesArray.pop();
+            break;
+        }
+        case "*": {
+            resultMsg = "Result unknown."; 
+            movesArray.pop();
+        }
+    }
 
     // if NO errors found while formatting,
     // => split the moves according to player
@@ -101,7 +131,7 @@ export const formatPgnData = (pgnData: string): PGNData => {
         });
     }
 
-    return {tags, moveNb, whiteMoves, blackMoves, errors}
+    return {tags, moveNb, whiteMoves, blackMoves, errors, resultMsg}
 }
 
 // verify formatted PGN data
@@ -114,6 +144,7 @@ export const validatePgnData = (formattedData: PGNData): void => {
 
             if (moveNb !== i + 1) {
                 const moveChar0Nb = parseInt(moveNbTxt.charAt(0));
+                console.log(moveChar0Nb);
                 if (!(moveChar0Nb >= 0 && moveChar0Nb <= 9)) {
                     formattedData.errors.push("One or more of the move mumbers is not a number.");
                 } else {

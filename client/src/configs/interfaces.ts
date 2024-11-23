@@ -44,6 +44,7 @@ export interface PGNData {
     blackMoves: string[];
     errors: string[];
     status?: string;
+    resultMsg?: string;
 }
 
 export type TagType = {

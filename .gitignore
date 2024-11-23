@@ -2,7 +2,7 @@
 /client/node_modules/
 
 # production
-/client/build/
+/client/dist/
 
 # misc
 /client/.env.*

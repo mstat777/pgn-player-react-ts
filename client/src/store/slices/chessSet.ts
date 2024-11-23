@@ -86,7 +86,7 @@ export const chessSetSlice = createSlice({
             }
         },
         setPieceData: (state, action: PayloadAction<PieceModif>) => {
-            console.log(action.payload);
+            //console.log(action.payload);
             return {
                 ...state,
                 pieces: {

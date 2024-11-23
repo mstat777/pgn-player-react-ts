@@ -14,7 +14,9 @@ export default function StatusPanel(props: Props) {
 
     useEffect(() => {
         if (status) {
-            setStatusTxt(status);
+            let errorsTxt = '';
+            errors.length && errors.forEach(err => errorsTxt += err + '\n');
+            setStatusTxt(status+'\n'+errorsTxt);
         }
     },[errors.length, status]);
 

@@ -3,15 +3,13 @@ import { useState, Dispatch, SetStateAction, forwardRef, MutableRefObject, useEf
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBackwardFast, faCaretLeft, faCaretRight, faForwardFast } from '@fortawesome/free-solid-svg-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { formatPgnData, validatePgnData } from '../../utils/pgnDataFunctions';
 import { initializePieces, initializeSquares, setPieceData } from '../../store/slices/chessSet';
 import { Color } from '../../configs/types';
-import { MoveNbWithLocation, Game, IChessPiece } from '../../configs/interfaces';
-import { changePlayer } from '../../utils/commonFunctions';
+import { MoveNbWithLocation } from '../../configs/interfaces';
 import { getDataForwardMove } from '../../utils/getDataForwardMove';
 import { getDataBackwardMove } from '../../utils/getDataBackwardMove';
-import { getX, getY, getPieceLocationByMoveNb } from '../../utils/commonFunctions';
-import { findCapturedPiece } from '../../utils/findCapturedPiece';
+import { formatPgnData, validatePgnData } from '../../utils/pgnDataFunctions';
+import { changePlayer, getX, getY, getPieceLocationByRoundNb } from '../../utils/commonFunctions';
 import { castling } from '../../utils/castling';
 
 type Props = {
@@ -29,13 +27,15 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
     const pgnErrors = useAppSelector((state) => state.pgnData.errors);
 
     const [isGameOver, setIsGameOver] = useState<boolean>(false);
-    const [piecesLeft, setPiecesLeft] = useState<number>(32); // pieces left of both players
+    //const [piecesLeft, setPiecesLeft] = useState<number>(32); // pieces left of both players
     const [currentMove, setCurrentMove] = useState<number>(-1);
     //const [currentRound, setCurrentRound] = useState<number>(0);
     const [playerTurn, setPlayerTurn] = useState<Color>("white");
     const [playerToWait, setPlayerToWait] = useState<Color>("black");
-    const [isValidMove, setIsValidMove] = useState<boolean>(true);
-    const [errors, setErrors] = useState<string[]>([]);
+    //const [isValidMove, setIsValidMove] = useState<boolean>(true);
+    //const [errors, setErrors] = useState<string[]>([]);
+    const [isArrowLeftDown, setIsArrowLeftDown] = useState<boolean>(false);
+    const [isArrowRightDown, setIsArrowRightDown] = useState<boolean>(false);
 
     const [pgnTxt, setPgnTxt] = useState<string>('');
     const pgnTxtMaxLength = 2500;
@@ -44,13 +44,38 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
 
     // play the move if Move number changed
     useEffect(() => {
+        console.log("currentMove = ", currentMove);
         if (currentMove >= 0) {
             isPlayingForward ? moveForward() : moveBackward();
         }
     },[currentMove, isPlayingForward]);
 
+    addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === "ArrowLeft" && !isArrowLeftDown) {
+            e.stopPropagation();
+            handlePreviousMove();
+            setIsArrowLeftDown(true);
+        }
+        if (e.key === "ArrowRight" && !isArrowRightDown) {
+            e.stopPropagation();
+            handleNextMove();
+            setIsArrowRightDown(true);
+        }
+    });
+    addEventListener('keyup', (e: KeyboardEvent) => {
+        if (e.key === "ArrowLeft") {
+            setIsArrowLeftDown(false);
+        }
+        if (e.key === "ArrowRight") {
+            setIsArrowRightDown(false);
+        }
+    });
+
     const initialize = () => {
         setCurrentMove(-1);
+        setIsPlayingForward(true);
+        setPlayerTurn("white");
+        setPlayerToWait("black");
         dispatch({type: 'RESET_GAME'}); // reset Redux pgnData slice
         dispatch(initializeSquares());
         dispatch(initializePieces());
@@ -89,7 +114,9 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
     const handleNextMove = () => {
         console.log(pgnErrors);
         console.log("isGameOver = ",isGameOver);
-
+        console.log(whiteMoves.length);
+        console.log("isPlayingForward = ", isPlayingForward);
+        console.log("currentMove = ", currentMove);
         if (!whiteMoves.length) {
             setStatusTxt("Please press the 'LOAD' button.");
             return;
@@ -101,29 +128,33 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                     setPlayerTurn(changePlayer(playerTurn));
                     console.log("playerTurn = ", playerTurn);
                     setPlayerToWait(changePlayer(playerToWait));
-                    console.log("playerToWait = ", playerToWait);
+                    //console.log("playerToWait = ", playerToWait);
                 }
                 setCurrentMove(currentMove +1); 
             } else {
+                //currentMove < 0 && setCurrentMove(currentMove +1); 
                 setIsPlayingForward(true);
             }
         }
     }
 
     const handlePreviousMove = () => {
-        console.log(pgnErrors);
+        //console.log(pgnErrors);
         console.log("currentMove = ",currentMove);
         if (!whiteMoves.length) {
             setStatusTxt("Please press the 'LOAD' button.");
             return;
-        } else if (!pgnErrors.length && currentMove > 0) {
+        } else if (!pgnErrors.length && currentMove >= 0) {
             console.log("isPlayingForward = ", isPlayingForward);
+            console.log("currentMove = ",currentMove);
             if (!isPlayingForward) {
-                setPlayerTurn(changePlayer(playerTurn));
-                console.log("playerTurn = ", playerTurn);
-                setPlayerToWait(changePlayer(playerToWait));
-                console.log("playerToWait = ", playerToWait);
-                setCurrentMove(currentMove -1); 
+                if (currentMove > 0) {
+                    setPlayerTurn(changePlayer(playerTurn));
+                    console.log("playerTurn = ", playerTurn);
+                    setPlayerToWait(changePlayer(playerToWait));
+                    //console.log("playerToWait = ", playerToWait);
+                    setCurrentMove(currentMove -1); 
+                }
             } else {
                 setIsPlayingForward(false);
             }
@@ -139,7 +170,8 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
         let currentRound = Math.floor(currentMove/2);
 
         // check for GAME OVER
-        if ((playerTurn === "white" && 
+        if (currentMove >= 0 &&
+            (playerTurn === "white" && 
             !whiteMoves[currentRound]) || 
             (playerTurn === "black" && 
             !blackMoves[currentRound]))
@@ -160,9 +192,9 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
             if (capture) {
                 console.log("capture");
                 for (let i = 0; i < 16; i++) {
-                    // get the last location of the piece
-                    const lastLocation: MoveNbWithLocation = Object.values(pieces[playerToWait][i].location.slice(-1)[0])[0];
-                    console.log(lastLocation);
+                    // get the current round location of the piece
+                    const lastLocation = getPieceLocationByRoundNb(pieces[playerToWait][i].location, currentRound+1);
+                    console.log("lastLocation = ",lastLocation);
                     // captured piece is found on the newLocation
                     if (lastLocation === newLocation) {
                         console.log("lastLocation = ", lastLocation);
@@ -178,16 +210,6 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                         break;
                     } 
                 }
-
-                // HIDE captured piece's image 
-                let idImage = idPiece;
-                if (playerToWait === "black") {
-                    idImage += 16;
-                }
-                const removeFromArray = [...pieces[`${playerToWait}`]];
-                const removedIndex: number = findCapturedPiece(newLocation, removeFromArray);
-                
-                pieceRef.current[removedIndex]!.style.opacity = '0';
             }
 
             // if CASTLING
@@ -297,12 +319,12 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
             if (capture) {
                 for (let i = 0; i < 16; i++) {
                     // captured piece is found on the newLocation
-                    let lastLocation = getPieceLocationByMoveNb(pieces[playerToWait][i].location, currentRound);
-                    console.log(lastLocation);
-                    console.log(currentLocation);
+                    let lastLocation = getPieceLocationByRoundNb(pieces[playerToWait][i].location, currentRound+1);
+                    //console.log(lastLocation);
+                    //console.log(currentLocation);
                     if (lastLocation === currentLocation) {
-                        console.log("playerToWait = ",playerToWait);
-                        console.log("i = ",i);
+                        //console.log("playerToWait = ",playerToWait);
+                        //console.log("i = ",i);
                         dispatch(setPieceData({
                             side: playerToWait, 
                             id: i, 
@@ -312,19 +334,6 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                         break;
                     } 
                 }
-
-                // make REAPPEAR captured piece's image 
-                let idImage = idPiece;
-                if (playerToWait === "black") {
-                    idImage += 16;
-                }
-                console.log("removedSide = ",playerToWait);
-                const removeFromArray = [...pieces[`${playerToWait}`]];
-                const removedIndex: number = findCapturedPiece(currentLocation, removeFromArray);
-                console.log("removedIndex = ",removedIndex);
-                console.log(pieceRef.current[removedIndex]);
-                pieceRef.current[removedIndex]!.style.opacity = '1';
-                //pieceRef.current[removedIndex]?.remove();
             }
 
             // if CASTLING

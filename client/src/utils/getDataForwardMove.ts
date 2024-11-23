@@ -1,6 +1,9 @@
 import { Color } from "../configs/types";
 import { store } from "../store/store";
-import { chessNotationToNumeric, getPieceLastLocation, getPieceLocationByMoveNb } from "./commonFunctions";
+import { chessNotationToNumeric, 
+        getPieceLastLocation, 
+        getPieceLocationByRoundNb,
+        getCapturingPawnId } from "./commonFunctions";
 import { checkObstruction } from "./checkObstruction";
 
 type ReturnType = {
@@ -26,10 +29,9 @@ export const getDataForwardMove = (
     let castlingLong = false;
     let castlingShort = false;
     let capture = false; 
-    let check = false;
-    let checkmate = false;
-    let draw = false;
-    let oneOfAPairMove = false;
+    //let check = false;
+    //let checkmate = false;
+    //let draw = false;
 
     // special notation characters
     if (move.includes("x")) {
@@ -39,14 +41,13 @@ export const getDataForwardMove = (
         console.log("capture = ",capture);
     } 
     if (move.slice(-1) === "+") {
-        check = true; 
+        //check = true; 
         move = move.slice(0, -1);
     } 
-    if (move.length === 4) {
-        oneOfAPairMove = true;
-    } else if (move === "O-O") {
+    if (move === "O-O") {
         castlingShort = true;
-    } else if (move === "O-O-O") {
+    } 
+    if (move === "O-O-O") {
         castlingLong = true;
     } 
     
@@ -118,7 +119,7 @@ export const getDataForwardMove = (
             } break;  
             // KNIGHT move
             case "N": {
-                const firstOfPairLoc = getPieceLocationByMoveNb(pieces[playerTurn][1].location, roundNb); // pair's first element location
+                const firstOfPairLoc = getPieceLocationByRoundNb(pieces[playerTurn][1].location, roundNb); // pair's first element location
                 console.log(pieces[playerTurn][1]);
 
                 console.log(Math.abs(parseInt(newLocation.charAt(0))));
@@ -146,14 +147,17 @@ export const getDataForwardMove = (
             // CASTLE 'O-O'
             case "O": idPiece = 4; break; 
             // pawns: a, ..., h
-            case "a": idPiece = 8;break; 
-            case "b": idPiece = 9; break; 
-            case "c": idPiece = 10; break; 
-            case "d": idPiece = 11; break; 
-            case "e": idPiece = 12; break; 
-            case "f": idPiece = 13; break; 
-            case "g": idPiece = 14; break; 
-            case "h": idPiece = 15; break; 
+            case "a":
+            case "b": 
+            case "c": 
+            case "d":
+            case "e": 
+            case "f":
+            case "g":  
+            case "h": {
+                idPiece = getCapturingPawnId(move.charAt(0), newLocation, playerTurn, roundNb, pieces[playerTurn]); 
+                break; 
+            }
             // Any other letter in notation means 'Error!'
             default: console.log("Erreur!");
         }

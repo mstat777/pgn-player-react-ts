@@ -1,13 +1,13 @@
 import './App.scss';
-import { useContext, useEffect, useState } from 'react';
-import Loading from './components/Loading/Index';
+import { useContext, useEffect } from 'react';
+//import Loading from './components/Loading/Index';
 import Header from './components/Header/Index';
 import Home from './pages/Home/Index';
 import Footer from './components/Footer/Index';
 import { ThemeContext } from './context/ThemeProvider';
 
 function App() {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    //const [isLoading, setIsLoading] = useState<boolean>(false);
     const { darkTheme } = useContext(ThemeContext);
 
     useEffect(() => {
@@ -18,8 +18,8 @@ function App() {
     },[darkTheme]);
 
     return (
-        isLoading ?
-            <Loading /> :
+        //isLoading ?
+            //<Loading /> :
         <>
             <Header />
             <Home />

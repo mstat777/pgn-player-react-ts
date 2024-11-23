@@ -14,7 +14,7 @@ export const pgnDataSlice = createSlice({
     name: "pgnData",
     initialState,
     reducers: {
-        setPgnData: (state, action: PayloadAction<PGNData>) => {
+        setPgnData: (_state, action: PayloadAction<PGNData>) => {
             return action.payload;
         }
     }

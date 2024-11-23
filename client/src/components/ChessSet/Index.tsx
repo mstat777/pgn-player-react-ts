@@ -6,9 +6,9 @@ import { Color } from '../../configs/types';
 import Loading from '../Loading/Index';
 import { getX, getY } from '../../utils/commonFunctions';
 
-const ChessSet = forwardRef((props, ref) => {
+const ChessSet = forwardRef((_props, ref) => {
     const { squares, pieces } = useAppSelector((state) => state.chessSet);
-    const { moveNb } = useAppSelector((state) => state.pgnData);
+    //const { moveNb } = useAppSelector((state) => state.pgnData);
 
     const piecesLength = pieces.white.length + pieces.black.length;
 
