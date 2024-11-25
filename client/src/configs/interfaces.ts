@@ -69,3 +69,7 @@ export interface ChessSet {
         black: IChessPiece[]
     };
 }
+
+export interface HTMLInputEvent extends Event {
+    target: HTMLInputElement & EventTarget;
+}

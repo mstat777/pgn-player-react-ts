@@ -1,17 +1,18 @@
 import './Notation.scss';
-import { useState, Dispatch, SetStateAction, forwardRef, MutableRefObject, useEffect } from 'react';
+import { useState, Dispatch, SetStateAction, forwardRef, MutableRefObject, useEffect, ChangeEvent } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBackwardFast, faCaretLeft, faCaretRight, faForwardFast } from '@fortawesome/free-solid-svg-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { initializePieces, initializeSquares, setPieceData } from '../../store/slices/chessSet';
 import { Color } from '../../configs/types';
-import { MoveNbWithLocation } from '../../configs/interfaces';
+import { MoveNbWithLocation, HTMLInputEvent } from '../../configs/interfaces';
 import { getDataForwardMove } from '../../utils/getDataForwardMove';
 import { getDataBackwardMove } from '../../utils/getDataBackwardMove';
 import { formatPgnData, validatePgnData } from '../../utils/pgnDataFunctions';
 import { changePlayer, getX, getY, getLocationByRoundNb } from '../../utils/commonFunctions';
 import { findCapturedPiece } from '../../utils/findCapturedPiece';
 import { castling } from '../../utils/castling';
+import FileUploader from '../FileUploader/Index';
 
 type Props = {
     setStatusTxt: Dispatch<SetStateAction<string>>;
@@ -23,6 +24,7 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
     const { whiteMoves, blackMoves } = useAppSelector((state) => state.pgnData);
 
     const pieces = useAppSelector((state) => state.chessSet.pieces);
+
     const pieceRef = ref as MutableRefObject<(HTMLDivElement | null)[]>;
     console.log(pieces);
     const pgnErrors = useAppSelector((state) => state.pgnData.errors);
@@ -71,6 +73,8 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
             setIsArrowRightDown(false);
         }
     });
+
+    
 
     const initialize = () => {
         console.clear();
@@ -407,41 +411,49 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
         (pieces.white.length && pieces.black.length) &&
         <section className="notation_section">
 
-            <div className="command_panel">
-                <div className="functions_btn">
-                    <button 
-                        id="loadBtn"
-                        onClick={handleLoad}
-                    >load</button>
+            <div className="control_panel">
+                <div className="control_ctn">
+                    <FileUploader 
+                        setPgnTxt={setPgnTxt}
+                        //handleFile={(e) => readPgn(e)}
+                    />
+                </div>  
+                <div className="control_ctn">
+                    <div className="functions_btn">
+                        <button 
+                            id="loadBtn"
+                            onClick={handleLoad}
+                        >load</button>
 
-                    <button 
-                        id="clearBtn"
-                        onClick={handleClear}
-                    >clear</button>
-                </div>
+                        <button 
+                            id="clearBtn"
+                            onClick={handleClear}
+                        >clear</button>
+                    </div>
 
-                <div className="nav_btn">
-                    <button id="toStartBtn">
-                        <FontAwesomeIcon icon={faBackwardFast}/>
-                    </button>
+                    <div className="nav_btn">
+                        <button id="toStartBtn">
+                            <FontAwesomeIcon icon={faBackwardFast}/>
+                        </button>
 
-                    <button 
-                        id="previousMoveBtn"
-                        onClick={handlePreviousMove}
-                    >
-                        <FontAwesomeIcon icon={faCaretLeft}/>
-                    </button>
+                        <button 
+                            id="previousMoveBtn"
+                            onClick={handlePreviousMove}
+                        >
+                            <FontAwesomeIcon icon={faCaretLeft}/>
+                        </button>
 
-                    <button 
-                        id="nextMoveBtn"
-                        onClick={handleNextMove}
-                    >
-                        <FontAwesomeIcon icon={faCaretRight}/>
-                    </button>
+                        <button 
+                            id="nextMoveBtn"
+                            onClick={handleNextMove}
+                        >
+                            <FontAwesomeIcon icon={faCaretRight}/>
+                        </button>
 
-                    <button id="toEndBtn">
-                        <FontAwesomeIcon icon={faForwardFast}/>
-                    </button>
+                        <button id="toEndBtn">
+                            <FontAwesomeIcon icon={faForwardFast}/>
+                        </button>
+                    </div>
                 </div>
             </div>
 

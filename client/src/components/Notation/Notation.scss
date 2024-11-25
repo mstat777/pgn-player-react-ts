@@ -24,20 +24,21 @@
         margin: 0 1rem 0 2rem;
     }
 
-
-    .command_panel {
-        display: flex;
-        justify-content: space-between;
-        height: 40px;
-        padding: 10px 5px;
+    .control_panel {
         outline: 1px solid var(--darkshade-color-1);
         background-color: var(--lightshade-color-4);
-    
-        .functions_btn {
+
+        .control_ctn {
             display: flex;
-            align-items: center;
-    
-            > button {
+            justify-content: space-between;
+            margin: 10px 5px;
+
+            & + .control_ctn {
+                margin-top: .5rem;
+            }
+
+            .open_btn,
+            button {
                 @include button;
                 padding: 0 6px;
                 font-weight: 600;
@@ -46,37 +47,55 @@
                 color: var(--tertiary-color-3);
                 background-color: var(--lightshade-color-4);
             }
-    
-            .clear_btn {
-                border-color: $highlight-color;
-                color: $highlight-color;
-                transition: color .4s;
-            }
-        
-            .load_btn {
-                border-color: var(--tertiary-color-3);
-                color: var(--lightshade-color-4);
-                background-color: var(--tertiary-color-3);
-                transition: background-color .4s;
-                &:hover {
-                    background-color: var(--tertiary-color-1);
+
+            .open_btn {
+                &::file-selector-button {
+                    &::content {
+                        content: "OPEN";
+                    } 
+                    background-color: $green-color-0;
+                }
+
+                > span {
+                    display: none;
                 }
             }
-        }
-    
-        .nav_btn {
-            display: flex;
-            align-items: center;
-    
-            >button {
-                @include button;
+        
+            .functions_btn {
                 display: flex;
-                justify-content: center;
                 align-items: center;
-                width: 30px;
-                font-size: 1.4rem;
-                color: var(--darkshade-color-2);
-                background-color: var(--lightshade-color-2);
+        
+                .clear_btn {
+                    border-color: $highlight-color;
+                    color: $highlight-color;
+                    transition: color .4s;
+                }
+            
+                .load_btn {
+                    border-color: var(--tertiary-color-3);
+                    color: var(--lightshade-color-4);
+                    background-color: var(--tertiary-color-3);
+                    transition: background-color .4s;
+                    &:hover {
+                        background-color: var(--tertiary-color-1);
+                    }
+                }
+            }
+        
+            .nav_btn {
+                display: flex;
+                align-items: center;
+        
+                >button {
+                    @include button;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 30px;
+                    font-size: 1.4rem;
+                    color: var(--darkshade-color-2);
+                    background-color: var(--lightshade-color-2);
+                }
             }
         }
     }
