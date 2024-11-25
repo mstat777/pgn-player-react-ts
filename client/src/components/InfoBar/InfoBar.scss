@@ -2,16 +2,15 @@
 
 .infobar {
     position: relative;
-    width: $chessboard-mobile;
     min-height: 36px;
     padding: 1rem;
-    outline: 1px solid grey;
+    outline: 1px solid var(--lightgrey-color-1);
     box-shadow: 3px 3px 6px 2px var(--lightgrey-color-1);
     background-color: $lightgreengrey-color;
 
-    @media screen and (min-width: $tablet) {
-        width: $chessboard-tablet;
-        margin: 0 1rem 0 2rem;
+    .no_info {
+        margin: 0;
+        font-size: 1.2rem;
     }
 
     .collapse_btn {
@@ -40,11 +39,7 @@
             > * + * {
                 margin-left: .5rem;
             }
-
-            .key {
-
-            }
-
+            
             .value { 
                 font-weight: 500;
             }

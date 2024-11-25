@@ -1,18 +1,20 @@
 import { PayloadAction, combineReducers, configureStore } from "@reduxjs/toolkit";
 import pgnDataReducer from './slices/pgnData';
 import chessSetReducer from './slices/chessSet';
+import settingsReducer from './slices/settings';
 
 const appReducer = combineReducers({
     pgnData: pgnDataReducer,
-    chessSet: chessSetReducer
+    chessSet: chessSetReducer,
+    settings: settingsReducer
 });
 
 const rootReducer = (state: any, action: PayloadAction) => {
     if (action.type === 'RESET_PGN') {
         //console.log("RESET_PGN called!");
         // exclude 'game' & 'chessSet' from being reset
-        const { chessSet } = state;
-        state = { chessSet };
+        const { chessSet, settings } = state;
+        state = { chessSet, settings };
         //console.log(state);
     } else if (action.type === 'RESET_GAME') {
         //console.log("RESET_GAME called!");

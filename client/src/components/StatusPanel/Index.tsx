@@ -26,6 +26,7 @@ export default function StatusPanel(props: Props) {
                 <textarea
                     className="status_txt"
                     value={statusTxt}
+                    rows={3}
                     disabled={true}
                 ></textarea>
             </div>

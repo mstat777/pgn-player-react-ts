@@ -2,16 +2,10 @@
 
 .status_section {
     display: inline-block;
-    width: $chessboard-mobile;
-    height: 150px;
-    margin: 2rem 1rem;
     padding: 1rem;
     outline: 1px solid grey;
     box-shadow: 3px 3px 6px 2px var(--lightgrey-color-1);
-    background-color: var(--darkgrey-color-1);
-    @media screen and (min-width: $tablet) {
-        margin: 0 1rem;
-    }
+    background-color: var(--lightgrey-color-3);
 
     .status_txt_ctn {
         width: 100%;

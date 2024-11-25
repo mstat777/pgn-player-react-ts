@@ -29,18 +29,8 @@ export const chessNotationToNumeric = (chessNotation: string): string => {
     return (chessNotation.charCodeAt(0) - 96) + chessNotation.charAt(1);
 }
 
-// find the last location from all locations of a piece
-export const getPieceLastLocation = (locationArray: MoveNbWithLocation[]): string => {
-    return Object.values(locationArray.slice(-1)[0])[0];
-}
-
-// find the last location from all locations of a piece
-export const getPieceBeforeLastLocation = (locationArray: MoveNbWithLocation[]): string => {
-    return Object.values(locationArray.slice(-2,-1)[0])[0];
-}
-
 // find the last location from a specific move number 
-export const getPieceLocationByRoundNb = (locationArray: MoveNbWithLocation[], roundNb: number): string => {
+export const getLocationByRoundNb = (locationArray: MoveNbWithLocation[], roundNb: number): string => {
     let resultIndex: number = -1;
     const rounds: number[] = [];
     locationArray.map(loc => {
@@ -58,7 +48,7 @@ export const getPieceLocationByRoundNb = (locationArray: MoveNbWithLocation[], r
     }
     console.log("resultIndex = ", resultIndex);
     if (resultIndex === undefined) {
-        throw new Error("Error: getPieceLocationByRoundNb!")
+        throw new Error("Error: getLocationByRoundNb!")
     }
     console.log("result = ", Object.values(locationArray[resultIndex])[0]);
     return (Object.values(locationArray[resultIndex])[0]);
@@ -66,11 +56,6 @@ export const getPieceLocationByRoundNb = (locationArray: MoveNbWithLocation[], r
         roundNb: 
         location: Object.values(locationArray[resultIndex])[0]
     });*/
-}
-
-// find the round number of the piece's last location
-export const getPieceLastLocationRoundNb = (locationArray: MoveNbWithLocation[]): number => {
-    return parseInt(Object.keys(locationArray.slice(-1)[0])[0]);
 }
 
 // find a capturing pawn's index
@@ -83,9 +68,9 @@ export const getCapturingPawnId = (file: string, targetLocation: string, playerT
     console.log("pawnLocation = ",pawnLocation);
 
     for (let i = 8; i < piecesData.length; i++){
-        console.log(getPieceLocationByRoundNb(piecesData[i].location, roundNb));
+        console.log(getLocationByRoundNb(piecesData[i].location, roundNb));
         console.log(chessNotationToNumeric(pawnLocation));
-        if (getPieceLocationByRoundNb(piecesData[i].location, roundNb) === chessNotationToNumeric(pawnLocation)) {
+        if (getLocationByRoundNb(piecesData[i].location, roundNb) === chessNotationToNumeric(pawnLocation)) {
             resultId = i;
             console.log("found!");
             console.log("resultId = ",resultId);

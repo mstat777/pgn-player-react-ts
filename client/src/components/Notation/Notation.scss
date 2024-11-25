@@ -16,12 +16,12 @@
 .notation_section {
     display: inline-flex;
     flex-direction: column;
-    width: $chessboard-mobile;
     margin: 2rem 1rem;
     outline: 1px solid grey;
     box-shadow: 4px 4px 8px 2px var(--darkgrey-color-1);
     @media screen and (min-width: $tablet) {
-        margin: 0 1rem;
+        width: 730px;
+        margin: 0 1rem 0 2rem;
     }
 
 
@@ -82,12 +82,11 @@
     }
 
     .notation {
-        width: 300px;
-        height: 90%;
+        width: 100%;
         padding: 5px;
         
         > textarea {
-            width: 290px;
+            width: 100%;
             height: 100%;
             padding: .5rem;
             box-shadow: inset 0 0 4px var(--darkgrey-color-1);

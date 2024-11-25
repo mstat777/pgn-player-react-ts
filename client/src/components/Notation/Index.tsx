@@ -9,7 +9,8 @@ import { MoveNbWithLocation } from '../../configs/interfaces';
 import { getDataForwardMove } from '../../utils/getDataForwardMove';
 import { getDataBackwardMove } from '../../utils/getDataBackwardMove';
 import { formatPgnData, validatePgnData } from '../../utils/pgnDataFunctions';
-import { changePlayer, getX, getY, getPieceLocationByRoundNb } from '../../utils/commonFunctions';
+import { changePlayer, getX, getY, getLocationByRoundNb } from '../../utils/commonFunctions';
+import { findCapturedPiece } from '../../utils/findCapturedPiece';
 import { castling } from '../../utils/castling';
 
 type Props = {
@@ -72,6 +73,7 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
     });
 
     const initialize = () => {
+        console.clear();
         setCurrentMove(-1);
         setIsPlayingForward(true);
         setPlayerTurn("white");
@@ -102,7 +104,6 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
 
     const handleLoad = () => {
         if (pgnTxt) {
-            console.clear();
             initialize();
             validatePgnData(formatPgnData(pgnTxt));
         } else {
@@ -186,14 +187,71 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
             getDataForwardMove(whiteMoves[currentRound], playerTurn, currentRound) :
             getDataForwardMove(blackMoves[currentRound], playerTurn, currentRound);
         
-        if (idPiece >= 0) {
+        // if CASTLING
+        if (castlingLong || castlingShort) {
+            console.log("castling");
+            const { kingLocation, rookLocation } = castling(castlingShort, castlingLong, playerTurn, isPlayingForward);
+            console.log({ kingLocation, rookLocation });
+            let rookId = castlingLong ? 0 : 7;
+
+            // check if king's move location is added to the locations register
+            // no need to check for the rook
+            const kingLocationsMoveNums: string[] = [];
+            pieces[playerTurn][4].location.map((loc) => {
+                //console.log(Object.keys(loc)[0]);
+                kingLocationsMoveNums.push(Object.keys(loc)[0]);
+            });
+
+            // If king move location is not added, then add it
+            if (!kingLocationsMoveNums.includes((currentRound+1).toString())){
+                let kingMoveAndLocation: MoveNbWithLocation = {};
+                kingMoveAndLocation[currentRound+1] = kingLocation;
+                let rookMoveAndLocation: MoveNbWithLocation = {};
+                rookMoveAndLocation[currentRound+1] = rookLocation;
+                // change king's location
+                dispatch(setPieceData({
+                    side: playerTurn, 
+                    id: 4, 
+                    location: [kingMoveAndLocation],
+                    active: true
+                }));
+                // change rook's location
+                dispatch(setPieceData({
+                    side: playerTurn, 
+                    id: rookId, 
+                    location: [rookMoveAndLocation],
+                    active: true
+                }));
+            }
+
+            // move the king's & rook's images
+            let idKingImage = 4;
+            let idRookImage = castlingLong ? 0 : 7;
+            if (playerTurn === "black") {
+                idKingImage += 16;
+                idRookImage += 16;
+            }
+            const kingImageRef = pieceRef.current[idKingImage];
+            const rookImageRef = pieceRef.current[idRookImage];
+            if (kingImageRef && rookImageRef) {
+                kingImageRef.style.left = `${getX(kingLocation)}%`;
+                kingImageRef.style.bottom = `${getY(kingLocation)}%`;
+                rookImageRef.style.left = `${getX(rookLocation)}%`;
+                rookImageRef.style.bottom = `${getY(rookLocation)}%`;
+            } 
+            else {
+                console.log("Error with king's & rook's images!");
+            }
+        }
+        // if NOT castling
+        else if (idPiece >= 0) {
             console.log("idPiece = ", idPiece);
             // if CAPTURE, find & reactivate the captured piece in redux store:
             if (capture) {
                 console.log("capture");
                 for (let i = 0; i < 16; i++) {
                     // get the current round location of the piece
-                    const lastLocation = getPieceLocationByRoundNb(pieces[playerToWait][i].location, currentRound+1);
+                    const lastLocation = getLocationByRoundNb(pieces[playerToWait][i].location, currentRound+1);
                     console.log("lastLocation = ",lastLocation);
                     // captured piece is found on the newLocation
                     if (lastLocation === newLocation) {
@@ -212,84 +270,36 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                 }
             }
 
-            // if CASTLING
-            if (castlingLong || castlingShort) {
-                console.log(castling);
-                const { kingLocation, rookLocation } = castling(castlingShort, castlingLong, playerTurn);
-
-                console.log({ kingLocation, rookLocation });
-                let kingMoveAndLocation: MoveNbWithLocation = {};
-                kingMoveAndLocation[currentRound+1] = kingLocation;
-                let rookMoveAndLocation: MoveNbWithLocation = {};
-                rookMoveAndLocation[currentRound+1] = rookLocation;
-                // change king's location
+            // check if the move location is added to the locations register
+            const pieceLocationsMoveNums: string[] = [];
+            pieces[playerTurn][idPiece].location.map((loc) => {
+                //console.log(Object.keys(loc)[0]);
+                pieceLocationsMoveNums.push(Object.keys(loc)[0]);
+            });
+            //console.log(pieces[playerTurn][idPiece].location);
+            //console.log(pieceLocationsMoveNums);
+            //console.log((currentRound+1).toString());
+            // If the move location is not added, then add it
+            if (!pieceLocationsMoveNums.includes((currentRound+1).toString())){
+                let pieceMoveAndLocation: MoveNbWithLocation = {};
+                pieceMoveAndLocation[currentRound+1] = newLocation;
                 dispatch(setPieceData({
                     side: playerTurn, 
-                    id: 4, 
-                    location: [kingMoveAndLocation],
+                    id: idPiece, 
+                    location: [pieceMoveAndLocation],
                     active: true
                 }));
-                // change rook's location
-                dispatch(setPieceData({
-                    side: playerTurn, 
-                    id: castlingLong ? 0 : 7, 
-                    location: [rookMoveAndLocation],
-                    active: true
-                }));
-                
-                // move the king's & rook's images
-                let idKingImage = 4;
-                let idRookImage = castlingLong ? 0 : 7;
-                if (playerTurn === "black") {
-                    idKingImage += 16;
-                    idRookImage += 16;
-                }
-                const kingImageRef = pieceRef.current[idKingImage];
-                const rookImageRef = pieceRef.current[idRookImage];
-                if (kingImageRef && rookImageRef) {
-                    kingImageRef.style.left = `${getX(kingLocation)}%`;
-                    kingImageRef.style.bottom = `${getY(kingLocation)}%`;
-                    rookImageRef.style.left = `${getX(rookLocation)}%`;
-                    rookImageRef.style.bottom = `${getY(rookLocation)}%`;
-                } 
-                else {
-                    console.log("Error with king's & rook's images!");
-                }
             }
 
-            // update Redux Store data (location, active, etc.) & move piece's image, only if NOT CASTLING
-            if (!castlingLong && !castlingShort) {
-
-                // check if the move location is not added to the locations register yet. If not, then added it
-                const pieceLocationsMoveNums: string[] = [];
-                pieces[playerTurn][idPiece].location.map((loc) => {
-                    //console.log(Object.keys(loc)[0]);
-                    pieceLocationsMoveNums.push(Object.keys(loc)[0]);
-                });
-                //console.log(pieces[playerTurn][idPiece].location);
-                //console.log(pieceLocationsMoveNums);
-                //console.log((currentRound+1).toString());
-                if (!pieceLocationsMoveNums.includes((currentRound+1).toString())){
-                    let pieceMoveAndLocation: MoveNbWithLocation = {};
-                    pieceMoveAndLocation[currentRound+1] = newLocation;
-                    dispatch(setPieceData({
-                        side: playerTurn, 
-                        id: idPiece, 
-                        location: [pieceMoveAndLocation],
-                        active: true
-                    }));
-                }
-
-                // move the piece's image
-                let idImage = idPiece;
-                if (playerTurn === "black") {
-                    idImage += 16;
-                }
-                const pieceImageRef = pieceRef.current[idImage];
-                if (pieceImageRef) {
-                    pieceImageRef.style.left = `${getX(newLocation)}%`;
-                    pieceImageRef.style.bottom = `${getY(newLocation)}%`;
-                }
+            // move the piece's image
+            let idImage = idPiece;
+            if (playerTurn === "black") {
+                idImage += 16;
+            }
+            const pieceImageRef = pieceRef.current[idImage];
+            if (pieceImageRef) {
+                pieceImageRef.style.left = `${getX(newLocation)}%`;
+                pieceImageRef.style.bottom = `${getY(newLocation)}%`;
             }
         } else { // idPiece === -1, it is 'undefined'
             setStatusTxt("Error: idPiece is 'undefined'!");
@@ -313,18 +323,50 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
             getDataBackwardMove(whiteMoves[currentRound], playerTurn, currentRound) :
             getDataBackwardMove(blackMoves[currentRound], playerTurn, currentRound);
         
-        if (idPiece >= 0) {
+        // if CASTLING
+        if (castlingLong || castlingShort) {
+            console.log("castling");
+            const { kingLocation, rookLocation } = castling(castlingShort, castlingLong, playerTurn, isPlayingForward);
+
+            console.log({ kingLocation, rookLocation });
+            let kingMoveAndLocation: MoveNbWithLocation = {};
+            kingMoveAndLocation[currentRound] = kingLocation;
+            let rookMoveAndLocation: MoveNbWithLocation = {};
+            rookMoveAndLocation[currentRound] = rookLocation;
+            
+            // move the king's & rook's images
+            let idKingImage = 4;
+            let idRookImage = castlingLong ? 0 : 7;
+            if (playerTurn === "black") {
+                idKingImage += 16;
+                idRookImage += 16;
+            }
+            const kingImageRef = pieceRef.current[idKingImage];
+            const rookImageRef = pieceRef.current[idRookImage];
+            if (kingImageRef && rookImageRef) {
+                kingImageRef.style.left = `${getX(kingLocation)}%`;
+                kingImageRef.style.bottom = `${getY(kingLocation)}%`;
+                rookImageRef.style.left = `${getX(rookLocation)}%`;
+                rookImageRef.style.bottom = `${getY(rookLocation)}%`;
+            } 
+            else {
+                console.log("Error with king's & rook's images!");
+            }
+        }
+        // if NOT castling
+        else if (idPiece >= 0) {
             console.log("idPiece = ", idPiece);
             // if CAPTURE, find & desactivate the captured piece in redux store:
             if (capture) {
                 for (let i = 0; i < 16; i++) {
                     // captured piece is found on the newLocation
-                    let lastLocation = getPieceLocationByRoundNb(pieces[playerToWait][i].location, currentRound+1);
+                    let lastLocation = getLocationByRoundNb(pieces[playerToWait][i].location, currentRound+1);
                     //console.log(lastLocation);
                     //console.log(currentLocation);
                     if (lastLocation === currentLocation) {
                         //console.log("playerToWait = ",playerToWait);
                         //console.log("i = ",i);
+                        // reactivate the captured piece
                         dispatch(setPieceData({
                             side: playerToWait, 
                             id: i, 
@@ -334,53 +376,28 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                         break;
                     } 
                 }
-            }
 
-            // if CASTLING
-            if (castlingLong || castlingShort) {
-                console.log(castling);
-                const { kingLocation, rookLocation } = castling(castlingShort, castlingLong, playerTurn);
-
-                console.log({ kingLocation, rookLocation });
-                let kingMoveAndLocation: MoveNbWithLocation = {};
-                kingMoveAndLocation[currentRound] = kingLocation;
-                let rookMoveAndLocation: MoveNbWithLocation = {};
-                rookMoveAndLocation[currentRound] = rookLocation;
-                
-                // move the king's & rook's images
-                let idKingImage = 4;
-                let idRookImage = castlingLong ? 0 : 7;
-                if (playerTurn === "black") {
-                    idKingImage += 16;
-                    idRookImage += 16;
-                }
-                const kingImageRef = pieceRef.current[idKingImage];
-                const rookImageRef = pieceRef.current[idRookImage];
-                if (kingImageRef && rookImageRef) {
-                    kingImageRef.style.left = `${getX(kingLocation)}%`;
-                    kingImageRef.style.bottom = `${getY(kingLocation)}%`;
-                    rookImageRef.style.left = `${getX(rookLocation)}%`;
-                    rookImageRef.style.bottom = `${getY(rookLocation)}%`;
-                } 
-                else {
-                    console.log("Error with king's & rook's images!");
-                }
-            }
-
-            // move piece's image - an ordinary move (NOT CASTLING)
-            if (!castlingLong && !castlingShort) {
-                // move the piece's image
+                // make REAPPEAR captured piece's image 
                 let idImage = idPiece;
-                if (playerTurn === "black") {
+                if (playerToWait === "black") {
                     idImage += 16;
                 }
-                const pieceImageRef = pieceRef.current[idImage];
-                if (pieceImageRef) {
-                    pieceImageRef.style.left = `${getX(newLocation)}%`;
-                    pieceImageRef.style.bottom = `${getY(newLocation)}%`;
-                }
+                console.log("removedSide = ",playerToWait);
+                const removeFromArray = [...pieces[`${playerToWait}`]];
+                const removedIndex: number = findCapturedPiece(currentLocation, removeFromArray, currentRound);
+                console.log("removedIndex = ",removedIndex);
+                console.log(pieceRef.current[removedIndex]);
             }
-
+            // move the piece's image
+            let idImage = idPiece;
+            if (playerTurn === "black") {
+                idImage += 16;
+            }
+            const pieceImageRef = pieceRef.current[idImage];
+            if (pieceImageRef) {
+                pieceImageRef.style.left = `${getX(newLocation)}%`;
+                pieceImageRef.style.bottom = `${getY(newLocation)}%`;
+            }
         } else { // idPiece is 'undefined'
             setStatusTxt("Error: idPiece is 'undefined'!");
         }
@@ -433,7 +450,7 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                     value={pgnTxt}
                     onChange={(e) => setPgnTxt(e.target.value)}
                     placeholder="put your PGN data here..."
-                    rows={8}
+                    rows={4}
                     maxLength={pgnTxtMaxLength}
                 ></textarea>
             </div>

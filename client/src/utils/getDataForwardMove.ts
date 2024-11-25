@@ -1,8 +1,7 @@
 import { Color } from "../configs/types";
 import { store } from "../store/store";
 import { chessNotationToNumeric, 
-        getPieceLastLocation, 
-        getPieceLocationByRoundNb,
+        getLocationByRoundNb,
         getCapturingPawnId } from "./commonFunctions";
 import { checkObstruction } from "./checkObstruction";
 
@@ -71,8 +70,8 @@ export const getDataForwardMove = (
             case "Q": idPiece = 3; break; // QUEEN move
             // ROOK move
             case "R": {
-                const firstOfPairLoc = getPieceLastLocation(pieces[playerTurn][0].location); // pair's first rook location
-                const secondOfPairLoc = getPieceLastLocation(pieces[playerTurn][7].location);
+                const firstOfPairLoc = getLocationByRoundNb(pieces[playerTurn][0].location, roundNb); // pair's first rook location
+                const secondOfPairLoc = getLocationByRoundNb(pieces[playerTurn][7].location, roundNb);
                 console.log(newLocation.charAt(0) === firstOfPairLoc.charAt(0));
                 console.log(newLocation.charAt(1) === firstOfPairLoc.charAt(1));
                 console.log(newLocation.charAt(0) === secondOfPairLoc.charAt(0));
@@ -97,9 +96,9 @@ export const getDataForwardMove = (
                 ) {
                     // both rooks have a row or a column that corresponds to the target location, but it's not indicated which one, because one of the pair is obstructed
                     // check if the 1st of the pair is obstructed
-                    idPiece = checkObstruction(firstOfPairLoc,newLocation, capture) ? 7 : 0;
+                    idPiece = checkObstruction(firstOfPairLoc,newLocation, capture, roundNb) ? 7 : 0;
                     console.log("obstruction Check");
-                    console.log(checkObstruction(firstOfPairLoc,newLocation, capture) );
+                    console.log(checkObstruction(firstOfPairLoc, newLocation, capture, roundNb) );
                     console.log("idPiece = ",idPiece);
                 } else {
                     console.log(`Rook notation error on ${playerTurn}'s move ${move}!`);
@@ -108,7 +107,7 @@ export const getDataForwardMove = (
             } break;
             // BISHOP move
             case "B": {
-                const firstOfPairLoc = getPieceLastLocation(pieces[playerTurn][2].location); 
+                const firstOfPairLoc = getLocationByRoundNb(pieces[playerTurn][2].location, roundNb); 
                 if (firstOfPairLoc && Math.abs((parseInt(firstOfPairLoc.charAt(0)) - parseInt(firstOfPairLoc.charAt(1))) % 2) === Math.abs((parseInt(newLocation.charAt(0)) - parseInt(newLocation.charAt(1))) % 2)) {
                     //console.log("equal");
                     idPiece = 2;
@@ -119,7 +118,7 @@ export const getDataForwardMove = (
             } break;  
             // KNIGHT move
             case "N": {
-                const firstOfPairLoc = getPieceLocationByRoundNb(pieces[playerTurn][1].location, roundNb); // pair's first element location
+                const firstOfPairLoc = getLocationByRoundNb(pieces[playerTurn][1].location, roundNb); // pair's first element location
                 console.log(pieces[playerTurn][1]);
 
                 console.log(Math.abs(parseInt(newLocation.charAt(0))));
@@ -176,12 +175,12 @@ export const getDataForwardMove = (
         switch (move.charAt(0)) {
             // ROOK move
             case "R": {
-                const firstOfPairLoc = getPieceLastLocation(pieces[playerTurn][0].location); // pair's first element location
+                const firstOfPairLoc = getLocationByRoundNb(pieces[playerTurn][0].location, roundNb); // pair's first element location
                 idPiece = (firstOfPairLoc?.charAt(hintType) === hint) ? 0 : 7;
             } break;
             // KNIGHT move
             case "N": {
-                const firstOfPairLoc = getPieceLastLocation(pieces[playerTurn][1].location); // pair's first element location
+                const firstOfPairLoc = getLocationByRoundNb(pieces[playerTurn][1].location, roundNb); // pair's first element location
                 //console.log(firstOfPairLoc);
                 //console.log("hintType = "+hintType);
                 //console.log(firstOfPairLoc.charAt(hintType));

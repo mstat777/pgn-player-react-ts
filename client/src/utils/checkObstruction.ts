@@ -1,9 +1,15 @@
 import { store } from "../store/store";
-import { getPieceLastLocation } from "./commonFunctions";
+import { getLocationByRoundNb } from "./commonFunctions";
 
 // check if the piece's path is obstructed by another piece
 // for queens, rooks or bishops
-export const checkObstruction = (startLocation: string, endLocation: string, capture: boolean): boolean => {
+export const checkObstruction = (
+        startLocation: string, 
+        endLocation: string, 
+        capture: boolean,
+        roundNb: number
+    ): boolean => {
+        
     const state = store.getState();
     const { pieces } = state.chessSet;
 
@@ -52,7 +58,7 @@ export const checkObstruction = (startLocation: string, endLocation: string, cap
         let side = "white";
         for (let j = 0; j < 2; j++){
             let obstacle = pieces[side as keyof typeof pieces].find(piece => 
-                piece.active && (squareArray[i] === getPieceLastLocation(piece.location))
+                piece.active && (squareArray[i] === getLocationByRoundNb(piece.location, roundNb))
             );
 
             if (obstacle) {
@@ -61,14 +67,6 @@ export const checkObstruction = (startLocation: string, endLocation: string, cap
             }
             side = "black";
         }
-        /*let obstacle = pieces.white.find(piece => 
-            piece.active && (squareArray[i] === getPieceLastLocation(piece.location))
-        );
-        if (obstacle) return true;
-        obstacle = pieces.black.find(piece => 
-            piece.active && (squareArray[i] === getPieceLastLocation(piece.location))
-        );
-        if (obstacle) return true;*/
     };
 
     // if there are no obstructing pieces
