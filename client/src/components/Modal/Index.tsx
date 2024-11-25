@@ -7,6 +7,7 @@ import { setShowBoardNotation,
         setShowInfoBar,
         setShowStatusPanel,
 } from '../../store/slices/settings';
+import SwitchBtn from '../buttons/SwitchBtn/Index';
 
 export default function Modal() {
     const { 
@@ -31,31 +32,29 @@ export default function Modal() {
 
                 { showSettings &&
                     <section className="settings">
+                        <h2>Settings</h2>
                         <div className="settings_ctn">
                             <label>Show Info Bar</label>
-                            <button
+                            <SwitchBtn
+                                state={showInfoBar}
                                 onClick={() => dispatch(setShowInfoBar(!showInfoBar))}
-                            >
-                                {showInfoBar ? "ON" : "OFF"}
-                            </button>
+                            />
                         </div>
 
                         <div className="settings_ctn">
                             <label>Show Status Panel</label>
-                            <button
+                            <SwitchBtn
+                                state={showStatusPanel}
                                 onClick={() => dispatch(setShowStatusPanel(!showStatusPanel))}
-                            >
-                                {showStatusPanel ? "ON" : "OFF"}
-                            </button>
+                            />
                         </div>
 
                         <div className="settings_ctn">
                             <label>Show Board Notation</label>
-                            <button
+                            <SwitchBtn
+                                state={showBoardNotation}
                                 onClick={() => dispatch(setShowBoardNotation(!showBoardNotation))}
-                            >
-                                {showBoardNotation ? "ON" : "OFF"}
-                            </button>
+                            />
                         </div>
 
                     </section>

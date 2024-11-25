@@ -5,7 +5,7 @@
     -webkit-box-sizing: border-box; 
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    background-color: var(--lightgrey-color-3);
+    background-color: var(--lightshade-color-3);
     
     .nav {
         display: flex;
@@ -72,7 +72,7 @@
             flex-direction: column;
             width: 100%;
             padding: .8rem 0 1rem;
-            background-color: var(--darkgrey-color-1); // rgba(var(--darkgrey-color-1), 0.9);
+            background-color: var(--darkshade-color-1); // rgba(var(--darkshade-color-1), 0.9);
             transition: transform 5s ease-out;
             z-index: 101;
             @media screen and (min-width: $tablet) {

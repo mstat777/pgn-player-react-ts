@@ -1,37 +1,37 @@
 @use './global' as *;
 
 html[data-theme="light"] {
-    --primary-color: #{$primary-color};
-    --secondary-color: #{$secondary-color};
-    --tertiary-color-0: #{$tertiary-color-0};
-    --tertiary-color-1: #{$tertiary-color-1};
-    --tertiary-color-2: #{$tertiary-color-2};
-    --tertiary-color-3: #{$tertiary-color-3};
+    --primary-color: #{$light-color};
+    --secondary-color: #{$dark-color};
+    --tertiary-color-0: #{$green-color-0};
+    --tertiary-color-1: #{$green-color-1};
+    --tertiary-color-2: #{$green-color-2};
+    --tertiary-color-3: #{$green-color-3};
 
-    --darkgrey-color-4: #{$darkgrey-color-4};
-    --darkgrey-color-3: #{$darkgrey-color-3};
-    --darkgrey-color-2: #{$darkgrey-color-2};
-    --darkgrey-color-1: #{$darkgrey-color-1};
-    --lightgrey-color-1: #{$lightgrey-color-1};
-    --lightgrey-color-2: #{$lightgrey-color-2};
-    --lightgrey-color-3: #{$lightgrey-color-3};
-    --lightgrey-color-4: #{$lightgrey-color-4};
+    --darkshade-color-4: #{$darkgrey-color-4};
+    --darkshade-color-3: #{$darkgrey-color-3};
+    --darkshade-color-2: #{$darkgrey-color-2};
+    --darkshade-color-1: #{$darkgrey-color-1};
+    --lightshade-color-1: #{$lightgrey-color-1};
+    --lightshade-color-2: #{$lightgrey-color-2};
+    --lightshade-color-3: #{$lightgrey-color-3};
+    --lightshade-color-4: #{$lightgrey-color-4};
 }
 
 html[data-theme="dark"] {
-    --primary-color: #{$secondary-color};
-    --secondary-color: #{$primary-color};
-    --tertiary-color-0: #{$tertiary-color-3};
-    --tertiary-color-1: #{$tertiary-color-2};
-    --tertiary-color-2: #{$tertiary-color-1};
-    --tertiary-color-3: #{$tertiary-color-0};
+    --primary-color: #{$dark-color};
+    --secondary-color: #{$light-color};
+    --tertiary-color-0: #{$green-color-3};
+    --tertiary-color-1: #{$green-color-2};
+    --tertiary-color-2: #{$green-color-1};
+    --tertiary-color-3: #{$green-color-0};
 
-    --darkgrey-color-4: #{$lightgrey-color-4};
-    --darkgrey-color-3: #{$lightgrey-color-3};
-    --darkgrey-color-2: #{$lightgrey-color-2};
-    --darkgrey-color-1: #{$lightgrey-color-1};
-    --lightgrey-color-1: #{$darkgrey-color-1};
-    --lightgrey-color-2: #{$darkgrey-color-2};
-    --lightgrey-color-3: #{$darkgrey-color-3};
-    --lightgrey-color-4: #{$darkgrey-color-4};
+    --darkshade-color-4: #{$lightgrey-color-4};
+    --darkshade-color-3: #{$lightgrey-color-3};
+    --darkshade-color-2: #{$lightgrey-color-2};
+    --darkshade-color-1: #{$lightgrey-color-1};
+    --lightshade-color-1: #{$darkgrey-color-1};
+    --lightshade-color-2: #{$darkgrey-color-2};
+    --lightshade-color-3: #{$darkgrey-color-3};
+    --lightshade-color-4: #{$darkgrey-color-4};
 }

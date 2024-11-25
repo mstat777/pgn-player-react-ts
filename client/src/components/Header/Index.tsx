@@ -4,7 +4,7 @@ import { useContext, useState } from 'react';
 import { ThemeContext } from '../../context/ThemeProvider';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
-import BurgerBtn from '../BurgerBtn/Index';
+import BurgerBtn from '../buttons/BurgerBtn/Index';
 import { useAppDispatch } from '../../store/hooks';
 import { setShowModal, setShowSettings } from '../../store/slices/settings';
 

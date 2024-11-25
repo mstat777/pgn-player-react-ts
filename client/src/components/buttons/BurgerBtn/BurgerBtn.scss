@@ -1,4 +1,4 @@
-@use '../../scss/global.scss' as *;
+@use '../../../scss/global.scss' as *;
 $btn-height: 36px;
 
 .burger_btn {
@@ -10,7 +10,7 @@ $btn-height: 36px;
     justify-content: center;
     height: 36px;
     width: 36px;
-    border: 3px solid var(--lightgrey-color-3);
+    border: 3px solid var(--lightshade-color-3);
     border-radius: 9px;
     color: var(--secondary-color);
     background-color: transparent; 
@@ -18,7 +18,7 @@ $btn-height: 36px;
     transition: all .4s;
 
     &:hover {
-        border-color: $primary-color;
+        border-color: $light-color;
         color: var(--tertiary-color-2);
     }
 

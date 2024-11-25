@@ -2,8 +2,8 @@
 
 .chess_set {
     position: relative;
-    outline: 1px solid var(--darkgrey-color-4);
-    box-shadow: 6px 6px 12px 3px var(--darkgrey-color-1);
+    outline: 1px solid var(--darkshade-color-4);
+    box-shadow: 6px 6px 12px 3px var(--darkshade-color-1);
 
     .chessboard {
         width: 100%;
@@ -33,10 +33,10 @@
         }
 
         .dark {
-            background-color: var(--lightgrey-color-1);
+            background-color: var(--lightshade-color-1);
         }
         .light {
-            background-color: var(--lightgrey-color-3);
+            background-color: var(--lightshade-color-3);
         }
     }
 

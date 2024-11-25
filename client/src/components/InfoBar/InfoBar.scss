@@ -4,8 +4,8 @@
     position: relative;
     min-height: 36px;
     padding: 1rem;
-    outline: 1px solid var(--lightgrey-color-1);
-    box-shadow: 3px 3px 6px 2px var(--lightgrey-color-1);
+    outline: 1px solid var(--lightshade-color-1);
+    box-shadow: 3px 3px 6px 2px var(--lightshade-color-1);
     background-color: $lightgreengrey-color;
 
     .no_info {
@@ -24,7 +24,7 @@
         height: 22px;
         border-radius: 50%;
         border: none;
-        background-color: var(--lightgrey-color-4);
+        background-color: var(--lightshade-color-4);
     }
 
     &_details,

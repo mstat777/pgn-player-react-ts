@@ -1,0 +1,38 @@
+@use '../../../scss/global' as *;
+
+$switch-btn-height: 20px;
+$thumb-diameter: 14px;
+$margin: calc(($switch-btn-height - $thumb-diameter) / 2);
+
+.switch_btn {
+    position: relative;
+    width: 36px;
+    height: $switch-btn-height;
+    border-radius: 10px;
+    border: none;
+    background-color: var(--lightshade-color-1);
+    transition: background-color .3s, outline .1s;
+
+    &:hover {
+        outline: 2px solid var(--tertiary-color-3);
+    }
+
+    .thumb {
+        position: absolute;
+        top: $margin;
+        left: $margin;
+        width: $thumb-diameter;
+        height: $thumb-diameter;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        transition: left .3s, background-color .3s;
+    }
+}
+
+.toggled {
+    background-color: var(--tertiary-color-1);
+
+    .thumb {
+        left: calc(100% - $thumb-diameter - $margin);
+    }
+}

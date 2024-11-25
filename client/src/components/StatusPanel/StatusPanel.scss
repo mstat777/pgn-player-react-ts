@@ -4,15 +4,15 @@
     display: inline-block;
     padding: 1rem;
     outline: 1px solid grey;
-    box-shadow: 3px 3px 6px 2px var(--lightgrey-color-1);
-    background-color: var(--lightgrey-color-3);
+    box-shadow: 3px 3px 6px 2px var(--lightshade-color-1);
+    background-color: var(--lightshade-color-3);
 
     .status_txt_ctn {
         width: 100%;
         height: 100%;
         padding: 1rem;
         border-radius: 12px;
-        box-shadow: inset 0 0 5px 2px var(--darkgrey-color-2);
+        box-shadow: inset 0 0 5px 2px var(--darkshade-color-2);
         background-color: var(--secondary-color);
 
         .status_txt {
