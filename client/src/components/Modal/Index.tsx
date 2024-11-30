@@ -1,65 +1,31 @@
 import './Modal.scss';
+import { ReactNode } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleXmark } from '@fortawesome/free-regular-svg-icons';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { setShowBoardNotation,
-        setShowModal,
-        setShowInfoBar,
-        setShowStatusPanel,
-} from '../../store/slices/settings';
-import SwitchBtn from '../buttons/SwitchBtn/Index';
+import { useAppDispatch } from '../../store/hooks';
+import { setShowModal } from '../../store/slices/settings';
 
-export default function Modal() {
-    const { 
-        showBoardNotation,
-        showInfoBar,
-        showSettings,
-        showStatusPanel
-    } = useAppSelector((state) => state.settings);
+interface Props {
+   children?: ReactNode;
+}
 
-    const dispatch = useAppDispatch();
+export default function Modal({children}: Props) {
 
-    return (
-        <div className="modal_ctn">
-            <section className="modal">
-                <button 
-                    className="close_btn"
-                    onClick={() => dispatch(setShowModal(false
-                    ))}
-                >
-                    <FontAwesomeIcon icon={faCircleXmark} />
-                </button>
+   const dispatch = useAppDispatch();
 
-                { showSettings &&
-                    <section className="settings">
-                        <h2>Settings</h2>
-                        <div className="settings_ctn">
-                            <label>Show Info Bar</label>
-                            <SwitchBtn
-                                state={showInfoBar}
-                                onClick={() => dispatch(setShowInfoBar(!showInfoBar))}
-                            />
-                        </div>
+   return (
+      <div className="modal_ctn">
+         <section className="modal">
+            <button 
+               className="close_btn"
+               onClick={() => dispatch(setShowModal(false))}
+            >
+               <FontAwesomeIcon icon={faCircleXmark} />
+            </button>
 
-                        <div className="settings_ctn">
-                            <label>Show Status Panel</label>
-                            <SwitchBtn
-                                state={showStatusPanel}
-                                onClick={() => dispatch(setShowStatusPanel(!showStatusPanel))}
-                            />
-                        </div>
+            { children }
 
-                        <div className="settings_ctn">
-                            <label>Show Board Notation</label>
-                            <SwitchBtn
-                                state={showBoardNotation}
-                                onClick={() => dispatch(setShowBoardNotation(!showBoardNotation))}
-                            />
-                        </div>
-
-                    </section>
-                }
-            </section>
-        </div>
-    );
+         </section>
+      </div>
+   );
 }

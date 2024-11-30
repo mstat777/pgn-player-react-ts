@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 import BurgerBtn from '../buttons/BurgerBtn/Index';
 import { useAppDispatch } from '../../store/hooks';
-import { setShowModal, setShowSettings } from '../../store/slices/settings';
+import { setShowModal, setShowSettings, setShowDB } from '../../store/slices/settings';
 
 // memo is in order to avoid rerendering
 export default function Header() {
@@ -44,11 +44,24 @@ export default function Header() {
                             <button
                                 onClick={() => {
                                     setShowMenu(false);
+                                    dispatch(setShowDB(true));
+                                    dispatch(setShowSettings(false));
+                                    dispatch(setShowModal(true));
+                                }}
+                            >database</button>
+                        </li>
+                        
+                        <li>
+                            <button
+                                onClick={() => {
+                                    setShowMenu(false);
                                     dispatch(setShowSettings(true));
+                                    dispatch(setShowDB(false));
                                     dispatch(setShowModal(true));
                                 }}
                             >settings</button>
                         </li>
+
                         <li>
                             <button>about</button>
                         </li>

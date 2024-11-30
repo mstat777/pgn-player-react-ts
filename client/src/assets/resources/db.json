@@ -1,0 +1,26 @@
+{
+   "db": {
+      "famous-games": [
+         "McDonnell-La Bourdonnais 0-1 - 1834",
+         "Steinitz-Lasker 1-0 - 1896",
+         "Botvinnik-Reshevsky 0-1 - 1948",
+         "Byrne vs Fischer 0-1 - 1956"
+      ],
+      "famous-players": {
+         "Aronian": {
+            "WHITE - D45 - Semi-Slav Defense": [
+               "Aronian-Akopian",
+               "Aronian-Jakovenko",
+               "Aronian-Kornev"
+            ]
+         },
+         "Nakamura": {
+            "WHITE - D12 - Slav Defense": [
+               "D12 - Nakamura-Bluebaum 1-0",
+               "D12 - Nakamura-Harikrishna 1-0",
+               "D12 - Nakamura-Jobava 1-0"
+            ]
+         }
+      }
+   }
+}

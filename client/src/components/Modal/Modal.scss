@@ -28,7 +28,7 @@
         padding: 1.5rem 1rem 1rem;
         border-radius: 8px;
         text-align: left;
-        background-color: var(--darkbluegrey-color-2);
+        background-color: var(--primary-color);
 
         @media screen and (min-width: $tablet){
             max-width: 500px;
@@ -37,7 +37,7 @@
 
         .close_btn {
             position: absolute;
-            top: -20px;
+            top: -36px;
             left: 50%;
             transform: translateX(-50%);
             border: none;
@@ -46,26 +46,10 @@
             background-color: transparent;
         }
 
-        .settings {
-            width: 100%;
-            height: 100%;
-            padding: 2rem;
-            background-color: $light-color;
-            
-            > h2 {
-                margin-top: 0;
-                text-align: center;
-            }
-
-            &_ctn {
-                display: flex;
-                align-items: center;
-                padding: .5rem;
-
-                > button {
-                    margin-left: 1rem;
-                }
-            }
+        > * {
+            overflow-y: auto;
+            white-space: break-spaces;
+            word-break: break-word;
         }
     }
 }
