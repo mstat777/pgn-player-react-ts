@@ -8,7 +8,7 @@ import Modal from '../../components/Modal/Index';
 import StatusPanel from '../../components/StatusPanel/Index';
 import InfoBar from '../../components/InfoBar/Index';
 import SettingsList from '../../components/SettingsList/Index';
-import DatabaseList from '../../components/DatabaseList/Index';
+import DBList from '../../components/DBList/Index';
 
 export default function Home(){
    const dispatch = useAppDispatch();
@@ -51,7 +51,7 @@ export default function Home(){
 
          { showModal &&      
             <Modal 
-               children={showDB ? <DatabaseList /> : <SettingsList />}
+               children={showDB ? <DBList /> : <SettingsList />}
             /> 
          }
       </main>

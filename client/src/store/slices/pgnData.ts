@@ -6,6 +6,7 @@ const initialState: PGNData = {
    moveNb: [],
    whiteMoves: [],
    blackMoves: [],
+   comments: [],
    errors: [],
    status: "",
    pgnTxt: ""

@@ -14,11 +14,13 @@ export const formatPgnData = (pgnData: string): PGNData => {
    let isTag = false; // for writing a tag (key & value)
    let isTagValue = false; // for writing a tag's value
    let isWritingMoves = false; // indicate moves part of the data
+   let isWritingComment = false;
 
    const tags: TagType = {};
    const moveNb: string[] = [];
    const whiteMoves: string[] = [];
    const blackMoves: string[] = [];
+   const comments: string[] = [];
    const errors: string[] = [];
    let resultMsg: string = '';
 
@@ -34,6 +36,7 @@ export const formatPgnData = (pgnData: string): PGNData => {
                tagValue = "";
                isTag = false;
             } else {
+               console.log("error");
                errors.push("Unexpected character found: ']' (closing square bracket)");
             }
          } else if (data.charAt(i) === "\"") {
@@ -44,6 +47,7 @@ export const formatPgnData = (pgnData: string): PGNData => {
                   isTagValue = false;
                }
             } else {
+               console.log("error");
                errors.push("Unexpected character found: \" (quotes)");
             }
          } else if (data.charAt(i) === " ") {
@@ -65,29 +69,45 @@ export const formatPgnData = (pgnData: string): PGNData => {
                   tagKey += data.charAt(i);
                }
             } else {
+               console.log("error");
                errors.push(`Unexpected character found: ${data.charAt(i)}`);
             }
          }
       }
       
       // if NO tags, or tags are already written,
-      // => extract moves data into an array using empty space (or dot) as separator
+      // => extract moves data into an array using empty space (or dot) as a separator
       else if (isWritingMoves) {
-         if (data.charAt(i) === " " || data.charAt(i) === "\n") {
-            if (!previousIsSpace && move) {
+         if (isWritingComment) {
+            if (data.charAt(i) === "}") {
+               isWritingComment = false;  
                movesArray.push(move);
                move = "";
-               previousIsSpace = true;
+            } else {
+               move += data.charAt(i);
             }
-         } else if (data.charAt(i) === ".") {
-            move += data.charAt(i);
-            movesArray.push(move);
-            move = "";
          } else {
-            move += data.charAt(i);
-            previousIsSpace && (previousIsSpace = false);
-            // if last character reached:
-            i === data.length - 1 && movesArray.push(move);
+            // NOT a comment
+            if (data.charAt(i) === " " || data.charAt(i) === "\n") {
+               if (!previousIsSpace && move) {
+                  movesArray.push(move);
+                  move = "";
+                  previousIsSpace = true;
+               }
+            } else if (data.charAt(i) === ".") {
+               move += data.charAt(i);
+               movesArray.push(move);
+               move = "";
+            } else if (data.charAt(i) === "{") {
+               // a comment is found. Start writing it
+               move += data.charAt(i);
+               isWritingComment = true; 
+            } else {
+               move += data.charAt(i);
+               previousIsSpace && (previousIsSpace = false);
+               // if last character reached:
+               i === data.length - 1 && movesArray.push(move);
+            }
          }
       }
    }
@@ -115,21 +135,28 @@ export const formatPgnData = (pgnData: string): PGNData => {
          movesArray.pop();
       }
    }
-
+   console.log(movesArray);
+   console.log(errors);
    // if NO errors found while formatting,
    // => split the moves according to player
    if (!errors.length) {
       movesArray.forEach((el, i) => {
-         switch (i % 3) {
-            case 0: moveNb.push(el); break;
-            case 1: whiteMoves.push(el); break;
-            case 2: blackMoves.push(el); break;
-            default: errors.push("An error occured while formatting the PGN data. (#SplitMovesError)");
-         } 
+         if (el.charAt(0) === "{") {
+            comments.push(el.slice(1));
+         } else {
+            // if it's NOT a comment
+            switch ((i - comments.length) % 3) {
+               case 0: moveNb.push(el); break;
+               case 1: whiteMoves.push(el); break;
+               case 2: blackMoves.push(el); break;
+               default: errors.push("An error occured while formatting the PGN data. (#SplitMovesError)");
+            } 
+         }
       });
    }
+   console.log(whiteMoves);
 
-   return {tags, moveNb, whiteMoves, blackMoves, errors, resultMsg}
+   return {tags, moveNb, whiteMoves, blackMoves, comments, errors, resultMsg}
 }
 
 // verify formatted PGN data

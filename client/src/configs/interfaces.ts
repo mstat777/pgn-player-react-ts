@@ -42,6 +42,7 @@ export interface PGNData {
    moveNb: string[];
    whiteMoves: string[];
    blackMoves: string[];
+   comments?: string[];
    errors: string[];
    status?: string;
    resultMsg?: string;

@@ -1,26 +1,38 @@
 {
    "db": {
       "famous-games": [
-         "McDonnell-La Bourdonnais 0-1 - 1834",
-         "Steinitz-Lasker 1-0 - 1896",
-         "Botvinnik-Reshevsky 0-1 - 1948",
+         "McDonnell vs La Bourdonnais 0-1 - 1834",
+         "Steinitz vs Lasker 1-0 - 1896",
+         "Botvinnik vs Reshevsky 0-1 - 1948",
          "Byrne vs Fischer 0-1 - 1956"
       ],
       "famous-players": {
-         "Aronian": {
-            "WHITE - D45 - Semi-Slav Defense": [
-               "Aronian-Akopian",
-               "Aronian-Jakovenko",
-               "Aronian-Kornev"
-            ]
-         },
-         "Nakamura": {
-            "WHITE - D12 - Slav Defense": [
-               "D12 - Nakamura-Bluebaum 1-0",
-               "D12 - Nakamura-Harikrishna 1-0",
-               "D12 - Nakamura-Jobava 1-0"
-            ]
-         }
+         "Aronian": [
+            "Aronian-Akopian",
+            "Aronian-Jakovenko",
+            "Aronian-Kornev"
+         ],
+         "Nakamura": [
+            "D12 - Nakamura-Bluebaum 1-0",
+            "D12 - Nakamura-Harikrishna 1-0",
+            "D12 - Nakamura-Jobava 1-0"
+         ]
+      },
+      "openings-white": {
+         "A70 - Benoni D. - Modern, Classical, New York V": [
+            "Blagojevic, Dragisa-Indjic, Dusan-1990",
+            "Chernin, Alexander-Lobron, Eric-1990",
+            "Chernin, Alexander-Sandic, Vladeta-1988",
+            "Evans, Larry M.-Lombardy, William J-1956",
+            "Gelfand, Boris-Illescas Cordoba, Miguel-1989",
+            "Miles, Anthony J-Indjic, Dusan-1989",
+            "Novikov, Igor A-Madl, Ildiko-1991",
+            "Polgar, Zsuzsa-Norwood, David R-1989",
+            "Sokolin, Leonid M-Cseshkovsky, Vitaly-1991"
+         ]
+      },
+      "openings-black": {
+         
       }
    }
 }
