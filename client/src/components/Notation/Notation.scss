@@ -1,6 +1,9 @@
 @use '../../scss/global.scss' as *;
 
 @mixin button {
+   display: flex;
+   justify-content: center;
+   align-items: center;
    height: 20px;
    margin: 0 5px;
    border: 1px solid var(--tertiary-color-3);
@@ -11,6 +14,7 @@
    -moz-user-select: none;
    -ms-user-select: none;
    user-select: none; 
+   transition: all .4s;
 }
 
 .notation_section {
@@ -42,7 +46,7 @@
             @include button;
             padding: 0 6px;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.4rem;
             letter-spacing: 1px;
             color: var(--tertiary-color-3);
             background-color: var(--lightshade-color-4);
@@ -52,37 +56,38 @@
             }
          }
 
-         .open_btn {
-            &::file-selector-button {
-               &::content {
-                  content: "OPEN";
-               } 
-               background-color: $green-color-0;
-            }
-
-            > span {
-               display: none;
-            }
-         }
-      
          .functions_btn {
             display: flex;
             align-items: center;
+
+            .open_btn {
+               color: rgb(109, 75, 0);
+
+               &::file-selector-button {
+                  &::content {
+                     content: "OPEN";
+                  } 
+                  background-color: $green-color-0;
+               }
    
-            .clear_btn {
-               border-color: $highlight-color;
-               color: $highlight-color;
-               transition: color .4s;
+               > span {
+                  display: none;
+               }
             }
-      
+   
             .load_btn {
-               border-color: var(--tertiary-color-3);
-               color: var(--lightshade-color-4);
-               background-color: var(--tertiary-color-3);
-               transition: background-color .4s;
+               color: var(--tertiary-color-3);
                &:hover {
                   background-color: var(--tertiary-color-1);
                }
+            }
+
+            .clear_btn {
+               color: $highlight-color;
+            }
+
+            .flip_board_btn {
+               color: blue;
             }
          }
       
@@ -92,9 +97,6 @@
    
             >button {
                @include button;
-               display: flex;
-               justify-content: center;
-               align-items: center;
                width: 25px;
                margin: 0 4px;
                font-size: 1.4rem;

@@ -1,122 +1,143 @@
 @use '../../scss/global.scss' as *;
 
 .chess_set {
-    position: relative;
-    outline: 1px solid var(--darkshade-color-4);
-    box-shadow: 6px 6px 12px 3px var(--darkshade-color-1);
+   position: relative;
+   outline: 1px solid var(--darkshade-color-4);
+   box-shadow: 6px 6px 12px 3px var(--darkshade-color-1);
 
-    .chessboard {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        display: grid;
-        grid-template-rows: repeat(8, 1fr);
-        grid-template-columns: repeat(8, 1fr);
-        grid-template-areas: "a8 b8 c8 d8 e8 f8 g8 h8" "a7 b7 c7 d7 e7 f7 g7 h7" "a6 b6 c6 d6 e6 f6 g6 h6" "a5 b5 c5 d5 e5 f5 g5 h5" "a4 b4 c4 d4 e4 f4 g4 h4" "a3 b3 c3 d3 e3 f3 g3 h3" "a2 b2 c2 d2 e2 f2 g2 h2" "a1 b1 c1 d1 e1 f1 g1 h1";
-        gap: 0;
-        z-index: 10;
-        @media screen and (min-width: $tablet) {
-            width: calc(100% - 2rem);
-            height: calc(100% - 2rem);
-            margin: 1rem;
-        }
+   .chessboard {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: grid;
+      grid-template-rows: repeat(8, 1fr);
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-areas: "a8 b8 c8 d8 e8 f8 g8 h8" "a7 b7 c7 d7 e7 f7 g7 h7" "a6 b6 c6 d6 e6 f6 g6 h6" "a5 b5 c5 d5 e5 f5 g5 h5" "a4 b4 c4 d4 e4 f4 g4 h4" "a3 b3 c3 d3 e3 f3 g3 h3" "a2 b2 c2 d2 e2 f2 g2 h2" "a1 b1 c1 d1 e1 f1 g1 h1";
+      gap: 0;
+      z-index: 10;
+      @media screen and (min-width: $tablet) {
+         width: calc(100% - 2rem);
+         height: calc(100% - 2rem);
+         margin: 1rem;
+      }
 
-        .square {
-            //position: relative;
-            width: 100%;
-            aspect-ratio: 1;
-        
-            img {
-                position: relative;
-                z-index: -9;
-            }
-        }
-
-        .dark {
-            background-color: var(--lightshade-color-1);
-        }
-        .light {
-            background-color: var(--lightshade-color-3);
-        }
-    }
-
-    .pieces_ctn {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 20;
-        @media screen and (min-width: $tablet) {
-            width: calc(100% - 2rem);
-            height: calc(100% - 2rem);
-            margin: 1rem;
-        }
-
-        .pieces {
+      .square {
+         //position: relative;
+         width: 100%;
+         aspect-ratio: 1;
+      
+         img {
             position: relative;
-            width: 100%;
-            height: 100%;
+            z-index: -9;
+         }
+      }
 
-            .piece {
-                position: absolute;
-                width: calc(100% / 8);
-                height: calc(100% / 8);
-                &:hover {
-                    cursor: grab;  
-                }
+      .dark {
+         background-color: var(--lightshade-color-1);
+      }
+      .light {
+         background-color: var(--lightshade-color-3);
+      }
+   }
 
-                @media screen and (min-width: $tablet) {
-                    width: calc((100% - 2rem) / 8);
-                    height: calc((100% - 2rem) / 8);
-                }
+   .pieces_ctn {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 20;
+      @media screen and (min-width: $tablet) {
+         width: calc(100% - 2rem);
+         height: calc(100% - 2rem);
+         margin: 1rem;
+      }
+
+      .pieces {
+         position: relative;
+         width: 100%;
+         height: 100%;
+
+         .piece {
+            position: absolute;
+            width: calc(100% / 8);
+            height: calc(100% / 8);
+            &:hover {
+               cursor: grab;  
             }
-        }
-    }
 
-    .board_notation {
-        position: absolute;
-        top: 0;
-        left: 0;
-        display: none;
-        @media screen and (min-width: $tablet) {
-            display: grid;
-            grid-template-columns: 1rem auto 1rem;
-            grid-template-rows: 1rem auto 1rem;
-            width: 100%;
-            height: 100%;
-        }
+            @media screen and (min-width: $tablet) {
+               width: calc((100% - 2rem) / 8);
+               height: calc((100% - 2rem) / 8);
+            }
+         }
+      }
+   }
 
-        > * {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            font-weight: 500;
-            font-size: 1rem;
+   .board_notation {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: none;
+      @media screen and (min-width: $tablet) {
+         display: grid;
+         grid-template-columns: 1rem auto 1rem;
+         grid-template-rows: 1rem auto 1rem;
+         width: 100%;
+         height: 100%;
+      }
 
-            &:first-child {
-                grid-row: 1 / 2;
-                grid-column: 2 / 3;
-                justify-content: space-around;
-            }
-            &:nth-child(2) {
-                grid-row: 2 / 3;
-                grid-column: 1 / 2;
-                flex-direction: column;
-                justify-content: space-around;
-            }
-            &:nth-child(3) {
-                grid-row: 2 / 3;
-                grid-column: 3 / 4;
-                flex-direction: column;
-                justify-content: space-around;
-            }
-            &:last-child {
-                grid-row: 3 / 4;
-                grid-column: 2 / 3;
-                justify-content: space-around;
-            }
-        }
+      > * {
+         width: 100%;
+         height: 100%;
+         display: flex;
+         font-weight: 500;
+         font-size: 1rem;
 
-    }
+         &:first-child {
+            grid-row: 1 / 2;
+            grid-column: 2 / 3;
+            justify-content: space-around;
+         }
+         &:nth-child(2) {
+            grid-row: 2 / 3;
+            grid-column: 1 / 2;
+            flex-direction: column;
+            justify-content: space-around;
+         }
+         &:nth-child(3) {
+            grid-row: 2 / 3;
+            grid-column: 3 / 4;
+            flex-direction: column;
+            justify-content: space-around;
+         }
+         &:last-child {
+            grid-row: 3 / 4;
+            grid-column: 2 / 3;
+            justify-content: space-around;
+         }
+      }
+
+   }
+}
+
+.flipped {
+   box-shadow: -6px -6px 12px 3px var(--darkshade-color-1);
+   transform: rotate(180deg);
+
+   .pieces_ctn {
+      .pieces {
+         .piece {
+            transform: rotate(180deg);
+         }
+      }
+   }
+
+   .board_notation {
+      > * {
+         * {
+            transform: rotate(180deg);
+         }
+      }
+   }
 }

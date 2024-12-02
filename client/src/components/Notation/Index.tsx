@@ -1,10 +1,12 @@
 import './Notation.scss';
 import { useState, Dispatch, SetStateAction, forwardRef, MutableRefObject, useEffect, ChangeEvent } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBackwardFast, faCaretLeft, faCaretRight, faForwardFast } from '@fortawesome/free-solid-svg-icons';
+import { faCirclePlay, faChessBoard, faBackwardFast, faCaretLeft, faCaretRight, faForwardFast } from '@fortawesome/free-solid-svg-icons';
+import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { initializePieces, initializeSquares, setPieceData } from '../../store/slices/chessSet';
 import { setPgnTxt } from '../../store/slices/pgnData';
+import { setFlipBoard } from '../../store/slices/settings';
 import { Color } from '../../configs/types';
 import { MoveNbWithLocation, HTMLInputEvent } from '../../configs/interfaces';
 import { getDataForwardMove } from '../../utils/getDataForwardMove';
@@ -14,6 +16,7 @@ import { changePlayer, getX, getY, getLocationByRoundNb } from '../../utils/comm
 import { findCapturedPiece } from '../../utils/findCapturedPiece';
 import { castling } from '../../utils/castling';
 import FileUploader from '../FileUploader/Index';
+import { useMediaQuery } from "react-responsive";
 
 type Props = {
    setStatusTxt: Dispatch<SetStateAction<string>>;
@@ -23,8 +26,10 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
    const dispatch = useAppDispatch();
 
    const { whiteMoves, blackMoves, pgnTxt } = useAppSelector((state) => state.pgnData);
-
    const pieces = useAppSelector((state) => state.chessSet.pieces);
+   const { flipBoard } = useAppSelector((state) => state.settings);
+
+   const isMobile = useMediaQuery({query: '(max-width: 767px)'});
 
    const pieceRef = ref as MutableRefObject<(HTMLDivElement | null)[]>;
    console.log(pieces);
@@ -86,6 +91,16 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
       dispatch(initializePieces());
    }
 
+   const handleLoad = () => {
+      if (pgnTxt) {
+         initialize();
+         validatePgnData(formatPgnData(pgnTxt));
+      } else {
+         setStatusTxt('Nothing is entered!');
+         console.log('Nothing is entered!');
+      }
+   }
+
    const handleClear = () => {
       if (pgnTxt) {
          initialize();
@@ -102,16 +117,6 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                }
             })
          )
-      }
-   }
-
-   const handleLoad = () => {
-      if (pgnTxt) {
-         initialize();
-         validatePgnData(formatPgnData(pgnTxt));
-      } else {
-         setStatusTxt('Nothing is entered!');
-         console.log('Nothing is entered!');
       }
    }
 
@@ -416,36 +421,51 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                   <FileUploader />
 
                   <button 
-                     id="loadBtn"
+                     className="load_btn"
                      onClick={handleLoad}
-                  >load</button>
+                  >
+                     {!isMobile ? 
+                        'load' :
+                        <FontAwesomeIcon icon={faCirclePlay} />}
+                  </button>
 
                   <button 
-                     id="clearBtn"
+                     className="clear_btn"
                      onClick={handleClear}
-                  >clear</button>
+                  >
+                     {!isMobile ? 
+                        'clear' :
+                        <FontAwesomeIcon icon={faTrashCan} />}
+                  </button>
+
+                  <button 
+                     className="flip_board_btn"
+                     onClick={() => dispatch(setFlipBoard(!flipBoard))}
+                  >
+                     {!isMobile ? 
+                        'flip board' :
+                        <FontAwesomeIcon icon={faChessBoard} />}
+                  </button>
                </div>
 
                <div className="nav_btn">
-                  <button id="toStartBtn">
+                  <button>
                      <FontAwesomeIcon icon={faBackwardFast}/>
                   </button>
 
                   <button 
-                     id="previousMoveBtn"
                      onClick={handlePreviousMove}
                   >
                         <FontAwesomeIcon icon={faCaretLeft}/>
                   </button>
 
                   <button 
-                     id="nextMoveBtn"
                      onClick={handleNextMove}
                   >
                         <FontAwesomeIcon icon={faCaretRight}/>
                   </button>
 
-                  <button id="toEndBtn">
+                  <button>
                      <FontAwesomeIcon icon={faForwardFast}/>
                   </button>
                </div>

@@ -1,9 +1,14 @@
 import { useRef, MouseEventHandler, ChangeEvent } from 'react';
 import { useAppDispatch } from '../../store/hooks';
 import { setPgnTxt } from '../../store/slices/pgnData';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
+import { useMediaQuery } from "react-responsive";
 
 export default function FileUploader() {
    const dispatch = useAppDispatch();
+
+   const isMobile = useMediaQuery({query: '(max-width: 767px)'});
 
    const hiddenFileInput = useRef<HTMLInputElement>(null);
 
@@ -35,7 +40,9 @@ export default function FileUploader() {
             className="open_btn"
             onClick={handleClick}
          >
-            open
+            {!isMobile ? 
+               'open' :
+               <FontAwesomeIcon icon={faFolderOpen} />}
          </button>
 
          <input 

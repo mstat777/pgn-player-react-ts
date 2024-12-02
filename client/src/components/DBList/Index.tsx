@@ -5,8 +5,11 @@ import DBListItem from './DBListItem/Index';
 export default function DBList() {
    const famousGames: string[] = Object.values(db)[0]['famous-games'];
    const famousPlayers = Object.entries(Object.values(db)[0]['famous-players']);
-   console.log(famousGames);
-   console.log(famousPlayers);
+   const openingsWhite = Object.entries(Object.values(db)[0]['openings-white']);
+   const openingsBlack = Object.entries(Object.values(db)[0]['openings-black']);
+
+   //console.log(famousGames);
+   //console.log(famousPlayers);
 
    return (
       <section className="db">
@@ -24,6 +27,20 @@ export default function DBList() {
                <DBListItem 
                   name="Famous Players"
                   itemsArr={famousPlayers} 
+               />
+            </li>
+
+            <li>
+               <DBListItem 
+                  name="Openings White"
+                  itemsArr={openingsWhite} 
+               />
+            </li>
+
+            <li>
+               <DBListItem 
+                  name="Openings Black"
+                  itemsArr={openingsBlack} 
                />
             </li>
          </ul>

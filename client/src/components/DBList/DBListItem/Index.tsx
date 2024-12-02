@@ -26,8 +26,8 @@ export default function DBListItem({name, itemsArr}: Props) {
       switch(name){
          case "Famous Games": URL = `db/famous-games`; break;
          case "Famous Players": URL = `db/famous-players/${subcategory}`; break;
-         case "openings-white": URL = `db/${name}/${subcategory}`; break;
-         case "famous-games": URL = `db/${name}/${subcategory}`; break;
+         case "Openings White": URL = `db/openings-white/${subcategory}`; break;
+         case "Openings Black": URL = `db/openings-black/${subcategory}`; break;
          default: throw Error("DBList: Error with the type of getPgnFileData");
       }
 
@@ -38,8 +38,8 @@ export default function DBListItem({name, itemsArr}: Props) {
 
    const getNestedItems = (item: string[] | string) => {
       if (typeof(item) !== 'string') {
-         console.log(item[1]);
-         console.log(item[0]);
+         //console.log(item[1]);
+         //console.log(item[0]);
          return (
             <ul className="subsublist">
                {Object.values(item[1]).map((el, i) => 

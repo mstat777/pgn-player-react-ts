@@ -29,10 +29,40 @@
             "Novikov, Igor A-Madl, Ildiko-1991",
             "Polgar, Zsuzsa-Norwood, David R-1989",
             "Sokolin, Leonid M-Cseshkovsky, Vitaly-1991"
+         ],
+         "A70 - Benoni D. - Modern, Classical, New York V - 8...O-O 9.Bd3 a6 10.a4 Re8": [
+            "Chernin, Alexander-Minasian, Artashes-1990",
+            "Gelfand, Boris-Wahls, Matthias-1989",
+            "Glavina, Pablo-Garbarino, Rodolfo-1988",
+            "Hegeler, Frank-Wanke, Rainer-1990",
+            "Juarez, Alberto-Yabiansky, Marcelo-1992",
+            "Junge, Ralf-Blecken, Volker-1992",
+            "Khalifman, Alexander-Suba, Mihai-1991",
+            "Miles, Anthony J-Levi, Eddy-1992",
+            "Van Der Sterren, Paul-Vokac, Marek-1992"
          ]
       },
       "openings-black": {
-         
+         "A45 - Trompowsky A. - (2...d5 3.Bxf6 exf6 4.e3 Bd6 5.Nf3)": [
+            "Dzindzichashvili, Roman-Yermolinsky, Alex-1993",
+            "Eidelson, Rakhil-Maric, Alisa-2000",
+            "Grinev, Valeriy-Golichenko, Ilija-2006",
+            "Ibragimov, Ildar-Kaidanov, Gregory S-2002",
+            "Pingas, Blas-Gomez Baillo, Jorge H.-1995",
+            "Tindall, Brett-Allen, Andrew-2001"
+         ],
+         "A46 - Indian G. - London S. - 3...c5 4.e3 Nc6 5.c3 Nh5": [
+            "Chojnacki, Slawomir-Macieja, Bartlomiej-2011",
+            "Karayev, Assylkhan-Hansen, Eric-2009",
+            "Kovacevic, Slobodan-Gomez Garrido, Camilo-2010",
+            "Kukov, Velislav-Parligras, Mircea-2013",
+            "Nazaretyan, Tigran-Ponkratov, Pavel-2016",
+            "Palchun, Grigory-Alekseev, Evgeny-2016",
+            "Reyes, Narquinden-Komarov, Dimitri-2015",
+            "Shvedchikov, Anatoli I.-Kozionov, Kirill-2017",
+            "Shvedchikov, Anatoli I.-Moiseenko, Alexander-2014",
+            "Usmanov, Vasily-Ponkratov, Pavel-2016"
+         ]
       }
    }
 }
