@@ -46,11 +46,11 @@ export const getLocationByRoundNb = (locationArray: MoveNbWithLocation[], roundN
             break;
         }
     }
-    console.log("resultIndex = ", resultIndex);
+    //console.log("resultIndex = ", resultIndex);
     if (resultIndex === undefined) {
         throw new Error("Error: getLocationByRoundNb!")
     }
-    console.log("result = ", Object.values(locationArray[resultIndex])[0]);
+    //console.log("result = ", Object.values(locationArray[resultIndex])[0]);
     return (Object.values(locationArray[resultIndex])[0]);
     /*return ({
         roundNb: 

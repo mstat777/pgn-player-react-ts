@@ -65,7 +65,37 @@ export const getDataForwardMove = (
    //console.log("move.length = ",move.length);
    // --------------- a simple pawn move -----------------
    if (move.length === 2) {
-      idPiece = parseInt(newLocation.charAt(0)) + 7;
+      let foundId = -1;
+      let foundLocation = "00";
+      //pieces[playerTurn].find((piece, i) => 
+      for (let i = 8; i < 16; i++) {
+         const currLocation = getLocationByRoundNb(pieces[playerTurn][i].location, roundNb);
+         console.log("currLocation = ",currLocation);
+         console.log("newLocation = ",newLocation);
+         if ( pieces[playerTurn][i].active === true &&
+               currLocation.charAt(0) === newLocation.charAt(0)
+         ) {
+            if (foundId) {
+               foundId = i;
+               foundLocation = currLocation;
+               console.log("foundId = ",foundId);
+               console.log("foundLocation = ",foundLocation);
+            } else {
+               // if the current piece is closer to the new location than the piece found, then it becomes the piece found
+               const currentPieceDist = Math.abs(parseInt(currLocation.charAt(1)) - parseInt(newLocation.charAt(1)));
+               const foundPieceDist = Math.abs(parseInt(foundLocation.charAt(1)) - parseInt(newLocation.charAt(1)));
+
+               if (currentPieceDist < foundPieceDist) {
+                  foundId = i;
+                  foundLocation = currLocation;
+                  console.log("foundId = ",foundId);
+                  console.log("foundLocation = ",foundLocation);
+               }
+            }
+         }
+      };
+      idPiece = foundId;
+      //idPiece = parseInt(newLocation.charAt(0)) + 7;
    }
    // -- a simple piece move (except pawn)/check with pawn ---
    if (move.length === 3) {

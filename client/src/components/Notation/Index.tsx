@@ -1,5 +1,5 @@
 import './Notation.scss';
-import { useState, Dispatch, SetStateAction, forwardRef, MutableRefObject, useEffect, ChangeEvent } from 'react';
+import { useState, Dispatch, SetStateAction, forwardRef, MutableRefObject, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlay, faChessBoard, faBackwardFast, faCaretLeft, faCaretRight, faForwardFast } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
@@ -8,7 +8,7 @@ import { initializePieces, initializeSquares, setPieceData } from '../../store/s
 import { setPgnTxt } from '../../store/slices/pgnData';
 import { setFlipBoard } from '../../store/slices/settings';
 import { Color } from '../../configs/types';
-import { MoveNbWithLocation, HTMLInputEvent } from '../../configs/interfaces';
+import { MoveNbWithLocation } from '../../configs/interfaces';
 import { getDataForwardMove } from '../../utils/getDataForwardMove';
 import { getDataBackwardMove } from '../../utils/getDataBackwardMove';
 import { formatPgnData, validatePgnData } from '../../utils/pgnDataFunctions';
@@ -170,7 +170,22 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
       }
    }
 
-    const moveForward = () => {
+   const handleToBeginning = () => {
+      initialize();
+      // reset pieces positions
+      pieceRef.current.map((pieceImage, i) => {
+         const side = i < 16 ? 'white' : 'black';
+         const id = side === 'white' ? i : i-16;
+         const initLocation = getLocationByRoundNb(pieces[side][id].location, 0);
+         //console.log(pieces[side]);
+         if (pieceImage) {
+            pieceImage.style.left = `${getX(initLocation)}%`;
+            pieceImage.style.bottom = `${getY(initLocation)}%`;
+         }
+      });
+   }
+
+   const moveForward = () => {
       console.clear();
       //console.log(pieces);
       console.log("moveForward");
@@ -312,9 +327,9 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
       } else { // idPiece === -1, it is 'undefined'
          setStatusTxt("Error: idPiece is 'undefined'!");
       }
-    }
+   }
 
-    const moveBackward = () => {
+   const moveBackward = () => {
       console.clear();
       console.log("moveBackward");
       console.log("round = " + Math.floor(currentMove/2) + " move = " + currentMove);
@@ -449,20 +464,16 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                </div>
 
                <div className="nav_btn">
-                  <button>
+                  <button onClick={handleToBeginning}>
                      <FontAwesomeIcon icon={faBackwardFast}/>
                   </button>
 
-                  <button 
-                     onClick={handlePreviousMove}
-                  >
-                        <FontAwesomeIcon icon={faCaretLeft}/>
+                  <button onClick={handlePreviousMove}>
+                     <FontAwesomeIcon icon={faCaretLeft}/>
                   </button>
 
-                  <button 
-                     onClick={handleNextMove}
-                  >
-                        <FontAwesomeIcon icon={faCaretRight}/>
+                  <button onClick={handleNextMove}>
+                     <FontAwesomeIcon icon={faCaretRight}/>
                   </button>
 
                   <button>

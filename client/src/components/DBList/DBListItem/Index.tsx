@@ -21,7 +21,7 @@ export default function DBListItem({name, itemsArr}: Props) {
    }*/
 
    const getPgnFileData = async (fileName: string, name: string, subcategory?: string) => {
-      console.log("getPNGFileData called");
+      //console.log("getPNGFileData called");
       let URL = '';
       switch(name){
          case "Famous Games": URL = `db/famous-games`; break;
@@ -31,7 +31,7 @@ export default function DBListItem({name, itemsArr}: Props) {
          default: throw Error("DBList: Error with the type of getPgnFileData");
       }
 
-      console.log("URL = ", `${URL}/${fileName}.pgn`);
+      //console.log("URL = ", `${URL}/${fileName}.pgn`);
       const data = await (await fetch(`${URL}/${fileName}.pgn`)).text();
       dispatch(setPgnTxt(data));
    }

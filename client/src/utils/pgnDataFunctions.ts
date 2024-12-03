@@ -56,7 +56,7 @@ export const formatPgnData = (pgnData: string): PGNData => {
                   tagValue += data.charAt(i);
                }
             }
-         } else if ( data.charAt(i) === "\n") {
+         } else if ( data.charAt(i) === "\n" || data.charAt(i) === "\r") {
             // skip
          } else if ( data.charAt(i) === "1" && !isTag) {
             isWritingMoves = true;
@@ -88,7 +88,10 @@ export const formatPgnData = (pgnData: string): PGNData => {
             }
          } else {
             // NOT a comment
-            if (data.charAt(i) === " " || data.charAt(i) === "\n") {
+            if (data.charAt(i) === " " || 
+               data.charAt(i) === "\n" ||
+               data.charAt(i) === "\r"
+            ) {
                if (!previousIsSpace && move) {
                   movesArray.push(move);
                   move = "";

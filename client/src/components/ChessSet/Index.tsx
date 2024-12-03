@@ -57,7 +57,7 @@ const ChessSet = forwardRef((_props, ref) => {
                            opacity={piece.active ? '1' : '0'}
                            key={i}
                         />
-                  )
+                     )
                   )
                }
             </div>
