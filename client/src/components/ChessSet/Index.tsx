@@ -41,7 +41,7 @@ const ChessSet = forwardRef((_props, ref) => {
 
          <div className="pieces_ctn">
             <div className="pieces">
-               {/* initialize piece images positions & opacity */}
+               {/* create piece images */}
                { Object.keys(pieces).map((side, indexSide) => 
                   pieces[side as keyof typeof pieces].map((piece, i) =>
                      piece.location &&

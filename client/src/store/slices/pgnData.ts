@@ -16,11 +16,12 @@ export const pgnDataSlice = createSlice({
    name: "pgnData",
    initialState,
    reducers: {
-      setPgnData: (_state, action: PayloadAction<PGNData>) => {
-         return action.payload;
+      setPgnData: (state, action: PayloadAction<PGNData>) => {
+         return { ...state, ...action.payload };
       },
       setPgnTxt: (state, action: PayloadAction<string>) => {
          state.pgnTxt = action.payload;
+         //console.log("change PGN text ", action.payload);
       },
    }
 });

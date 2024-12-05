@@ -13,6 +13,7 @@ import { getDataForwardMove } from '../../utils/getDataForwardMove';
 import { getDataBackwardMove } from '../../utils/getDataBackwardMove';
 import { formatPgnData, validatePgnData } from '../../utils/pgnDataFunctions';
 import { changePlayer, getX, getY, getLocationByRoundNb } from '../../utils/commonFunctions';
+import { initializePiecesImages } from '../../utils/initializePiecesImages';
 import { findCapturedPiece } from '../../utils/findCapturedPiece';
 import { castling } from '../../utils/castling';
 import FileUploader from '../FileUploader/Index';
@@ -51,6 +52,8 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
 
    const [isPlayingForward, setIsPlayingForward] = useState<boolean>(true);
 
+   const [isHandleToEnd, setIsHandleToEnd] = useState<boolean>(false);
+
    // play the move if Move number changed
    useEffect(() => {
       console.log("currentMove = ", currentMove);
@@ -58,6 +61,10 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
          isPlayingForward ? moveForward() : moveBackward();
       }
    },[currentMove, isPlayingForward]);
+
+   useEffect(() => {
+      console.log("pgnTxt = ", pgnTxt);
+   },[pgnTxt]);
 
    addEventListener('keydown', (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft" && !isArrowLeftDown) {
@@ -82,13 +89,16 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
 
    const initialize = () => {
       console.clear();
+      console.log("pgnTxt = ",pgnTxt);
+      setIsGameOver(false);
       setCurrentMove(-1);
       setIsPlayingForward(true);
       setPlayerTurn("white");
       setPlayerToWait("black");
-      //dispatch({type: 'RESET_GAME'}); // reset Redux pgnData slice
       dispatch(initializeSquares());
       dispatch(initializePieces());
+      // reset pieces positions
+      initializePiecesImages(pieceRef, pieces);
    }
 
    const handleLoad = () => {
@@ -104,19 +114,8 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
    const handleClear = () => {
       if (pgnTxt) {
          initialize();
+         setStatusTxt("PGN data cleared.");
          dispatch(setPgnTxt('')); // clear input data
-         setStatusTxt("PGN data cleared.")
-         // reset to initial piece's IMAGE positions
-         Object.keys(pieces).map((side, indexSide) => 
-            pieces[side as keyof typeof pieces].map((piece, i) => {
-               let ref = pieceRef.current[i + (indexSide*16)];
-               if (ref && piece.location) {
-                  ref.style.left = `${getX(piece.location[0][0])}%`;
-                  ref.style.bottom = `${getY(piece.location[0][0])}%`;
-                  ref.style.opacity = '1';
-               }
-            })
-         )
       }
    }
 
@@ -166,23 +165,39 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
             }
          } else {
             setIsPlayingForward(false);
+            if (isGameOver){
+               setIsGameOver(false);
+               setCurrentMove(currentMove -1); 
+            }
          }
       }
    }
 
    const handleToBeginning = () => {
       initialize();
-      // reset pieces positions
-      pieceRef.current.map((pieceImage, i) => {
-         const side = i < 16 ? 'white' : 'black';
-         const id = side === 'white' ? i : i-16;
-         const initLocation = getLocationByRoundNb(pieces[side][id].location, 0);
-         //console.log(pieces[side]);
-         if (pieceImage) {
-            pieceImage.style.left = `${getX(initLocation)}%`;
-            pieceImage.style.bottom = `${getY(initLocation)}%`;
+   }
+
+   const handleToEnd = () => {
+      setIsHandleToEnd(true);
+      if (!whiteMoves.length) {
+         setStatusTxt("Please press the 'LOAD' button.");
+         return;
+      } else if (!pgnErrors.length && !isGameOver) {
+         console.log("isPlayingForward = ", isPlayingForward);
+         console.log("currentMove = ", currentMove);
+         console.log("whiteMoves.length = ", whiteMoves.length);
+         console.log("blackMoves.length = ", blackMoves.length);
+         for (let i=0; i < whiteMoves.length + blackMoves.length; i++){
+            if (currentMove >= 0) {
+               console.log("i = ",i);
+               setPlayerTurn(changePlayer(playerTurn));
+               console.log("playerTurn = ", playerTurn);
+               setPlayerToWait(changePlayer(playerToWait));
+               //console.log("playerToWait = ", playerToWait);
+            }
+            setCurrentMove(currentMove +1); 
          }
-      });
+      }
    }
 
    const moveForward = () => {
@@ -327,6 +342,12 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
       } else { // idPiece === -1, it is 'undefined'
          setStatusTxt("Error: idPiece is 'undefined'!");
       }
+
+      console.log("isHandleToEnd = ",isHandleToEnd);
+      if (isHandleToEnd){
+         console.log("handleTOEND");
+         handleToEnd();
+      }
    }
 
    const moveBackward = () => {
@@ -429,7 +450,6 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
    return ( 
       (pieces.white.length && pieces.black.length) &&
       <section className="notation_section">
-
          <div className="control_panel">
             <div className="control_ctn">
                <div className="functions_btn">
@@ -476,7 +496,7 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                      <FontAwesomeIcon icon={faCaretRight}/>
                   </button>
 
-                  <button>
+                  <button onClick={handleToEnd}>
                      <FontAwesomeIcon icon={faForwardFast}/>
                   </button>
                </div>

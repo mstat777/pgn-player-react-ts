@@ -104,38 +104,42 @@ export const getDataForwardMove = (
          case "Q": idPiece = 3; break; // QUEEN move
          // ROOK move
          case "R": {
-            const firstOfPairLoc = getLocationByRoundNb(pieces[playerTurn][0].location, roundNb); // pair's first rook location
-            const secondOfPairLoc = getLocationByRoundNb(pieces[playerTurn][7].location, roundNb);
-            console.log(newLocation.charAt(0) === firstOfPairLoc.charAt(0));
-            console.log(newLocation.charAt(1) === firstOfPairLoc.charAt(1));
-            console.log(newLocation.charAt(0) === secondOfPairLoc.charAt(0));
-            console.log(newLocation.charAt(1) === secondOfPairLoc.charAt(1));
-
-            if (
-               pieces[playerTurn][0].active && (newLocation.charAt(0) === firstOfPairLoc.charAt(0) || newLocation.charAt(1) === firstOfPairLoc.charAt(1)) &&
-               (newLocation.charAt(0) !== secondOfPairLoc.charAt(0) && newLocation.charAt(1) !== secondOfPairLoc.charAt(1))
-            ) {
-               // the first Rook row or column corresponds to the target location, but the second one don't
-               idPiece = 0;
-            } else if (
-               pieces[playerTurn][7].active && (newLocation.charAt(0) === secondOfPairLoc.charAt(0) || newLocation.charAt(1) === secondOfPairLoc.charAt(1)) &&
-               (newLocation.charAt(0) !== firstOfPairLoc.charAt(0) && newLocation.charAt(1) !== firstOfPairLoc.charAt(1))
-            ) {
-               // the second Rook row or column corresponds to the target location, but the first one don't
-               idPiece = 7;
-            } else if (
-               pieces[playerTurn][0].active && 
-               pieces[playerTurn][7].active && (newLocation.charAt(0) === secondOfPairLoc.charAt(0) || newLocation.charAt(1) === secondOfPairLoc.charAt(1)) &&
-               (newLocation.charAt(0) !== firstOfPairLoc.charAt(0) || newLocation.charAt(1) !== firstOfPairLoc.charAt(1))
-            ) {
-               // both rooks have a row or a column that corresponds to the target location, but it's not indicated which one, because one of the pair is obstructed
-               // check if the 1st of the pair is obstructed
-               idPiece = checkObstruction(firstOfPairLoc,newLocation, capture, roundNb) ? 7 : 0;
-               console.log("obstruction Check");
-               console.log(checkObstruction(firstOfPairLoc, newLocation, capture, roundNb) );
-               console.log("idPiece = ",idPiece);
+            if (!pieces[playerTurn][0].active){
+               console.log("idPiece = 7");
+               idPiece = 7; break;
+            } else if (!pieces[playerTurn][7].active){
+               console.log("idPiece = 0");
+               idPiece = 0; break;
             } else {
-               console.log(`Rook notation error on ${playerTurn}'s move ${move}!`);
+               const firstOfPairLoc = getLocationByRoundNb(pieces[playerTurn][0].location, roundNb); // pair's first rook location
+               const secondOfPairLoc = getLocationByRoundNb(pieces[playerTurn][7].location, roundNb);
+               console.log(newLocation.charAt(0) === firstOfPairLoc.charAt(0));
+               console.log(newLocation.charAt(1) === firstOfPairLoc.charAt(1));
+               console.log(newLocation.charAt(0) === secondOfPairLoc.charAt(0));
+               console.log(newLocation.charAt(1) === secondOfPairLoc.charAt(1));
+   
+               if ((newLocation.charAt(0) === firstOfPairLoc.charAt(0) || newLocation.charAt(1) === firstOfPairLoc.charAt(1)) &&
+                  (newLocation.charAt(0) !== secondOfPairLoc.charAt(0) && newLocation.charAt(1) !== secondOfPairLoc.charAt(1))
+               ){
+                  // the first Rook row or column corresponds to the target location, but the second one don't
+                  idPiece = 0;
+               } else if ((newLocation.charAt(0) === secondOfPairLoc.charAt(0) || newLocation.charAt(1) === secondOfPairLoc.charAt(1)) &&
+                  (newLocation.charAt(0) !== firstOfPairLoc.charAt(0) && newLocation.charAt(1) !== firstOfPairLoc.charAt(1))
+               ){
+                  // the second Rook row or column corresponds to the target location, but the first one don't
+                  idPiece = 7;
+               } else if ((newLocation.charAt(0) === secondOfPairLoc.charAt(0) || newLocation.charAt(1) === secondOfPairLoc.charAt(1)) &&
+                  (newLocation.charAt(0) !== firstOfPairLoc.charAt(0) || newLocation.charAt(1) !== firstOfPairLoc.charAt(1))
+               ) {
+                  // both rooks have a row or a column that corresponds to the target location, but it's not indicated which one, because one of the pair is obstructed
+                  // check if the 1st of the pair is obstructed
+                  idPiece = checkObstruction(firstOfPairLoc,newLocation, capture, roundNb) ? 7 : 0;
+                  console.log("obstruction Check");
+                  console.log(checkObstruction(firstOfPairLoc, newLocation, capture, roundNb) );
+                  console.log("idPiece = ",idPiece);
+               } else {
+                  console.log(`Rook notation error on ${playerTurn}'s move ${move}!`);
+               }
             }
          } break;
          // BISHOP move
