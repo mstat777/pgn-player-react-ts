@@ -1,14 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit/react";
 import { Color, SquareType, PieceType } from "../../configs/types";
-import { Square, MoveNbWithLocation, IChessPiece, ChessPiece } from "../../configs/interfaces";
-import { ChessSet } from "../../configs/interfaces";
-
-type PieceModif = {
-   side: Color;
-   id: number;
-   location: MoveNbWithLocation[];
-   active: boolean;
-}
+import { Square, MoveNbWithLocation, SetPiece, IChessPiece, ChessPiece, ChessSet } from "../../configs/interfaces";
 
 const initialState: ChessSet = {
    squares: [],
@@ -46,7 +38,7 @@ export const chessSetSlice = createSlice({
          state.squares = [...tempArray];
       },
       initializePieces: (state) => {
-         let side: Color = "white";
+         let color: Color = "white";
          let majPiecesRow: number;
          let pawnsRow: number;
 
@@ -62,37 +54,40 @@ export const chessSetSlice = createSlice({
 
          // create pieces. Iterate 2 times (white & black)
          for (let i = 0; i < 2; i++) {
-            majPiecesRow = side === "white" ? 1 : 8;
-            pawnsRow = side === "white" ? 2 : 7;
+            majPiecesRow = color === "white" ? 1 : 8;
+            pawnsRow = color === "white" ? 2 : 7;
             
             // create all major pieces:
             majPiecesSet.forEach((majPiece, i) => {
                const initPieceLocation: MoveNbWithLocation = {0: ''};
                initPieceLocation[0] = `${i+1}${majPiecesRow}`;
                //console.log([initPieceLocation]);
-               tempPieces[side][i] = new ChessPiece(side, majPiece, [initPieceLocation], true);
+               tempPieces[color][i] = new ChessPiece(color, majPiece, [initPieceLocation], true);
             });
 
             // create all pawns:
             for (let i = 0; i < 8; i++){
                const initPieceLocation: MoveNbWithLocation = {0: ''};
                initPieceLocation[0] = `${i+1}${pawnsRow}`;
-               tempPieces[side][i+8] = new ChessPiece(side, "pawn", [initPieceLocation], true);
+               tempPieces[color][i+8] = new ChessPiece(color, "pawn", [initPieceLocation], true);
             }
 
-            state.pieces[side] = [...tempPieces[side]];
+            state.pieces[color] = [...tempPieces[color]];
 
-            side = "black";
+            color = "black";
          }
       },
-      setPieceData: (state, action: PayloadAction<PieceModif>) => {
+      setPieceData: (state, action: PayloadAction<SetPiece>) => {
          //console.log(action.payload);
          return {
             ...state,
             pieces: {
                ...state.pieces,
-               [`${action.payload.side}`]: state.pieces[`${action.payload.side}`].map((piece, i) => {
+               [`${action.payload.color}`]: state.pieces[`${action.payload.color}`].map((piece, i) => {
                   if (i === action.payload.id) {
+                     if (action.payload.type) {
+                        piece.type = action.payload.type;
+                     }
                      const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location, ...action.payload.location as MoveNbWithLocation[]], action.payload.active);
                      return chessPiece;
                   };

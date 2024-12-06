@@ -42,15 +42,15 @@ const ChessSet = forwardRef((_props, ref) => {
          <div className="pieces_ctn">
             <div className="pieces">
                {/* create piece images */}
-               { Object.keys(pieces).map((side, indexSide) => 
-                  pieces[side as keyof typeof pieces].map((piece, i) =>
+               { Object.keys(pieces).map((color, indexSide) => 
+                  pieces[color as keyof typeof pieces].map((piece, i) =>
                      piece.location &&
                         <ChessPiece 
                            ref={(el) => //{
                               pieceRef.current[i + (indexSide*16)] = el
                               //console.log(el); }
                            }
-                           color={side as Color}
+                           color={color as Color}
                            type={piece.type} 
                            left={`${getX(piece.location[0][0])}%`}
                            bottom={`${getY(piece.location[0][0])}%`}

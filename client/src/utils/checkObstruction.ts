@@ -55,9 +55,9 @@ export const checkObstruction = (
     // check if there is a piece located on one of the in-between squares or on the target ('endLocation') square
     for (let i = 0; i < squareArray.length; i++) {
         console.log("square = ",squareArray[i]);
-        let side = "white";
+        let color = "white";
         for (let j = 0; j < 2; j++){
-            let obstacle = pieces[side as keyof typeof pieces].find(piece => 
+            let obstacle = pieces[color as keyof typeof pieces].find(piece => 
                 piece.active && (squareArray[i] === getLocationByRoundNb(piece.location, roundNb))
             );
 
@@ -65,7 +65,7 @@ export const checkObstruction = (
                 console.log(obstacle);
                 return true; 
             }
-            side = "black";
+            color = "black";
         }
     };
 

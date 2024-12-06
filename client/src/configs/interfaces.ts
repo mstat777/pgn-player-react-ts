@@ -11,6 +11,14 @@ export type MoveNbWithLocation = {
    [key: number]: string;
 }
 
+export interface SetPiece {
+   color: Color;
+   type?: PieceType;
+   location: MoveNbWithLocation[];
+   active: boolean;
+   id: number;
+}
+
 export interface IChessPiece {
    color: Color;
    type: PieceType;

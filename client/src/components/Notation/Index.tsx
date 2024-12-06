@@ -8,7 +8,7 @@ import { initializePieces, initializeSquares, setPieceData } from '../../store/s
 import { setPgnTxt } from '../../store/slices/pgnData';
 import { setFlipBoard } from '../../store/slices/settings';
 import { Color } from '../../configs/types';
-import { MoveNbWithLocation } from '../../configs/interfaces';
+import { MoveNbWithLocation, SetPiece } from '../../configs/interfaces';
 import { getDataForwardMove } from '../../utils/getDataForwardMove';
 import { getDataBackwardMove } from '../../utils/getDataBackwardMove';
 import { formatPgnData, validatePgnData } from '../../utils/pgnDataFunctions';
@@ -214,10 +214,11 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
       }
 
       // get the piece and the new location to be moved to:
-      let { idPiece, newLocation, capture, enPassant, castlingLong, castlingShort } = playerTurn === "white" ?
-         getDataForwardMove(whiteMoves[currentRound], playerTurn, currentRound) :
-         getDataForwardMove(blackMoves[currentRound], playerTurn, currentRound);
+      let { idPiece, newLocation, capture, enPassant, promotion, castlingLong, castlingShort } = playerTurn === "white" ?
+         getDataForwardMove(playerTurn, currentRound) :
+         getDataForwardMove(playerTurn, currentRound);
         
+      
       // if CASTLING
       if (castlingLong || castlingShort) {
          console.log("castling");
@@ -241,14 +242,14 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
             rookMoveAndLocation[currentRound+1] = rookLocation;
             // change king's location
             dispatch(setPieceData({
-               side: playerTurn, 
+               color: playerTurn, 
                id: 4, 
                location: [kingMoveAndLocation],
                active: true
             }));
             // change rook's location
             dispatch(setPieceData({
-               side: playerTurn, 
+               color: playerTurn, 
                id: rookId, 
                location: [rookMoveAndLocation],
                active: true
@@ -274,7 +275,7 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
             console.log("Error with king's & rook's images!");
          }
       }
-      // if NOT castling
+      // else if an ordinary move
       else if (idPiece >= 0) {
          console.log("idPiece = ", idPiece);
          // if CAPTURE, find & deactivate the captured piece in redux store:
@@ -293,7 +294,7 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                         //console.log("newLocation = ", newLocation);
                         console.log(playerToWait, i, false);
                         dispatch(setPieceData({
-                           side: playerToWait, 
+                           color: playerToWait, 
                            id: i, 
                            location: [],
                            active: false
@@ -321,7 +322,7 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                         //console.log("newLocation = ", newLocation);
                         console.log(playerToWait, i, false);
                         dispatch(setPieceData({
-                           side: playerToWait, 
+                           color: playerToWait, 
                            id: i, 
                            location: [],
                            active: false
@@ -344,25 +345,29 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
          //console.log((currentRound+1).toString());
          // If the move location is not added, then add it
          if (!pieceLocationsMoveNums.includes((currentRound+1).toString())){
-               let pieceMoveAndLocation: MoveNbWithLocation = {};
-               pieceMoveAndLocation[currentRound+1] = newLocation;
-               dispatch(setPieceData({
-                  side: playerTurn, 
-                  id: idPiece, 
-                  location: [pieceMoveAndLocation],
-                  active: true
-               }));
+            let pieceMoveAndLocation: MoveNbWithLocation = {};
+            pieceMoveAndLocation[currentRound+1] = newLocation;
+            const data: SetPiece = {
+               color: playerTurn, 
+               id: idPiece, 
+               location: [pieceMoveAndLocation],
+               active: true
+            }
+            if (promotion) {
+               data.type = promotion;
+            }
+            dispatch(setPieceData(data));
          }
 
          // move the piece's image
          let idImage = idPiece;
          if (playerTurn === "black") {
-               idImage += 16;
+            idImage += 16;
          }
          const pieceImageRef = pieceRef.current[idImage];
          if (pieceImageRef) {
-               pieceImageRef.style.left = `${getX(newLocation)}%`;
-               pieceImageRef.style.bottom = `${getY(newLocation)}%`;
+            pieceImageRef.style.left = `${getX(newLocation)}%`;
+            pieceImageRef.style.bottom = `${getY(newLocation)}%`;
          }
       } else { // idPiece === -1, it is 'undefined'
          setStatusTxt("Error: idPiece is 'undefined'!");
@@ -437,7 +442,7 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
                   //console.log("i = ",i);
                   // reactivate the captured piece
                   dispatch(setPieceData({
-                     side: playerToWait, 
+                     color: playerToWait, 
                      id: i, 
                      location: [],
                      active: true

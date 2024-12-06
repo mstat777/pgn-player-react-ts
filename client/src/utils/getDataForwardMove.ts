@@ -1,4 +1,4 @@
-import { Color } from "../configs/types";
+import { Color, PieceType } from "../configs/types";
 import { store } from "../store/store";
 import { chessNotationToNumeric, 
          getLocationByRoundNb,
@@ -10,12 +10,12 @@ type ReturnType = {
    newLocation: string;
    capture: boolean;
    enPassant: boolean;
+   promotion: PieceType | null;
    castlingLong: boolean;
    castlingShort: boolean;
 }
 
 export const getDataForwardMove = (
-   move: string,
    playerTurn: Color,
    roundNb: number
 ): ReturnType => {
@@ -25,11 +25,10 @@ export const getDataForwardMove = (
    const { whiteMoves, blackMoves } = state.pgnData;
 
    console.log(pieces);
+
+   let move = playerTurn === 'white' ? whiteMoves[roundNb] : blackMoves[roundNb];
    console.log("move = ", move);
    let previousMove = "";
-
-   const calculatedMove = playerTurn === 'white' ? whiteMoves[roundNb] : blackMoves[roundNb];
-   console.log("calculatedMove = ", calculatedMove);
    if (roundNb > 0){
       previousMove = playerTurn === 'white' ? blackMoves[roundNb-1] : whiteMoves[roundNb];
    }
@@ -39,6 +38,7 @@ export const getDataForwardMove = (
    let castlingShort = false;
    let capture = false; 
    let enPassant = false;
+   let promotion: PieceType | null = null;
    //let check = false;
    //let checkmate = false;
    //let draw = false;
@@ -75,6 +75,20 @@ export const getDataForwardMove = (
    if (move === "O-O-O") {
       castlingLong = true;
    } 
+   if (move.includes("=")) {
+      const lastLetter = move.slice(-1);
+      console.log(lastLetter);
+      switch(lastLetter){
+         case 'Q': promotion = 'queen'; break;
+         case 'R': promotion = 'rook'; break;
+         case 'B': promotion = 'bishop'; break;
+         case 'N': promotion = 'knight'; break;
+         default: console.log('Error with the pawn promotion.');
+      }
+      console.log("promotion = ",promotion);
+      move = move.slice(0, -2);
+      console.log("move = ",move);
+   }
     
    // store the move square location ID (ex. 'a4', 'd5')
    const squareLoc = move.slice(-2);
@@ -263,6 +277,7 @@ export const getDataForwardMove = (
       newLocation, 
       capture, 
       enPassant,
+      promotion,
       castlingLong, 
       castlingShort
    })
