@@ -9,6 +9,7 @@ type ReturnType = {
    idPiece: number;
    newLocation: string;
    capture: boolean;
+   enPassant: boolean;
    castlingLong: boolean;
    castlingShort: boolean;
 }
@@ -21,13 +22,23 @@ export const getDataForwardMove = (
    //console.clear();
    const state = store.getState();
    const { pieces } = state.chessSet;
+   const { whiteMoves, blackMoves } = state.pgnData;
 
    console.log(pieces);
    console.log("move = ", move);
+   let previousMove = "";
+
+   const calculatedMove = playerTurn === 'white' ? whiteMoves[roundNb] : blackMoves[roundNb];
+   console.log("calculatedMove = ", calculatedMove);
+   if (roundNb > 0){
+      previousMove = playerTurn === 'white' ? blackMoves[roundNb-1] : whiteMoves[roundNb];
+   }
+   console.log("previousMove = ", previousMove);
 
    let castlingLong = false;
    let castlingShort = false;
    let capture = false; 
+   let enPassant = false;
    //let check = false;
    //let checkmate = false;
    //let draw = false;
@@ -35,9 +46,20 @@ export const getDataForwardMove = (
    // special notation characters
    if (move.includes("x")) {
       capture = true;
-      //removeImgIfCapture = true;
-      move = move.replace("x", "");
       console.log("capture = ",capture);
+      // check for EN PASSANT
+      if (
+         move.length === 4 && // a capturing move
+         (move.charCodeAt(0) >= 97 && move.charCodeAt(0) <= 104) && // a pawn move
+         previousMove.length === 2 && // previous was a pawn move & not a capture
+         (previousMove.charAt(1) === "4" ||
+         previousMove.charAt(1) === "5") && 
+         previousMove.charAt(0)
+      ){
+         enPassant = true;
+         console.log("enPassant!!!");
+      }
+      move = move.replace("x", "");
    } 
    if (move.slice(-1) === "+") {
       //check = true; 
@@ -70,8 +92,8 @@ export const getDataForwardMove = (
       //pieces[playerTurn].find((piece, i) => 
       for (let i = 8; i < 16; i++) {
          const currLocation = getLocationByRoundNb(pieces[playerTurn][i].location, roundNb);
-         console.log("currLocation = ",currLocation);
-         console.log("newLocation = ",newLocation);
+         //console.log("currLocation = ",currLocation);
+         //console.log("newLocation = ",newLocation);
          if ( pieces[playerTurn][i].active === true &&
                currLocation.charAt(0) === newLocation.charAt(0)
          ) {
@@ -235,11 +257,13 @@ export const getDataForwardMove = (
    console.log("idPiece = ",idPiece);
    console.log("newLocation = ",newLocation);
    console.log("capture = ",capture);
-   return { 
+   console.log("enPassant = ",enPassant);
+   return ({ 
       idPiece, 
       newLocation, 
       capture, 
+      enPassant,
       castlingLong, 
       castlingShort
-   }
+   })
 }

@@ -12,16 +12,16 @@ import whiteKnight from '../assets/img/chessboard/pieces/white-knight-t45.png';
 import whitePawn from '../assets/img/chessboard/pieces/white-pawn-t45.png';
 
 export default {
-    blackKing,
-    blackQueen,
-    blackRook,
-    blackBishop,
-    blackKnight,
-    blackPawn,
-    whiteKing,
-    whiteQueen,
-    whiteRook,
-    whiteBishop,
-    whiteKnight,
-    whitePawn
+   blackKing,
+   blackQueen,
+   blackRook,
+   blackBishop,
+   blackKnight,
+   blackPawn,
+   whiteKing,
+   whiteQueen,
+   whiteRook,
+   whiteBishop,
+   whiteKnight,
+   whitePawn
 }

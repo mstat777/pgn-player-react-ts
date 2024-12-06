@@ -62,10 +62,6 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
       }
    },[currentMove, isPlayingForward]);
 
-   useEffect(() => {
-      console.log("pgnTxt = ", pgnTxt);
-   },[pgnTxt]);
-
    addEventListener('keydown', (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft" && !isArrowLeftDown) {
          e.stopPropagation();
@@ -89,7 +85,6 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
 
    const initialize = () => {
       console.clear();
-      console.log("pgnTxt = ",pgnTxt);
       setIsGameOver(false);
       setCurrentMove(-1);
       setIsPlayingForward(true);
@@ -147,13 +142,11 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
    }
 
    const handlePreviousMove = () => {
-      //console.log(pgnErrors);
-      console.log("currentMove = ",currentMove);
       if (!whiteMoves.length) {
          setStatusTxt("Please press the 'LOAD' button.");
          return;
       } else if (!pgnErrors.length && currentMove >= 0) {
-         console.log("isPlayingForward = ", isPlayingForward);
+         //console.log("isPlayingForward = ", isPlayingForward);
          console.log("currentMove = ",currentMove);
          if (!isPlayingForward) {
             if (currentMove > 0) {
@@ -221,7 +214,7 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
       }
 
       // get the piece and the new location to be moved to:
-      let { idPiece, newLocation, capture, castlingLong, castlingShort } = playerTurn === "white" ?
+      let { idPiece, newLocation, capture, enPassant, castlingLong, castlingShort } = playerTurn === "white" ?
          getDataForwardMove(whiteMoves[currentRound], playerTurn, currentRound) :
          getDataForwardMove(blackMoves[currentRound], playerTurn, currentRound);
         
@@ -284,27 +277,59 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
       // if NOT castling
       else if (idPiece >= 0) {
          console.log("idPiece = ", idPiece);
-         // if CAPTURE, find & reactivate the captured piece in redux store:
+         // if CAPTURE, find & deactivate the captured piece in redux store:
          if (capture) {
             console.log("capture");
-            for (let i = 0; i < 16; i++) {
-               // get the current round location of the piece
-               const lastLocation = getLocationByRoundNb(pieces[playerToWait][i].location, currentRound+1);
-               console.log("lastLocation = ",lastLocation);
-               // captured piece is found on the newLocation
-               if (lastLocation === newLocation) {
-                  console.log("lastLocation = ", lastLocation);
-                  //console.log("pieces[playerToWait][i].location = ", pieces[playerToWait][i].location);
-                  //console.log("newLocation = ", newLocation);
-                  console.log(playerToWait, i, false);
-                  dispatch(setPieceData({
-                     side: playerToWait, 
-                     id: i, 
-                     location: [],
-                     active: false
-                  }));
-                  break;
-               } 
+            if (!enPassant) {
+               for (let i = 0; i < 16; i++) {
+                  if (pieces[playerToWait][i].active){
+                     // get the current round location of the piece
+                     const lastLocation = getLocationByRoundNb(pieces[playerToWait][i].location, currentRound+1);
+                     console.log("lastLocation = ",lastLocation);
+                     // except for the EN PASSANT case, the captured piece is found on the newLocation
+                     if (lastLocation === newLocation) {
+                        console.log("lastLocation = ", lastLocation);
+                        //console.log("pieces[playerToWait][i].location = ", pieces[playerToWait][i].location);
+                        //console.log("newLocation = ", newLocation);
+                        console.log(playerToWait, i, false);
+                        dispatch(setPieceData({
+                           side: playerToWait, 
+                           id: i, 
+                           location: [],
+                           active: false
+                        }));
+                        break;
+                     } 
+                  }
+               }
+            } else { // EN PASSANT
+               for (let i = 8; i < 16; i++) {
+                  if (pieces[playerToWait][i].active){
+                     // get the current round location of the piece
+                     const lastLocation = getLocationByRoundNb(pieces[playerToWait][i].location, currentRound+1);
+                     console.log("lastLocation = ",lastLocation);
+                     // EN PASSANT case: the captured piece is found on the 4th or 5th rank
+                     if (
+                        lastLocation.charAt(0) === newLocation.charAt(0) && // on the same file
+                        ((playerToWait === 'white' &&
+                        lastLocation.charAt(1) === '4') ||
+                        (playerToWait === 'black' &&
+                        lastLocation.charAt(1) === '5'))
+                     ) {
+                        console.log("lastLocation = ", lastLocation);
+                        //console.log("pieces[playerToWait][i].location = ", pieces[playerToWait][i].location);
+                        //console.log("newLocation = ", newLocation);
+                        console.log(playerToWait, i, false);
+                        dispatch(setPieceData({
+                           side: playerToWait, 
+                           id: i, 
+                           location: [],
+                           active: false
+                        }));
+                        break;
+                     } 
+                  }
+               }
             }
          }
 
@@ -352,7 +377,7 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
 
    const moveBackward = () => {
       console.clear();
-      console.log("moveBackward");
+      //console.log("moveBackward");
       console.log("round = " + Math.floor(currentMove/2) + " move = " + currentMove);
       // check if the GAME BEGINNING reached
       if (currentMove < 0) {
@@ -400,7 +425,7 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
       // if NOT castling
       else if (idPiece >= 0) {
          console.log("idPiece = ", idPiece);
-         // if CAPTURE, find & desactivate the captured piece in redux store:
+         // if CAPTURE, find & reactivate the captured piece in redux store:
          if (capture) {
             for (let i = 0; i < 16; i++) {
                // captured piece is found on the newLocation

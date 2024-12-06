@@ -21,7 +21,6 @@ export const pgnDataSlice = createSlice({
       },
       setPgnTxt: (state, action: PayloadAction<string>) => {
          state.pgnTxt = action.payload;
-         //console.log("change PGN text ", action.payload);
       },
    }
 });

@@ -4,36 +4,36 @@ import chessSetReducer from './slices/chessSet';
 import settingsReducer from './slices/settings';
 
 const appReducer = combineReducers({
-    pgnData: pgnDataReducer,
-    chessSet: chessSetReducer,
-    settings: settingsReducer
+   pgnData: pgnDataReducer,
+   chessSet: chessSetReducer,
+   settings: settingsReducer
 });
 
 const rootReducer = (state: any, action: PayloadAction) => {
-    if (action.type === 'RESET_PGN') {
-        //console.log("RESET_PGN called!");
-        // exclude 'game' & 'chessSet' from being reset
-        const { chessSet, settings } = state;
-        state = { chessSet, settings };
-        //console.log(state);
-    } else if (action.type === 'RESET_GAME') {
-        //console.log("RESET_GAME called!");
-        state = {};
-    }
-    return appReducer(state, action);
+   if (action.type === 'RESET_PGN') {
+      //console.log("RESET_PGN called!");
+      // exclude 'game' & 'chessSet' from being reset
+      const { chessSet, settings } = state;
+      state = { chessSet, settings };
+      //console.log(state);
+   } else if (action.type === 'RESET_GAME') {
+      //console.log("RESET_GAME called!");
+      state = {};
+   }
+   return appReducer(state, action);
 }
 
 export const store = configureStore({
-    reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => 
-        getDefaultMiddleware({
-            // allow non-serializable data to be stored (ChessPiece class instances)
-            serializableCheck: {
-                ignoredPaths: ['chessSet.pieces', 'pgnData.tags'],
-                //ignoredActions: ['pgnData/setPgnData'],
-                ignoredActionPaths: ['payload.tags']
-            }
-        })
+   reducer: rootReducer,
+   middleware: (getDefaultMiddleware) => 
+      getDefaultMiddleware({
+         // allow non-serializable data to be stored (ChessPiece class instances)
+         serializableCheck: {
+            ignoredPaths: ['chessSet.pieces', 'pgnData.tags'],
+            //ignoredActions: ['pgnData/setPgnData'],
+            ignoredActionPaths: ['payload.tags']
+         }
+      })
 });
 
 export type AppStore = typeof store;
