@@ -24,13 +24,14 @@ export default function PlayerInfo({position}: Props){
          <div className={`player_info ${color}`}>
             <div>
                <span>{capitalize(color)}:&nbsp;</span>
-               <span className="name">{formatPlayerName(tags[color])}</span>
+               <span className="value">{formatPlayerName(tags[color])}</span>
             </div>
 
+            { tags[`${color}elo`] &&
             <div>
-               <span className="key">ELO:&nbsp;</span>
+               <span>ELO:&nbsp;</span>
                <span className="value">{tags[`${color}elo`]}</span>
-            </div>
+            </div>}
          </div>
    )
 }

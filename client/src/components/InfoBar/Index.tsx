@@ -11,7 +11,7 @@ export default function InfoBar() {
 
    return (
       <div className="infobar">
-         {!Object.keys(tags as Object).length || !tags ? 
+         { !tags || !Object.keys(tags as Object).length ? 
             <p className="no_info">No additional information</p> :
             <>
                <button 

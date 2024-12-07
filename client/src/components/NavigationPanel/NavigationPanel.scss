@@ -78,6 +78,7 @@
       padding: .5rem 1rem 3rem;
       overflow-y: scroll;
       box-shadow: inset 0 0 4px var(--darkshade-color-1);
+      background-color: $light-color;
 
       > * {
          display: flex;

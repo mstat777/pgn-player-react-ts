@@ -7,13 +7,23 @@
    width: 100%;
    padding: 0 1rem;
    outline: 1px solid var(--darkshade-color-4);
+   font-size: 1.4rem;
    @media screen and (min-width: $tablet) {
       width: $chessboard-tablet;
+      font-size: 1.6rem;
+   }
+
+   .value {
+      font-weight: 500;
    }
 }
 
 .white {
    background-color: white;
+
+   .value {
+      font-weight: 600;
+   }
 }
 
 .black {

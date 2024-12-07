@@ -11,7 +11,7 @@ import PlayerInfo from './PlayerInfo/Index';
 const ChessSet = forwardRef((_props, ref) => {
    const { squares, pieces } = useAppSelector((state) => state.chessSet);
    const { flipBoard, showBoardNotation } = useAppSelector((state) => state.settings);
-   //const { moveNb } = useAppSelector((state) => state.pgnData);
+   const { tags } = useAppSelector((state) => state.pgnData);
 
    const piecesLength = pieces.white.length + pieces.black.length;
 
@@ -28,8 +28,10 @@ const ChessSet = forwardRef((_props, ref) => {
    return ( 
       !isDataLoaded ? 
          <Loading /> :
-         <section className="chess_section">
-            <PlayerInfo position="top"/>
+         <section className={`chess_section ${Object.keys(tags as Object).length ? '' : 'no_player_info'}`}>
+            
+            { Object.keys(tags as Object).length ?
+               <PlayerInfo position="top"/> : '' }
 
             <section className={`chess_set ${flipBoard ? 'flipped' : ''}`}>
                <div className="chessboard">
@@ -76,7 +78,8 @@ const ChessSet = forwardRef((_props, ref) => {
                }
             </section>
 
-            <PlayerInfo position="bottom"/>
+            { Object.keys(tags as Object).length ?
+               <PlayerInfo position="bottom"/> : null }
          </section>
    );
 });

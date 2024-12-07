@@ -1,13 +1,12 @@
 import './Notation.scss';
 import { useState, forwardRef, MutableRefObject, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCirclePlay, faChessBoard, faBackwardFast, faCaretLeft, faCaretRight, faForwardFast } from '@fortawesome/free-solid-svg-icons';
+import { faCirclePlay, faBackwardFast, faCaretLeft, faCaretRight, faForwardFast } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { initializePieces, initializeSquares, setPieceData } from '../../store/slices/chessSet';
 import { setPgnTxt } from '../../store/slices/pgnData';
 import { setStatusTxt, setCurrentMove, setPlayerTurn, setPlayerToWait } from '../../store/slices/game';
-import { setFlipBoard } from '../../store/slices/settings';
 import { MoveNbWithLocation, SetPiece } from '../../configs/interfaces';
 import { getDataForwardMove } from '../../utils/getDataForwardMove';
 import { getDataBackwardMove } from '../../utils/getDataBackwardMove';
@@ -25,7 +24,6 @@ const Notation = forwardRef((_props, ref) => {
    const { whiteMoves, blackMoves, pgnTxt } = useAppSelector((state) => state.pgnData);
    const { currentMove, playerTurn, playerToWait } = useAppSelector((state) => state.game);
    const pieces = useAppSelector((state) => state.chessSet.pieces);
-   const { flipBoard } = useAppSelector((state) => state.settings);
 
    const isMobile = useMediaQuery({query: '(max-width: 767px)'});
 
@@ -34,8 +32,6 @@ const Notation = forwardRef((_props, ref) => {
    const pgnErrors = useAppSelector((state) => state.pgnData.errors);
 
    const [isGameOver, setIsGameOver] = useState<boolean>(false);
-   //const [playerTurn, setPlayerTurn] = useState<Color>("white");
-   //const [playerToWait, setPlayerToWait] = useState<Color>("black");
 
    const [isArrowLeftDown, setIsArrowLeftDown] = useState<boolean>(false);
    const [isArrowRightDown, setIsArrowRightDown] = useState<boolean>(false);
@@ -511,7 +507,7 @@ const Notation = forwardRef((_props, ref) => {
                      <FontAwesomeIcon icon={faForwardFast}/>
                   </button>
                </div>
-               
+
             </div>
          </div>
 

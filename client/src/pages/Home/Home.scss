@@ -30,6 +30,11 @@
             margin: 2rem 2rem 4rem;
          }
       }
+      .no_player_info {
+         @media screen and (min-width: $tablet) {
+            height: $chessboard-tablet;
+         }
+      }
 
       .notation_section {
          order: 2;

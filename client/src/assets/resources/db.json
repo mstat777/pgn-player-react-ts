@@ -62,6 +62,42 @@
             "Shvedchikov, Anatoli I.-Kozionov, Kirill-2017",
             "Shvedchikov, Anatoli I.-Moiseenko, Alexander-2014",
             "Usmanov, Vasily-Ponkratov, Pavel-2016"
+         ],
+         "E21 - Nimzo-Indian D. - St. Petersburg V. - 5.Nf3 Bb7 6.Bd3 Ne4 7.Qc2 f5 8.O-O Nxc3": [
+            "Brynell, Stellan-Tikkanen, Hans-2014",
+            "Kushnir, Alla-Ligterink, Gert-1976",
+            "Livaja, Mario-Blesic, Vaso-2015",
+            "Praggnanandhaa R, -Shevchenko, Kirill-2021",
+            "Winter, William-Capablanca, Jose-1929",
+            "Zhu, Yi-Xu, Yi-2015"
+         ],
+         "E21 - Nimzo-Indian D. - Three Knights - Duchamp V. - 5.Bg5 Bb7 6.e3 h6 7.Bh4 g5 8.Bg3 Ne4 9.Qc2 Bxc3 10.bxc3 d6": [
+            "Evans, Larry M.-Reshevsky, Samuel-1957",
+            "Farago, Ivan-Langeweg, Kick-1980",
+            "Langeweg, Kick-Van den Berg, Carel B-1962",
+            "Littlewood, Norman-Haygarth, Michael J-1966",
+            "Rashkovsky, Nukhim N-Eolian, Levon S-1984",
+            "Rashkovsky, Nukhim N-Short, Nigel D-1983",
+            "Szilagyi, Gyorgy-Barcza, Gedeon-1950",
+            "Torre, Eugenio-Spassky, Boris V.-1982"
+         ],
+         "E21 - Nimzo-Indian D. - Three Knights - Duchamp V. - 5.Qc2 Bb7": [
+            "Cvetkovic, Srdjan-Maksimovic, Branimir-2004",
+            "Doroshkievich, Vladimir K-Ivanov, Igor V-1977",
+            "Doroshkievich, Vladimir K-Smyslov, Vassily-1968",
+            "Garidmagnai, Byambasuren-Tran, Tuan Minh-2019",
+            "Mandrikin, Igor-Neverov, Valeriy-2013",
+            "Mohammed Abdul, Malek-Uddin, Saif-2004",
+            "Varga, Peter-Ilincic, Zlatko-2010",
+            "Vertetics, Attila-Ludwig, Daniel-2013",
+            "Vlatkovic, Milos-Kosic, Dragan-2014",
+            "Zarandieta Lopera, Jose Luis-Camacho Calle, Pedro-2001"
+         ],
+         "E30-E21 - Nimzo-Indian D. - Leningrad V. - 4...c5 5.Nf3 h6": [
+            "Kladiva, Istvan-Almasi, Zoltan-1991",
+            "Navarovszky, Laszlo-Vonthron, Horst-1995",
+            "Zsinka, Laszlo-Lau, Ralf-1987",
+            "Zsinka, Laszlo-Smagin, Sergey-1988"
          ]
       }
    }
