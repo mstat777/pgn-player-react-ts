@@ -20,13 +20,13 @@
          width: 100%;
       }
 
-      .chess_set {
+      .chess_section {
          order: 1;
          aspect-ratio: 1;
-         margin: 2rem auto;
+         margin: 2rem auto 0;
          @media screen and (min-width: $tablet) {
             width: $chessboard-tablet;
-            height: $chessboard-tablet;
+            height: calc($chessboard-tablet + 40px);
             margin: 2rem 2rem 4rem;
          }
       }

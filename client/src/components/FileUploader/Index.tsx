@@ -1,6 +1,7 @@
 import { useRef, MouseEventHandler, ChangeEvent } from 'react';
 import { useAppDispatch } from '../../store/hooks';
 import { setPgnTxt } from '../../store/slices/pgnData';
+import { setStatusTxt } from '../../store/slices/game';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFolderOpen } from '@fortawesome/free-solid-svg-icons';
 import { useMediaQuery } from "react-responsive";
@@ -29,6 +30,7 @@ export default function FileUploader() {
          reader.onloadend = (readerEvent: ProgressEvent<FileReader>) => {
             if (readerEvent.target?.result) {
                dispatch(setPgnTxt(readerEvent.target.result.toString()));
+               dispatch(setStatusTxt('Press the LOAD button'));
             }
          };
       }

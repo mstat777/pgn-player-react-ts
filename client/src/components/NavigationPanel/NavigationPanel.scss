@@ -75,7 +75,7 @@
       min-height: 40px;
       max-height: 300px;
       display: flex;
-      padding: .5rem 1rem;
+      padding: .5rem 1rem 3rem;
       overflow-y: scroll;
       box-shadow: inset 0 0 4px var(--darkshade-color-1);
 
@@ -83,6 +83,18 @@
          display: flex;
          flex-direction: column;
          align-items: center;
+
+         > span {
+            &:last-child {
+               // add a bottom-padding (because of scroll)
+               &::after {
+                  content: "";
+                  display: block;
+                  height: .5em;
+                  width: 100%;
+               }
+            }
+         }
 
          .active {
             width: 100%;

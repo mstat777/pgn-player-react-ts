@@ -1,0 +1,22 @@
+@use '../../../scss/global' as *;
+
+.player_info {
+   display: flex;
+   justify-content: space-between;
+   height: 20px;
+   width: 100%;
+   padding: 0 1rem;
+   outline: 1px solid var(--darkshade-color-4);
+   @media screen and (min-width: $tablet) {
+      width: $chessboard-tablet;
+   }
+}
+
+.white {
+   background-color: white;
+}
+
+.black {
+   color: white;
+   background-color: $darkgrey-color-2;
+}

@@ -93,15 +93,14 @@ const Notation = forwardRef((_props, ref) => {
          initialize();
          validatePgnData(formatPgnData(pgnTxt));
       } else {
-         setStatusTxt('Nothing is entered!');
-         console.log('Nothing is entered!');
+         dispatch(setStatusTxt('No PGN data is entered!'));
       }
    }
 
    const handleClear = () => {
       if (pgnTxt) {
          initialize();
-         setStatusTxt("PGN data cleared.");
+         dispatch(setStatusTxt("PGN data cleared."));
          dispatch(setPgnTxt('')); // clear input data
       }
    }
@@ -112,7 +111,7 @@ const Notation = forwardRef((_props, ref) => {
       console.log("isPlayingForward = ", isPlayingForward);
       console.log("currentMove = ", currentMove);
       if (!whiteMoves.length) {
-         setStatusTxt("Please press the 'LOAD' button.");
+         dispatch(setStatusTxt("Please press the 'LOAD' button."));
          return;
       } else if (!pgnErrors.length && !isGameOver) {
          console.log("isPlayingForward = ", isPlayingForward);
@@ -133,7 +132,7 @@ const Notation = forwardRef((_props, ref) => {
 
    const handlePreviousMove = () => {
       if (!whiteMoves.length) {
-         setStatusTxt("Please press the 'LOAD' button.");
+         dispatch(setStatusTxt("Please press the 'LOAD' button."));
          return;
       } else if (!pgnErrors.length && currentMove >= 0) {
          //console.log("isPlayingForward = ", isPlayingForward);
@@ -163,7 +162,7 @@ const Notation = forwardRef((_props, ref) => {
    const handleToEnd = () => {
       setIsHandleToEnd(true);
       if (!whiteMoves.length) {
-         setStatusTxt("Please press the 'LOAD' button.");
+         dispatch(setStatusTxt("Please press the 'LOAD' button."));
          return;
       } else if (!pgnErrors.length && !isGameOver) {
          console.log("isPlayingForward = ", isPlayingForward);
@@ -198,7 +197,7 @@ const Notation = forwardRef((_props, ref) => {
          (playerTurn === "black" && 
          !blackMoves[currentRound]))
       {
-         setStatusTxt("Game is over.");
+         dispatch(setStatusTxt("Game is over."));
          setIsGameOver(true);
          return;
       }
@@ -360,7 +359,7 @@ const Notation = forwardRef((_props, ref) => {
             pieceImageRef.style.bottom = `${getY(newLocation)}%`;
          }
       } else { // idPiece === -1, it is 'undefined'
-         setStatusTxt("Error: idPiece is 'undefined'!");
+         dispatch(setStatusTxt("Error: idPiece is 'undefined'!"));
       }
 
       console.log("isHandleToEnd = ",isHandleToEnd);
@@ -376,7 +375,7 @@ const Notation = forwardRef((_props, ref) => {
       console.log("round = " + Math.floor(currentMove/2) + " move = " + currentMove);
       // check if the GAME BEGINNING reached
       if (currentMove < 0) {
-         setStatusTxt("The very beginning reached.");
+         dispatch(setStatusTxt("The very beginning reached."));
          return;
       }
 
@@ -463,7 +462,7 @@ const Notation = forwardRef((_props, ref) => {
                pieceImageRef.style.bottom = `${getY(newLocation)}%`;
          }
       } else { // idPiece is 'undefined'
-         setStatusTxt("Error: idPiece is 'undefined'!");
+         dispatch(setStatusTxt("Error: idPiece is 'undefined'!"));
       }
    }
 
@@ -471,6 +470,7 @@ const Notation = forwardRef((_props, ref) => {
       (pieces.white.length && pieces.black.length) &&
       <section className="notation_section">
          <div className="control_panel">
+
             <div className="control_ctn">
                <div className="functions_btn">
                   <FileUploader />
@@ -492,15 +492,6 @@ const Notation = forwardRef((_props, ref) => {
                         'clear' :
                         <FontAwesomeIcon icon={faTrashCan} />}
                   </button>
-
-                  <button 
-                     className="flip_board_btn"
-                     onClick={() => dispatch(setFlipBoard(!flipBoard))}
-                  >
-                     {!isMobile ? 
-                        'flip board' :
-                        <FontAwesomeIcon icon={faChessBoard} />}
-                  </button>
                </div>
 
                <div className="nav_btn">
@@ -520,6 +511,7 @@ const Notation = forwardRef((_props, ref) => {
                      <FontAwesomeIcon icon={faForwardFast}/>
                   </button>
                </div>
+               
             </div>
          </div>
 
