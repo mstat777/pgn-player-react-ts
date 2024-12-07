@@ -1,13 +1,13 @@
 import './Notation.scss';
-import { useState, Dispatch, SetStateAction, forwardRef, MutableRefObject, useEffect } from 'react';
+import { useState, forwardRef, MutableRefObject, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCirclePlay, faChessBoard, faBackwardFast, faCaretLeft, faCaretRight, faForwardFast } from '@fortawesome/free-solid-svg-icons';
 import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { initializePieces, initializeSquares, setPieceData } from '../../store/slices/chessSet';
 import { setPgnTxt } from '../../store/slices/pgnData';
+import { setStatusTxt, setCurrentMove, setPlayerTurn, setPlayerToWait } from '../../store/slices/game';
 import { setFlipBoard } from '../../store/slices/settings';
-import { Color } from '../../configs/types';
 import { MoveNbWithLocation, SetPiece } from '../../configs/interfaces';
 import { getDataForwardMove } from '../../utils/getDataForwardMove';
 import { getDataBackwardMove } from '../../utils/getDataBackwardMove';
@@ -19,14 +19,11 @@ import { castling } from '../../utils/castling';
 import FileUploader from '../FileUploader/Index';
 import { useMediaQuery } from "react-responsive";
 
-type Props = {
-   setStatusTxt: Dispatch<SetStateAction<string>>;
-}
-
-const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
+const Notation = forwardRef((_props, ref) => {
    const dispatch = useAppDispatch();
 
    const { whiteMoves, blackMoves, pgnTxt } = useAppSelector((state) => state.pgnData);
+   const { currentMove, playerTurn, playerToWait } = useAppSelector((state) => state.game);
    const pieces = useAppSelector((state) => state.chessSet.pieces);
    const { flipBoard } = useAppSelector((state) => state.settings);
 
@@ -37,17 +34,12 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
    const pgnErrors = useAppSelector((state) => state.pgnData.errors);
 
    const [isGameOver, setIsGameOver] = useState<boolean>(false);
-   //const [piecesLeft, setPiecesLeft] = useState<number>(32); // pieces left of both players
-   const [currentMove, setCurrentMove] = useState<number>(-1);
-   //const [currentRound, setCurrentRound] = useState<number>(0);
-   const [playerTurn, setPlayerTurn] = useState<Color>("white");
-   const [playerToWait, setPlayerToWait] = useState<Color>("black");
-   //const [isValidMove, setIsValidMove] = useState<boolean>(true);
-   //const [errors, setErrors] = useState<string[]>([]);
+   //const [playerTurn, setPlayerTurn] = useState<Color>("white");
+   //const [playerToWait, setPlayerToWait] = useState<Color>("black");
+
    const [isArrowLeftDown, setIsArrowLeftDown] = useState<boolean>(false);
    const [isArrowRightDown, setIsArrowRightDown] = useState<boolean>(false);
 
-   //const [pgnTxt, setPgnTxt] = useState<string>('');
    const pgnTxtMaxLength = 2500;
 
    const [isPlayingForward, setIsPlayingForward] = useState<boolean>(true);
@@ -86,10 +78,10 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
    const initialize = () => {
       console.clear();
       setIsGameOver(false);
-      setCurrentMove(-1);
+      dispatch(setCurrentMove(-1));
       setIsPlayingForward(true);
-      setPlayerTurn("white");
-      setPlayerToWait("black");
+      dispatch(setPlayerTurn("white"));
+      dispatch(setPlayerToWait("black"));
       dispatch(initializeSquares());
       dispatch(initializePieces());
       // reset pieces positions
@@ -117,7 +109,6 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
    const handleNextMove = () => {
       console.log(pgnErrors);
       console.log("isGameOver = ",isGameOver);
-      console.log(whiteMoves.length);
       console.log("isPlayingForward = ", isPlayingForward);
       console.log("currentMove = ", currentMove);
       if (!whiteMoves.length) {
@@ -128,14 +119,13 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
          console.log("currentMove = ", currentMove);
          if (isPlayingForward) {
             if (currentMove >= 0) {
-               setPlayerTurn(changePlayer(playerTurn));
+               dispatch(setPlayerTurn(changePlayer(playerTurn)));
                console.log("playerTurn = ", playerTurn);
-               setPlayerToWait(changePlayer(playerToWait));
+               dispatch(setPlayerToWait(changePlayer(playerToWait)));
                //console.log("playerToWait = ", playerToWait);
             }
-            setCurrentMove(currentMove +1); 
+            dispatch(setCurrentMove(currentMove +1)); 
          } else {
-            //currentMove < 0 && setCurrentMove(currentMove +1); 
             setIsPlayingForward(true);
          }
       }
@@ -150,17 +140,17 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
          console.log("currentMove = ",currentMove);
          if (!isPlayingForward) {
             if (currentMove > 0) {
-               setPlayerTurn(changePlayer(playerTurn));
+               dispatch(setPlayerTurn(changePlayer(playerTurn)));
                console.log("playerTurn = ", playerTurn);
-               setPlayerToWait(changePlayer(playerToWait));
+               dispatch(setPlayerToWait(changePlayer(playerToWait)));
                //console.log("playerToWait = ", playerToWait);
-               setCurrentMove(currentMove -1); 
+               dispatch(setCurrentMove(currentMove -1)); 
             }
          } else {
             setIsPlayingForward(false);
             if (isGameOver){
                setIsGameOver(false);
-               setCurrentMove(currentMove -1); 
+               dispatch(setCurrentMove(currentMove -1)); 
             }
          }
       }
@@ -183,12 +173,12 @@ const Notation = forwardRef(({setStatusTxt}: Props, ref) => {
          for (let i=0; i < whiteMoves.length + blackMoves.length; i++){
             if (currentMove >= 0) {
                console.log("i = ",i);
-               setPlayerTurn(changePlayer(playerTurn));
+               dispatch(setPlayerTurn(changePlayer(playerTurn)));
                console.log("playerTurn = ", playerTurn);
-               setPlayerToWait(changePlayer(playerToWait));
+               dispatch(setPlayerToWait(changePlayer(playerToWait)));
                //console.log("playerToWait = ", playerToWait);
             }
-            setCurrentMove(currentMove +1); 
+            dispatch(setCurrentMove(currentMove +1)); 
          }
       }
    }

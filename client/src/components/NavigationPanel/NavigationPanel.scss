@@ -1,0 +1,104 @@
+@use '../../scss/global' as *;
+
+@mixin button {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   height: 20px;
+   margin: 0 5px;
+   border: 1px solid var(--tertiary-color-3);
+   border-radius: 2px;
+   box-shadow: 2px 2px 2px var(--darkshade-color-2);
+   text-transform: uppercase;
+   -webkit-user-select: none;       
+   -moz-user-select: none;
+   -ms-user-select: none;
+   user-select: none; 
+   transition: all .4s;
+}
+
+.navigation {
+   margin: 2rem 0 0;
+   padding: 0 .5rem .5rem;
+   outline: 1px solid grey;
+   box-shadow: 4px 4px 8px 2px var(--darkshade-color-1);
+
+   .control_panel {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 5px;
+
+      button {
+         @include button;
+         padding: 0 6px;
+         font-weight: 600;
+         font-size: 1.4rem;
+         letter-spacing: 1px;
+         color: var(--tertiary-color-3);
+         background-color: var(--lightshade-color-4);
+
+         @media screen and (min-width: $tablet) {
+            font-size: 1.4rem;
+         }
+      }
+
+      .functions_btn {
+         display: flex;
+         align-items: center;
+
+         .flip_board_btn {
+            color: blue;
+         }
+      }
+
+      .nav_btn {
+         display: flex;
+         align-items: center;
+
+         >button {
+            @include button;
+            width: 25px;
+            margin: 0 4px;
+            font-size: 1.4rem;
+            color: var(--darkshade-color-2);
+            background-color: var(--lightshade-color-2);
+
+            @media screen and (min-width: $tablet) {
+               width: 30px;
+               margin: 0 5px;
+            }
+         }
+      }
+   }
+
+   .moves_section {
+      min-height: 40px;
+      max-height: 300px;
+      display: flex;
+      padding: .5rem 1rem;
+      overflow-y: scroll;
+      box-shadow: inset 0 0 4px var(--darkshade-color-1);
+
+      > * {
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+
+         .active {
+            width: 100%;
+            font-weight: 600;
+            background-color: $lightgreengrey-color;
+         }
+      }
+
+      .move_number {
+         width: 20%;
+         min-width: 30px;
+      }
+
+      .white_move,
+      .black_move {
+         width: 40%;
+      }
+   }
+}

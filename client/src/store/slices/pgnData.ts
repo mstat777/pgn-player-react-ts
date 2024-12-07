@@ -8,8 +8,8 @@ const initialState: PGNData = {
    blackMoves: [],
    comments: [],
    errors: [],
-   status: "",
-   pgnTxt: ""
+   status: "", // linked to errors
+   pgnTxt: "" // when loading a png from DB
 }
 
 export const pgnDataSlice = createSlice({
@@ -21,7 +21,7 @@ export const pgnDataSlice = createSlice({
       },
       setPgnTxt: (state, action: PayloadAction<string>) => {
          state.pgnTxt = action.payload;
-      },
+      }
    }
 });
 

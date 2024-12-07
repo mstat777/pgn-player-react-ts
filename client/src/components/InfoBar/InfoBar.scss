@@ -1,48 +1,48 @@
 @use '../../scss/global.scss' as *;
 
 .infobar {
-    position: relative;
-    min-height: 36px;
-    padding: 1rem;
-    outline: 1px solid var(--lightshade-color-1);
-    box-shadow: 3px 3px 6px 2px var(--lightshade-color-1);
-    background-color: $lightgreengrey-color;
+   position: relative;
+   min-height: 36px;
+   padding: 1rem 3.5rem 1rem 1rem;
+   outline: 1px solid var(--lightshade-color-1);
+   box-shadow: 3px 3px 6px 2px var(--lightshade-color-1);
+   background-color: $lightgreengrey-color;
 
-    .no_info {
-        margin: 0;
-        font-size: 1.2rem;
-    }
+   .no_info {
+      margin: 0;
+      font-size: 1.2rem;
+   }
 
-    .collapse_btn {
-        position: absolute;
-        top: 7px;
-        right: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
-        border: none;
-        background-color: var(--lightshade-color-4);
-    }
+   .collapse_btn {
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: none;
+      background-color: var(--lightshade-color-4);
+   }
 
-    &_details,
-    &_data_ctn {
-        width: 100%;
-        text-align: left;
+   &_details,
+   &_data_ctn {
+      width: 100%;
+      text-align: left;
 
-        .tag {
-            margin: 0;
-            font-size: 1.2rem;
+      .tag {
+         margin: 0;
+         font-size: 1.2rem;
 
-            > * + * {
-                margin-left: .5rem;
-            }
-            
-            .value { 
-                font-weight: 500;
-            }
-        }
-    }
+         > * + * {
+            margin-left: .5rem;
+         }
+         
+         .value { 
+            font-weight: 500;
+         }
+      }
+   }
 }

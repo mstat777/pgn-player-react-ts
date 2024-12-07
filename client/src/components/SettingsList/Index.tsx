@@ -1,3 +1,4 @@
+import './SettingsList.scss';
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import SwitchBtn from "../buttons/SwitchBtn/Index";
 import { setShowBoardNotation,

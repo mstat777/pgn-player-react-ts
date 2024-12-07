@@ -2,11 +2,13 @@ import { PayloadAction, combineReducers, configureStore } from "@reduxjs/toolkit
 import pgnDataReducer from './slices/pgnData';
 import chessSetReducer from './slices/chessSet';
 import settingsReducer from './slices/settings';
+import gameReducer from './slices/game';
 
 const appReducer = combineReducers({
    pgnData: pgnDataReducer,
    chessSet: chessSetReducer,
-   settings: settingsReducer
+   settings: settingsReducer,
+   game: gameReducer
 });
 
 const rootReducer = (state: any, action: PayloadAction) => {
