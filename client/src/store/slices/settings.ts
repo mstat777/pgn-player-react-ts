@@ -6,6 +6,7 @@ type settingsType = {
    showDB: boolean;
    showInfoBar: boolean;
    showModal: boolean;
+   showPlayerInfoBar: boolean;
    showSettings: boolean;
    showStatusPanel: boolean;
 }
@@ -16,6 +17,7 @@ const initialState: settingsType = {
    showDB: true,
    showInfoBar: true,
    showModal: false,
+   showPlayerInfoBar: false,
    showSettings: false,
    showStatusPanel: true,
 }
@@ -39,6 +41,9 @@ export const settingsSlice = createSlice({
       setShowModal: (state, action) => {
          state.showModal = action.payload;
       },
+      setShowPlayerInfoBar: (state, action) => {
+         state.showPlayerInfoBar = action.payload;
+      },
       setShowSettings: (state, action) => {
          state.showSettings = action.payload;
       },
@@ -55,6 +60,7 @@ export const {
    setShowDB,
    setShowInfoBar,
    setShowModal,
+   setShowPlayerInfoBar,
    setShowSettings,
    setShowStatusPanel, 
 } = settingsSlice.actions;

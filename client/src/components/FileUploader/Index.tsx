@@ -16,13 +16,7 @@ export default function FileUploader() {
    const handleClick: MouseEventHandler<HTMLButtonElement> = () => {
       hiddenFileInput.current?.click();
    }
-/*
-   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-      if (e.target.files?.length) {
-         const fileUploaded = e.target.files[0];
-         handleFile(fileUploaded); 
-      }
-   };*/
+
    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       if (e.target.files?.length) {
          const reader = new FileReader();
@@ -31,6 +25,7 @@ export default function FileUploader() {
             if (readerEvent.target?.result) {
                dispatch(setPgnTxt(readerEvent.target.result.toString()));
                dispatch(setStatusTxt('Press the LOAD button'));
+               console.log('Press the LOAD button');
             }
          };
       }

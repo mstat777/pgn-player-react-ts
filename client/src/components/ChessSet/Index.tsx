@@ -1,16 +1,16 @@
 import './ChessSet.scss';
 import { useEffect, useState, forwardRef, MutableRefObject } from 'react';
 import { useAppSelector } from '../../store/hooks';
+import { Color } from '../../configs/types';
+import { getX, getY } from '../../utils/commonFunctions';
+import Loading from '../Loading/Index';
 import ChessPiece from './ChessPiece/Index';
 import BoardNotationCtn from './BoardNotationCtn';
-import { Color } from '../../configs/types';
-import Loading from '../Loading/Index';
-import { getX, getY } from '../../utils/commonFunctions';
-import PlayerInfo from './PlayerInfo/Index';
+import PlayerInfoBar from './PlayerInfoBar/Index';
 
 const ChessSet = forwardRef((_props, ref) => {
    const { squares, pieces } = useAppSelector((state) => state.chessSet);
-   const { flipBoard, showBoardNotation } = useAppSelector((state) => state.settings);
+   const { flipBoard, showBoardNotation, showPlayerInfoBar } = useAppSelector((state) => state.settings);
    const { tags } = useAppSelector((state) => state.pgnData);
 
    const piecesLength = pieces.white.length + pieces.black.length;
@@ -28,10 +28,10 @@ const ChessSet = forwardRef((_props, ref) => {
    return ( 
       !isDataLoaded ? 
          <Loading /> :
-         <section className={`chess_section ${Object.keys(tags as Object).length ? '' : 'no_player_info'}`}>
+         <section className={`chess_section ${Object.keys(tags as Object).length && showPlayerInfoBar ? '' : 'no_player_info'}`}>
             
-            { Object.keys(tags as Object).length ?
-               <PlayerInfo position="top"/> : '' }
+            { Object.keys(tags as Object).length && showPlayerInfoBar ?
+               <PlayerInfoBar position="top"/> : null }
 
             <section className={`chess_set ${flipBoard ? 'flipped' : ''}`}>
                <div className="chessboard">
@@ -78,8 +78,8 @@ const ChessSet = forwardRef((_props, ref) => {
                }
             </section>
 
-            { Object.keys(tags as Object).length ?
-               <PlayerInfo position="bottom"/> : null }
+            { Object.keys(tags as Object).length && showPlayerInfoBar ?
+               <PlayerInfoBar position="bottom"/> : null }
          </section>
    );
 });

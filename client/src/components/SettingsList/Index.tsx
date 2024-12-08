@@ -3,6 +3,7 @@ import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import SwitchBtn from "../buttons/SwitchBtn/Index";
 import { setShowBoardNotation,
         setShowInfoBar,
+        setShowPlayerInfoBar,
         setShowStatusPanel,
         } from '../../store/slices/settings';
 
@@ -10,6 +11,7 @@ export default function SettingsList() {
     const { 
         showBoardNotation,
         showInfoBar,
+        showPlayerInfoBar,
         showStatusPanel
     } = useAppSelector((state) => state.settings);
 
@@ -24,6 +26,14 @@ export default function SettingsList() {
                 <SwitchBtn
                     state={showInfoBar}
                     onClick={() => dispatch(setShowInfoBar(!showInfoBar))}
+                />
+            </div>
+
+            <div className="settings_ctn">
+                <label>Show Player Info Bar</label>
+                <SwitchBtn
+                    state={showPlayerInfoBar}
+                    onClick={() => dispatch(setShowPlayerInfoBar(!showPlayerInfoBar))}
                 />
             </div>
 

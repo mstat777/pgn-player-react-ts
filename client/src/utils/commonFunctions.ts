@@ -7,12 +7,14 @@ export const capitalize = (str: string) => {
 }
 
 // format player's names, if there is a comma in the string
-export const formatPlayerName = (str: string | undefined) => {
-   let result;
-   if (str){
+export const formatPlayerName = (str: string) => {
+   //console.log("str = ",str);
+   let result = str;
+   if (str.includes(',')){
       const names = str.split(',');
-      result = str ? names[1] + " " + names[0] : undefined;
+      result = names[1] + " " + names[0];
    }
+   //console.log("result = ",result);
    return result;
 }
 

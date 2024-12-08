@@ -8,9 +8,6 @@ export default function DBList() {
    const openingsWhite = Object.entries(Object.values(db)[0]['openings-white']);
    const openingsBlack = Object.entries(Object.values(db)[0]['openings-black']);
 
-   //console.log(famousGames);
-   //console.log(famousPlayers);
-
    return (
       <section className="db">
          <h2>database</h2>

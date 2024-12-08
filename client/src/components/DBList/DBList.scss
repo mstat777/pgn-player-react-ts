@@ -13,16 +13,43 @@
    > h2 {
       margin-top: 0;
       text-align: center;
+      text-transform: uppercase;
    }
 
    .list {
       padding-left: 2rem;
 
+      button {
+         margin-bottom: 2px;
+         padding: 2px 4px;
+         text-align: left;
+         color: var(--secondary-color);
+         background-color: var(--lightshade-color-4);
+      }
+
+      .list_btn {
+         margin-top: 1rem;
+         font-size: 1.8rem;
+      }
+
       .sublist {
          padding-left: 2rem;
 
+         .sublist_btn {
+            font-weight: 600;
+         }
+
          .subsublist {
             padding-left: 2rem;
+            
+            .subsublist_btn {
+               color: var(--tertiary-color-3);
+               background-color: var(--primary-color);
+
+               &::before {
+                  content: "►";
+               }
+            }
          }
       }
    }

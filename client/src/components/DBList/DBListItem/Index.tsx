@@ -10,15 +10,13 @@ type Props = {
 
 export default function DBListItem({name, itemsArr}: Props) {
    const [showItems, setShowItems] = useState<boolean>(false);
-   const [showSubItems, setShowSubItems] = useState<boolean>(false);
+
+   const subItemsState: boolean[] = [];
+   itemsArr.forEach(() => subItemsState.push(false));
+
+   const [showSubItems, setShowSubItems] = useState<boolean[]>(subItemsState);
 
    const dispatch = useAppDispatch();
-
-   /*const initialize = () => {
-      setShowGames(false);
-      setShowPlayers(false);
-      setShowPlayerGames(false);
-   }*/
 
    const getPgnFileData = async (fileName: string, name: string, subcategory?: string) => {
       //console.log("getPNGFileData called");
@@ -45,8 +43,8 @@ export default function DBListItem({name, itemsArr}: Props) {
                {Object.values(item[1]).map((el, i) => 
                   <li key={i}>
                      <button
+                        className="subsublist_btn"
                         onClick={() => {
-                           //initialize();
                            dispatch(setShowModal(false));
                            getPgnFileData(el, name, item[0]);
                         }}
@@ -61,19 +59,22 @@ export default function DBListItem({name, itemsArr}: Props) {
       return null;
    }
 
-   const handleClick = (item: string[] | string) => {
+   const handleClick = (item: string[] | string, i: number) => {
       if (typeof(item) === 'string') {
-         //initialize();
          dispatch(setShowModal(false));
          getPgnFileData(item, name);
       } else {
-         setShowSubItems(!showSubItems)
+         showSubItems[i] = !showSubItems[i];
+         //console.log(showSubItems[i]);
+         //console.log([...showSubItems]);
+         setShowSubItems([...showSubItems]);
       }
    }
 
    return (
       <>
          <button
+            className="list_btn"
             onClick={() => setShowItems(!showItems)}
          >
             {name}
@@ -84,7 +85,8 @@ export default function DBListItem({name, itemsArr}: Props) {
                {itemsArr.map((item, i) => 
                   <li key={i}>
                      <button
-                        onClick={() => handleClick(item)}
+                        className="sublist_btn"
+                        onClick={() => handleClick(item, i)}
                      >
                         { typeof(item) === 'string' &&
                            item }
@@ -92,7 +94,7 @@ export default function DBListItem({name, itemsArr}: Props) {
                            item[0] } 
                      </button>
                      
-                     {showSubItems &&
+                     {showSubItems[i] &&
                            getNestedItems(item)}
                   </li>
                )}
