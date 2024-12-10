@@ -89,25 +89,6 @@
                color: blue;
             }
          }
-      
-         .nav_btn {
-            display: flex;
-            align-items: center;
-   
-            >button {
-               @include button;
-               width: 25px;
-               margin: 0 4px;
-               font-size: 1.4rem;
-               color: var(--darkshade-color-2);
-               background-color: var(--lightshade-color-2);
-
-               @media screen and (min-width: $tablet) {
-                  width: 30px;
-                  margin: 0 5px;
-               }
-            }
-         }
       }
    }
 

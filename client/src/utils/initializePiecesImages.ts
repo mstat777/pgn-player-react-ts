@@ -17,6 +17,7 @@ export const initializePiecesImages = (
       if (pieceImage) {
          pieceImage.style.left = `${getX(initLocation)}%`;
          pieceImage.style.bottom = `${getY(initLocation)}%`;
+         pieceImage.style.opacity = '1';
       }
    });
 }

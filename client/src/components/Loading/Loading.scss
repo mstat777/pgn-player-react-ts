@@ -1,40 +1,40 @@
 @use '../../scss/global.scss' as *;
 
 .spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 60px;
-    height: 60px;
-    
-    @media screen and (min-width: $tablet) {
-        width: 80px;
-        height: 80px;
-    }
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   width: 60px;
+   height: 60px;
+   
+   @media screen and (min-width: $tablet) {
+      width: 80px;
+      height: 80px;
+   }
 
-    >path {
-        &:first-child {
-            stroke: var(--tertiary-color-2);
-        }
-        &:last-child {
-            stroke: var(--tertiary-color-1);
-            fill: var(--tertiary-color-3);
-            -webkit-animation: spin 1.5s linear infinite;
-            -moz-animation: spin 1.5s linear infinite;
-            -o-animation: spin 1.5s linear infinite;
-            animation: spin 1.5s linear infinite;
-        }
-    }
+   >path {
+      &:first-child {
+         stroke: var(--tertiary-color-2);
+      }
+      &:last-child {
+         stroke: var(--tertiary-color-1);
+         fill: var(--tertiary-color-3);
+         -webkit-animation: spin 1.5s linear infinite;
+         -moz-animation: spin 1.5s linear infinite;
+         -o-animation: spin 1.5s linear infinite;
+         animation: spin 1.5s linear infinite;
+      }
+   }
 }
 
 @keyframes spin {
-    0%   { 
-        transform-origin: 50% 50%; 
-        transform: rotate(0deg); 
-    }
-    100% { 
-        transform-origin: 50% 50%; 
-        transform: rotate(360deg); 
-    }
+   0%   { 
+      transform-origin: 50% 50%; 
+      transform: rotate(0deg); 
+   }
+   100% { 
+      transform-origin: 50% 50%; 
+      transform: rotate(360deg); 
+   }
 }

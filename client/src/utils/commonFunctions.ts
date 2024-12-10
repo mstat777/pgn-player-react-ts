@@ -1,5 +1,9 @@
 import { Color } from "../configs/types";
 import { IChessPiece, MoveNbWithLocation } from "../configs/interfaces";
+import { store } from "../store/store";
+import { setIsGameOver, setIsPlayingForward, setCurrentMove, setPlayerTurn, setPlayerToWait, setAreMovesLoaded } from '../store/slices/game';
+import { initializeSquares, initializePieces } from "../store/slices/chessSet";
+import { initializePiecesImages } from "./initializePiecesImages";
 
 export const capitalize = (str: string) => {
    let result = str.charAt(0).toUpperCase() + str.slice(1);
@@ -16,6 +20,16 @@ export const formatPlayerName = (str: string) => {
    }
    //console.log("result = ",result);
    return result;
+}
+
+export const initializeGame = (
+) => {
+   store.dispatch(setIsGameOver(false));
+   store.dispatch(setCurrentMove(-1));
+   store.dispatch(setIsPlayingForward(true));
+   store.dispatch(setAreMovesLoaded(false));
+   store.dispatch(setPlayerTurn("white"));
+   store.dispatch(setPlayerToWait("black"));
 }
 
 export const changePlayer = (turn: Color): Color => {
@@ -77,15 +91,15 @@ export const getCapturingPawnId = (file: string, targetLocation: string, playerT
       parseInt(targetLocation.charAt(1))-1 :
       parseInt(targetLocation.charAt(1))+1
    let pawnLocation: string = file + rank.toString();
-   console.log("pawnLocation = ",pawnLocation);
+   //console.log("pawnLocation = ",pawnLocation);
 
    for (let i = 8; i < piecesData.length; i++){
-      console.log(getLocationByRoundNb(piecesData[i].location, roundNb));
-      console.log(chessNotationToNumeric(pawnLocation));
+      //console.log(getLocationByRoundNb(piecesData[i].location, roundNb));
+      //console.log(chessNotationToNumeric(pawnLocation));
       if (getLocationByRoundNb(piecesData[i].location, roundNb) === chessNotationToNumeric(pawnLocation)) {
          resultId = i;
-         console.log("found!");
-         console.log("resultId = ",resultId);
+         //console.log("found!");
+         //console.log("resultId = ",resultId);
          break;
       }
    };

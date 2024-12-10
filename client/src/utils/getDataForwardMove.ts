@@ -25,6 +25,7 @@ export const getDataForwardMove = (
    const { whiteMoves, blackMoves } = state.pgnData;
 
    console.log(pieces);
+   //console.log(whiteMoves);
 
    let move = playerTurn === 'white' ? whiteMoves[roundNb] : blackMoves[roundNb];
    console.log("move = ", move);
@@ -32,7 +33,7 @@ export const getDataForwardMove = (
    if (roundNb > 0){
       previousMove = playerTurn === 'white' ? blackMoves[roundNb-1] : whiteMoves[roundNb];
    }
-   console.log("previousMove = ", previousMove);
+   //console.log("previousMove = ", previousMove);
 
    let castlingLong = false;
    let castlingShort = false;
@@ -77,7 +78,7 @@ export const getDataForwardMove = (
    } 
    if (move.includes("=")) {
       const lastLetter = move.slice(-1);
-      console.log(lastLetter);
+      //console.log(lastLetter);
       switch(lastLetter){
          case 'Q': promotion = 'queen'; break;
          case 'R': promotion = 'rook'; break;
@@ -85,9 +86,9 @@ export const getDataForwardMove = (
          case 'N': promotion = 'knight'; break;
          default: console.log('Error with the pawn promotion.');
       }
-      console.log("promotion = ",promotion);
+      //console.log("promotion = ",promotion);
       move = move.slice(0, -2);
-      console.log("move = ",move);
+      //console.log("move = ",move);
    }
     
    // store the move square location ID (ex. 'a4', 'd5')
@@ -98,7 +99,7 @@ export const getDataForwardMove = (
    // the id of the piece that should be moved
    let idPiece: number = -1; // from 0 to 15, -1 for undefined
 
-   //console.log("move.length = ",move.length);
+   console.log("move.length = ",move.length);
    // --------------- a simple pawn move -----------------
    if (move.length === 2) {
       let foundId = -1;
@@ -106,16 +107,17 @@ export const getDataForwardMove = (
       //pieces[playerTurn].find((piece, i) => 
       for (let i = 8; i < 16; i++) {
          const currLocation = getLocationByRoundNb(pieces[playerTurn][i].location, roundNb);
-         //console.log("currLocation = ",currLocation);
-         //console.log("newLocation = ",newLocation);
-         if ( pieces[playerTurn][i].active === true &&
+         console.log("currLocation = ",currLocation);
+         console.log("newLocation = ",newLocation);
+
+         if ( pieces[playerTurn][i].deactivated === 1000 &&
                currLocation.charAt(0) === newLocation.charAt(0)
          ) {
             if (foundId) {
                foundId = i;
                foundLocation = currLocation;
-               console.log("foundId = ",foundId);
-               console.log("foundLocation = ",foundLocation);
+               //console.log("foundId = ",foundId);
+               //console.log("foundLocation = ",foundLocation);
             } else {
                // if the current piece is closer to the new location than the piece found, then it becomes the piece found
                const currentPieceDist = Math.abs(parseInt(currLocation.charAt(1)) - parseInt(newLocation.charAt(1)));
@@ -124,8 +126,8 @@ export const getDataForwardMove = (
                if (currentPieceDist < foundPieceDist) {
                   foundId = i;
                   foundLocation = currLocation;
-                  console.log("foundId = ",foundId);
-                  console.log("foundLocation = ",foundLocation);
+                  //console.log("foundId = ",foundId);
+                  //console.log("foundLocation = ",foundLocation);
                }
             }
          }
@@ -140,19 +142,19 @@ export const getDataForwardMove = (
          case "Q": idPiece = 3; break; // QUEEN move
          // ROOK move
          case "R": {
-            if (!pieces[playerTurn][0].active){
-               console.log("idPiece = 7");
+            if (pieces[playerTurn][0].deactivated !== 1000){
+               //console.log("idPiece = 7");
                idPiece = 7; break;
-            } else if (!pieces[playerTurn][7].active){
-               console.log("idPiece = 0");
+            } else if (pieces[playerTurn][7].deactivated !== 1000){
+               //console.log("idPiece = 0");
                idPiece = 0; break;
             } else {
                const firstOfPairLoc = getLocationByRoundNb(pieces[playerTurn][0].location, roundNb); // pair's first rook location
                const secondOfPairLoc = getLocationByRoundNb(pieces[playerTurn][7].location, roundNb);
-               console.log(newLocation.charAt(0) === firstOfPairLoc.charAt(0));
-               console.log(newLocation.charAt(1) === firstOfPairLoc.charAt(1));
-               console.log(newLocation.charAt(0) === secondOfPairLoc.charAt(0));
-               console.log(newLocation.charAt(1) === secondOfPairLoc.charAt(1));
+               //console.log(newLocation.charAt(0) === firstOfPairLoc.charAt(0));
+               //console.log(newLocation.charAt(1) === firstOfPairLoc.charAt(1));
+               //console.log(newLocation.charAt(0) === secondOfPairLoc.charAt(0));
+               //console.log(newLocation.charAt(1) === secondOfPairLoc.charAt(1));
    
                if ((newLocation.charAt(0) === firstOfPairLoc.charAt(0) || newLocation.charAt(1) === firstOfPairLoc.charAt(1)) &&
                   (newLocation.charAt(0) !== secondOfPairLoc.charAt(0) && newLocation.charAt(1) !== secondOfPairLoc.charAt(1))
@@ -170,9 +172,9 @@ export const getDataForwardMove = (
                   // both rooks have a row or a column that corresponds to the target location, but it's not indicated which one, because one of the pair is obstructed
                   // check if the 1st of the pair is obstructed
                   idPiece = checkObstruction(firstOfPairLoc,newLocation, capture, roundNb) ? 7 : 0;
-                  console.log("obstruction Check");
-                  console.log(checkObstruction(firstOfPairLoc, newLocation, capture, roundNb) );
-                  console.log("idPiece = ",idPiece);
+                  //console.log("obstruction Check");
+                  //console.log(checkObstruction(firstOfPairLoc, newLocation, capture, roundNb) );
+                  //console.log("idPiece = ",idPiece);
                } else {
                   console.log(`Rook notation error on ${playerTurn}'s move ${move}!`);
                }
@@ -192,20 +194,20 @@ export const getDataForwardMove = (
          // KNIGHT move
          case "N": {
             const firstOfPairLoc = getLocationByRoundNb(pieces[playerTurn][1].location, roundNb); // pair's first element location
-            console.log(pieces[playerTurn][1]);
+            //console.log(pieces[playerTurn][1]);
 
-            console.log(Math.abs(parseInt(newLocation.charAt(0))));
-            console.log(Math.abs(parseInt(newLocation.charAt(1))));
-            console.log(parseInt(firstOfPairLoc.charAt(0)));
-            console.log(parseInt(firstOfPairLoc.charAt(1)));
+            //console.log(Math.abs(parseInt(newLocation.charAt(0))));
+            //console.log(Math.abs(parseInt(newLocation.charAt(1))));
+            //console.log(parseInt(firstOfPairLoc.charAt(0)));
+            //console.log(parseInt(firstOfPairLoc.charAt(1)));
 
-            console.log(pieces[playerTurn][1].active &&
+            /*console.log(pieces[playerTurn][1].deactivated === 1000 &&
                Math.abs(parseInt(newLocation.charAt(0)) - parseInt(firstOfPairLoc.charAt(0))) >= 1 && 
                Math.abs(parseInt(newLocation.charAt(0)) - parseInt(firstOfPairLoc.charAt(0))) <= 2 &&
                Math.abs(parseInt(newLocation.charAt(1)) - parseInt(firstOfPairLoc.charAt(1))) >= 1 && 
-               Math.abs(parseInt(newLocation.charAt(1)) - parseInt(firstOfPairLoc.charAt(1))) <= 2);
+               Math.abs(parseInt(newLocation.charAt(1)) - parseInt(firstOfPairLoc.charAt(1))) <= 2);*/
 
-            if (pieces[playerTurn][1].active &&
+            if (pieces[playerTurn][1].deactivated === 1000 &&
                Math.abs(parseInt(newLocation.charAt(0)) - parseInt(firstOfPairLoc.charAt(0))) >= 1 && 
                Math.abs(parseInt(newLocation.charAt(0)) - parseInt(firstOfPairLoc.charAt(0))) <= 2 &&
                Math.abs(parseInt(newLocation.charAt(1)) - parseInt(firstOfPairLoc.charAt(1))) >= 1 && 

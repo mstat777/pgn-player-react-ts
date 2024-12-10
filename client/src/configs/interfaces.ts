@@ -15,7 +15,7 @@ export interface SetPiece {
    color: Color;
    type?: PieceType;
    location: MoveNbWithLocation[];
-   active: boolean;
+   deactivated?: number;
    id: number;
 }
 
@@ -23,25 +23,34 @@ export interface IChessPiece {
    color: Color;
    type: PieceType;
    location: MoveNbWithLocation[];
-   active: boolean;
+   deactivated: number;
+   promotion?: number;
 }
 
 export class ChessPiece {
    color;
    type;
    location;
-   active;
+   deactivated;
+   promotion;
 
    constructor(
       color: Color, 
       type: PieceType, 
       location: MoveNbWithLocation[],
-      active: boolean
+      deactivated?: number,
+      promotion?: number
    ) {
       this.color = color;
       this.type = type;
       this.location = location || []; // location ID links the pieces and the chessboard squares, ex. 24, 47, 88
-      this.active = active;
+      // if a piece is active, it has the default value '1000'
+      // otherwise if it's captured (deactivated), the value represents the round in which the piece has been captured
+      // value different from '1000' means that the piece has been captured
+      this.deactivated = deactivated ? deactivated : 1000;
+      if (promotion){
+         this.promotion = promotion;
+      }
    }
 }
 

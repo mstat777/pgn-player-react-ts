@@ -29,17 +29,15 @@ export default function Home(){
    return ( 
       <main className="home">
          <section className="home_section">
-            <ChessSet ref={pieceRef}/>
+            <ChessSet ref={pieceRef} />
 
-            <Notation 
-               ref={pieceRef}
-            />
+            <Notation ref={pieceRef} />
 
             <section className="right_section">
                { showInfoBar && 
                   <InfoBar /> }
 
-               <NavigationPanel />
+               <NavigationPanel ref={pieceRef} />
 
                { showStatusPanel && 
                   <StatusPanel />

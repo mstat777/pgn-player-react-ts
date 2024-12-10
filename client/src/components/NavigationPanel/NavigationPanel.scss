@@ -91,8 +91,9 @@
                &::after {
                   content: "";
                   display: block;
-                  height: .5em;
+                  height: .5rem;
                   width: 100%;
+                  background-color: $light-color;
                }
             }
          }

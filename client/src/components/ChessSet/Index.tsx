@@ -12,6 +12,7 @@ const ChessSet = forwardRef((_props, ref) => {
    const { squares, pieces } = useAppSelector((state) => state.chessSet);
    const { flipBoard, showBoardNotation, showPlayerInfoBar } = useAppSelector((state) => state.settings);
    const { tags } = useAppSelector((state) => state.pgnData);
+   const { areMovesLoaded } = useAppSelector((state) => state.game);
 
    const piecesLength = pieces.white.length + pieces.black.length;
 
@@ -28,6 +29,7 @@ const ChessSet = forwardRef((_props, ref) => {
    return ( 
       !isDataLoaded ? 
          <Loading /> :
+
          <section className={`chess_section ${Object.keys(tags as Object).length && showPlayerInfoBar ? '' : 'no_player_info'}`}>
             
             { Object.keys(tags as Object).length && showPlayerInfoBar ?
@@ -47,8 +49,8 @@ const ChessSet = forwardRef((_props, ref) => {
                <div className="pieces_ctn">
                   <div className="pieces">
                      {/* create piece images */}
-                     { Object.keys(pieces).map((color, indexSide) => 
-                        pieces[color as keyof typeof pieces].map((piece, i) =>
+                     { areMovesLoaded && Object.keys(pieces).map((color, indexSide) => 
+                        pieces[color as keyof typeof pieces].map((piece, i) => 
                            piece.location &&
                               <ChessPiece 
                                  ref={(el) => //{
@@ -59,7 +61,7 @@ const ChessSet = forwardRef((_props, ref) => {
                                  type={piece.type} 
                                  left={`${getX(piece.location[0][0])}%`}
                                  bottom={`${getY(piece.location[0][0])}%`}
-                                 opacity={piece.active ? '1' : '0'}
+                                 opacity='1'
                                  key={i}
                               />
                            )

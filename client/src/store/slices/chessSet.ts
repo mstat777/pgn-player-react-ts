@@ -62,14 +62,14 @@ export const chessSetSlice = createSlice({
                const initPieceLocation: MoveNbWithLocation = {0: ''};
                initPieceLocation[0] = `${i+1}${majPiecesRow}`;
                //console.log([initPieceLocation]);
-               tempPieces[color][i] = new ChessPiece(color, majPiece, [initPieceLocation], true);
+               tempPieces[color][i] = new ChessPiece(color, majPiece, [initPieceLocation], 0);
             });
 
             // create all pawns:
             for (let i = 0; i < 8; i++){
                const initPieceLocation: MoveNbWithLocation = {0: ''};
                initPieceLocation[0] = `${i+1}${pawnsRow}`;
-               tempPieces[color][i+8] = new ChessPiece(color, "pawn", [initPieceLocation], true);
+               tempPieces[color][i+8] = new ChessPiece(color, "pawn", [initPieceLocation], 0);
             }
 
             state.pieces[color] = [...tempPieces[color]];
@@ -78,7 +78,7 @@ export const chessSetSlice = createSlice({
          }
       },
       setPieceData: (state, action: PayloadAction<SetPiece>) => {
-         //console.log(action.payload);
+         console.log(action.payload);
          return {
             ...state,
             pieces: {
@@ -88,21 +88,26 @@ export const chessSetSlice = createSlice({
                      if (action.payload.type) {
                         piece.type = action.payload.type;
                      }
-                     const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location, ...action.payload.location as MoveNbWithLocation[]], action.payload.active);
+                     const chessPiece = new ChessPiece(piece.color, piece.type, [...piece.location, ...action.payload.location as MoveNbWithLocation[]], action.payload.deactivated);
                      return chessPiece;
                   };
                   return piece;
                })
             }
          }
-      }
+      },
+      /*setAllPiecesActive: (state) => {
+         state.pieces.white.map((piece) => piece.active = true);
+         state.pieces.black.map((piece) => piece.active = true);
+      }*/
    }
 });
 
 export const {
    initializeSquares,
    initializePieces,
-   setPieceData
+   setPieceData,
+   //setAllPiecesActive
 } = chessSetSlice.actions;
 
 export default chessSetSlice.reducer;
