@@ -56,6 +56,7 @@ export class ChessPiece {
 
 export interface PGNData {
    tags?: TagType;
+   nbTotalMoves: number;
    moveNb: string[];
    whiteMoves: string[];
    blackMoves: string[];

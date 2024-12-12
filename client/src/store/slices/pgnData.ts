@@ -3,7 +3,8 @@ import { PGNData } from "../../configs/interfaces";
 
 const initialState: PGNData = {
    tags: {},
-   moveNb: [],
+   nbTotalMoves: 0, // the total of half-moves ( white + black ), PlyCount
+   moveNb: [], // current move number
    whiteMoves: [],
    blackMoves: [],
    comments: [],

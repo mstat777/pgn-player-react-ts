@@ -85,17 +85,34 @@
          flex-direction: column;
          align-items: center;
 
-         > span {
+         > * {
             &:last-child {
+               
                // add a bottom-padding (because of scroll)
-               &::after {
+               /*&::after {
                   content: "";
                   display: block;
                   height: .5rem;
                   width: 100%;
-                  background-color: $light-color;
-               }
+                  border: none;
+                  background-color: green; //$light-color;
+               }*/
             }
+         }
+
+         > button {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            border: none;
+            outline: 2px solid transparent;
+            outline-offset: -2px;
+            background-color: $light-color;
+            transition: all .3s;
+            &:hover {
+               outline-color: $green-color-3;
+               font-weight: 600;
+            }    
          }
 
          .active {

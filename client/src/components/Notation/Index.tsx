@@ -19,7 +19,7 @@ const Notation = forwardRef((_props, ref) => {
 
    const pieceRef = ref as MutableRefObject<(HTMLDivElement | null)[]>;
 
-   const { pgnTxt, whiteMoves ,blackMoves } = useAppSelector((state) => state.pgnData);
+   const { nbTotalMoves, pgnTxt } = useAppSelector((state) => state.pgnData);
    const pieces = useAppSelector((state) => state.chessSet.pieces);
 
    const isMobile = useMediaQuery({query: '(max-width: 767px)'});
@@ -27,12 +27,11 @@ const Notation = forwardRef((_props, ref) => {
    const pgnTxtMaxLength = 2500;
 
    useEffect(() => {
-      if (whiteMoves.length) {
-         const movesLength = whiteMoves.length + blackMoves.length;
-         console.log(movesLength);
-         loadMoves(movesLength);
+      if (nbTotalMoves) {
+         console.log(nbTotalMoves);
+         loadMoves(nbTotalMoves);
       }
-   },[whiteMoves.length, blackMoves.length]);
+   },[nbTotalMoves]);
 
    const initializeAll = () => {
       initializeGame();

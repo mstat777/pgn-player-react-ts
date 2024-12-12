@@ -12,7 +12,7 @@ import { Color } from '../../configs/types';
 const NavigationPanel = forwardRef((_props, ref) => {
    const pieceRef = ref as MutableRefObject<(HTMLDivElement | null)[]>;
 
-   const { moveNb, whiteMoves, blackMoves } = useAppSelector((state) => state.pgnData);
+   const { nbTotalMoves, moveNb, whiteMoves, blackMoves } = useAppSelector((state) => state.pgnData);
    const pgnErrors = useAppSelector((state) => state.pgnData.errors);
    const { areMovesLoaded, isGameOver, isPlayingForward, currentMove, currentRound, playerTurn, playerToWait } = useAppSelector((state) => state.game);
    const { flipBoard } = useAppSelector((state) => state.settings);
@@ -27,13 +27,21 @@ const NavigationPanel = forwardRef((_props, ref) => {
    useEffect(() => {
       console.log("currentMove = ", currentMove);
       console.log("playerTurn = ",playerTurn);
+      // playing FORWARD
       if (currentMove >= 0 && isPlayingForward) {
          for (let i = 0; i < pieceRef.current.length; i++){
             let img = pieceRef.current[i];
             let id = i > 15 ? i-16 : i;
             let side: Color = i > 15 ? 'black' : 'white';
             let correctRound = (playerTurn === "white" && i > 15 ) ? 1 : 0;
-            let correctOpacity = (playerTurn === "white" && i <= 16 ) ? 1 : 0;
+
+            if (i === 0){
+               console.log("index White = ", currentRound + 1 - correctRound);
+            } else if (i === 16) {
+               console.log("index Black = ", currentRound + 1 - correctRound);
+            }
+
+            let correctOpacity = (playerTurn === "white" && i <= 15 ) ? 1 : 0;
             //console.log(pieces[side][id].location);
             //console.log("currentMove = ", currentMove);
             if (img) {
@@ -55,14 +63,17 @@ const NavigationPanel = forwardRef((_props, ref) => {
                }*/
             }
          }
-      // playing backwards
-      } else if (!isGameOver && !isPlayingForward) {
+      // playing BACKWARDS
+      } else if (!isPlayingForward) {
+         console.log("playing backwards");
          for (let i = 0; i < pieceRef.current.length; i++){
             let img = pieceRef.current[i];
             let id = i > 15 ? i-16 : i;
             let side: Color = i > 15 ? 'black' : 'white';
-            let correctRound = (playerTurn === "white" && i > 15 ) ? 1 : 0;
-            let correctOpacity = (playerTurn === "white" && i <= 16 ) ? 1 : 0;
+            /*let correctRound = (playerTurn === "white" && i <= 15) ? 0 : 1;
+            let correctOpacity = (playerTurn === "white" && i > 15 ) ? 0 : 1;*/
+            let correctRound = (playerTurn === "black" && i > 15) ? 1 : 0;
+            let correctOpacity = (playerTurn === "black" && i <= 15) ? 1 : 0;
             //console.log(pieces[side][id].location);
             //console.log("currentMove = ", currentMove);
             if (img) {
@@ -109,7 +120,7 @@ const NavigationPanel = forwardRef((_props, ref) => {
    }
 
    const handlePreviousMove = () => {
-      if (!whiteMoves.length) {
+      if (!nbTotalMoves) {
          dispatch(setStatusTxt("Please press the 'LOAD' button."));
          return;
       } else if (!areMovesLoaded) {
@@ -118,18 +129,16 @@ const NavigationPanel = forwardRef((_props, ref) => {
          //console.log("isPlayingForward = ", isPlayingForward);
          console.log("currentMove = ",currentMove);
          if (!isPlayingForward) {
-            if (currentMove > 0) {
-               dispatch(setPlayerTurn(changePlayer(playerTurn)));
-               console.log("playerTurn = ", playerTurn);
-               dispatch(setPlayerToWait(changePlayer(playerToWait)));
-               //console.log("playerToWait = ", playerToWait);
-               dispatch(setCurrentMove(currentMove -1)); 
-            }
+            dispatch(setPlayerTurn(changePlayer(playerTurn)));
+            console.log("playerTurn = ", playerTurn);
+            dispatch(setPlayerToWait(changePlayer(playerToWait)));
+            //console.log("playerToWait = ", playerToWait);
+            dispatch(setCurrentMove(currentMove -1)); 
          } else {
             dispatch(setIsPlayingForward(false));
+            dispatch(setCurrentMove(currentMove -1)); 
             if (isGameOver){
                dispatch(setIsGameOver(false));
-               dispatch(setCurrentMove(currentMove -1)); 
             }
          }
       }
@@ -138,37 +147,42 @@ const NavigationPanel = forwardRef((_props, ref) => {
    const handleNextMove = () => {
       //console.log(pgnErrors);
       //console.log("isGameOver = ",isGameOver);
-      //console.log("isPlayingForward = ", isPlayingForward);
-      //console.log("currentMove = ", currentMove);
-      if (!whiteMoves.length) {
+      console.log("isPlayingForward = ", isPlayingForward);
+      console.log("currentMove = ", currentMove);
+      if (!nbTotalMoves) {
          dispatch(setStatusTxt("Please press the 'LOAD' button."));
          return;
       } else if (!areMovesLoaded) {
          dispatch(setStatusTxt("Please wait while moves are loading."));
       } else if (!pgnErrors.length && !isGameOver) {
-         if (currentMove >= 0) {
-            dispatch(setPlayerTurn(changePlayer(playerTurn)));
-            console.log("playerTurn = ", playerTurn);
-            dispatch(setPlayerToWait(changePlayer(playerToWait)));
-            //console.log("playerToWait = ", playerToWait);
+         if (isPlayingForward) {
+            if (currentMove === -1) {
+               dispatch(setCurrentMove(currentMove +1)); 
+            } else if (currentMove >= 0 && currentMove < nbTotalMoves - 1) {
+               dispatch(setPlayerTurn(changePlayer(playerTurn)));
+               console.log("playerTurn = ", playerTurn);
+               dispatch(setPlayerToWait(changePlayer(playerToWait)));
+               //console.log("playerToWait = ", playerToWait);
+               dispatch(setCurrentMove(currentMove +1)); 
+            } else if (currentMove === nbTotalMoves - 1){
+               dispatch(setIsGameOver(true));
+            }
+         } else {
+            dispatch(setIsPlayingForward(true));
+            dispatch(setCurrentMove(currentMove +1)); 
          }
-         dispatch(setCurrentMove(currentMove +1)); 
       }
    }
 
    const handleToEnd = () => {
-      if (!whiteMoves.length) {
+      if (!nbTotalMoves) {
          dispatch(setStatusTxt("Please press the 'LOAD' button."));
          return;
       } else if (!areMovesLoaded) {
          dispatch(setStatusTxt("Please wait while moves are loading."));
       } else if (!pgnErrors.length) {
-         //console.log("isPlayingForward = ", isPlayingForward);
-         //console.log("currentMove = ", currentMove);
-         //console.log("whiteMoves.length = ", whiteMoves.length);
-         //console.log("blackMoves.length = ", blackMoves.length);
-         console.log(whiteMoves.length + blackMoves.length - 1);
-         dispatch(setCurrentMove(whiteMoves.length + blackMoves.length - 1)); 
+         console.log(nbTotalMoves - 1);
+         dispatch(setCurrentMove(nbTotalMoves - 1)); 
       }
    }
 
@@ -213,23 +227,29 @@ const NavigationPanel = forwardRef((_props, ref) => {
 
             <div className="white_move">
                {whiteMoves.map((move, i) => 
-                  <span 
+                  <button 
                      key={i}
-                     className={`${(playerTurn === 'white' && currentRound === i) ? 'active' : null}`}
+                     className={`${(currentMove % 2 === 0 && currentRound === i) ? 'active' : null}`}
+                     onClick={() => {
+                        dispatch(setCurrentMove(i*2));
+                        console.log("currentMove = ",currentMove);
+                     }
+                     }
                   >
                      {move}
-                  </span>
+                  </button>
                )}
             </div>
 
             <div className="black_move">
                {blackMoves.map((move, i) => 
-                  <span 
+                  <button 
                      key={i}
-                     className={`${(playerTurn === 'black' && currentRound === i) ? 'active' : null}`}
+                     className={`${(currentMove % 2 === 1 && currentRound === i) ? 'active' : null}`}
+                     onClick={() => dispatch(setCurrentMove(i*2 + 1))}
                   >
                      {move}
-                  </span>
+                  </button>
                )}
             </div>
          </section>

@@ -157,9 +157,10 @@ export const formatPgnData = (pgnData: string): PGNData => {
          }
       });
    }
-   console.log(whiteMoves);
+   //console.log(whiteMoves);
+   const nbTotalMoves = whiteMoves.length + blackMoves.length;
 
-   return {tags, moveNb, whiteMoves, blackMoves, comments, errors, resultMsg}
+   return {tags, nbTotalMoves, moveNb, whiteMoves, blackMoves, comments, errors, resultMsg}
 }
 
 // verify formatted PGN data
