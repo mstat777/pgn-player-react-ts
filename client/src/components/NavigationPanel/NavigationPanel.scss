@@ -72,12 +72,13 @@
    }
 
    .moves_section {
+      position: relative;
       min-height: 40px;
       max-height: 300px;
       display: flex;
       padding: .5rem 1rem 3rem;
       overflow-y: scroll;
-      box-shadow: inset 0 0 4px var(--darkshade-color-1);
+      box-shadow: 0 0 4px var(--darkshade-color-1);
       background-color: $light-color;
 
       > * {
@@ -87,16 +88,14 @@
 
          > * {
             &:last-child {
-               
                // add a bottom-padding (because of scroll)
-               /*&::after {
+               &::after {
                   content: "";
                   display: block;
                   height: .5rem;
                   width: 100%;
                   border: none;
-                  background-color: green; //$light-color;
-               }*/
+               }
             }
          }
 
@@ -107,6 +106,7 @@
             border: none;
             outline: 2px solid transparent;
             outline-offset: -2px;
+            font-size: 1.6rem;
             background-color: $light-color;
             transition: all .3s;
             &:hover {

@@ -4,7 +4,6 @@ import { Color } from "../../configs/types";
 type gameType = {
    statusTxt: string;
    isGameOver: boolean;
-   isPlayingForward: boolean;
    areMovesLoaded: boolean;
    currentMove: number;
    currentRound: number;
@@ -15,7 +14,6 @@ type gameType = {
 const initialState: gameType = {
    statusTxt: '',
    isGameOver: false,
-   isPlayingForward: true,
    areMovesLoaded: false,
    currentMove: -1,
    currentRound: -1,// 0,
@@ -32,9 +30,6 @@ export const gameSlice = createSlice({
       },
       setIsGameOver: (state, action: PayloadAction<boolean>) => {
          state.isGameOver = action.payload;
-      },
-      setIsPlayingForward: (state, action: PayloadAction<boolean>) => {
-         state.isPlayingForward = action.payload;
       },
       setAreMovesLoaded: (state, action: PayloadAction<boolean>) => {
          state.areMovesLoaded = action.payload;
@@ -56,7 +51,6 @@ export const gameSlice = createSlice({
 export const {
    setStatusTxt,
    setIsGameOver,
-   setIsPlayingForward,
    setAreMovesLoaded,
    setCurrentMove,
    setPlayerTurn,

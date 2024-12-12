@@ -1,9 +1,7 @@
 import { Color } from "../configs/types";
 import { IChessPiece, MoveNbWithLocation } from "../configs/interfaces";
 import { store } from "../store/store";
-import { setIsGameOver, setIsPlayingForward, setCurrentMove, setPlayerTurn, setPlayerToWait, setAreMovesLoaded } from '../store/slices/game';
-import { initializeSquares, initializePieces } from "../store/slices/chessSet";
-import { initializePiecesImages } from "./initializePiecesImages";
+import { setIsGameOver, setCurrentMove, setPlayerTurn, setPlayerToWait, setAreMovesLoaded } from '../store/slices/game';
 
 export const capitalize = (str: string) => {
    let result = str.charAt(0).toUpperCase() + str.slice(1);
@@ -26,7 +24,6 @@ export const initializeGame = (
 ) => {
    store.dispatch(setIsGameOver(false));
    store.dispatch(setCurrentMove(-1));
-   store.dispatch(setIsPlayingForward(true));
    store.dispatch(setAreMovesLoaded(false));
    store.dispatch(setPlayerTurn("white"));
    store.dispatch(setPlayerToWait("black"));

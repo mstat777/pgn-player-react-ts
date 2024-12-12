@@ -78,6 +78,7 @@ img {
 button {
    display: inline-block;
    user-select: none;
+   font-family: $main-font;  
    &:hover {
       cursor: pointer;
    }

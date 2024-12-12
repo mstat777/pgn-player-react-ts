@@ -3,7 +3,7 @@ import { setAreMovesLoaded, setStatusTxt} from "../store/slices/game";
 import { setPieceData } from "../store/slices/chessSet";
 import { MoveNbWithLocation, SetPiece } from "../configs/interfaces";
 import { getLocationByRoundNb } from "./commonFunctions";
-import { getDataForwardMove } from "./getDataForwardMove";
+import { getMoveData } from "./getMoveData";
 import { castling } from "./castling";
 
 export const loadMoves = (movesLength: number) => {
@@ -27,13 +27,13 @@ export const loadMoves = (movesLength: number) => {
 
       // get the piece and the new location to be moved to:
       let { idPiece, newLocation, capture, enPassant, promotion, castlingLong, castlingShort } = playerTurn === "white" ?
-         getDataForwardMove(playerTurn, roundNb) :
-         getDataForwardMove(playerTurn, roundNb);
+         getMoveData(playerTurn, roundNb) :
+         getMoveData(playerTurn, roundNb);
 
       // if CASTLING
       if (castlingLong || castlingShort) {
          //console.log("castling");
-         const { kingLocation, rookLocation } = castling(castlingShort, castlingLong, playerTurn, true);
+         const { kingLocation, rookLocation } = castling(castlingShort, castlingLong, playerTurn);
          //console.log({ kingLocation, rookLocation });
          let rookId = castlingLong ? 0 : 7;
 

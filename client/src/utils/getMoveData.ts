@@ -15,7 +15,7 @@ type ReturnType = {
    castlingShort: boolean;
 }
 
-export const getDataForwardMove = (
+export const getMoveData = (
    playerTurn: Color,
    roundNb: number
 ): ReturnType => {
